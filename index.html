@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261125-1430">
+<link rel="stylesheet" href="styles.css?v=20261125-1558">
 </head>
 <body>
 <div class="app">
@@ -18,7 +18,7 @@
 <section class="screen" id="s-setup" aria-label="New game">
   <h1 id="setup-title">Megan's Taboo</h1>
   <p class="sub">Each partner gets their own saved game. Your partner's name fills in from their phone.</p>
-  <label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
+  <label class="f">Play as <small>Your name, or a team name like "Red team" for a room game.</small><input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
   <label class="f">Code word <small>Agree on one with your partner and both type it. Your phones use it to find each other, then pick who's Player 1 and Player 2.</small>
     <input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"></label>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="setup"></div></div>
@@ -35,6 +35,8 @@
   <div class="top"><h2>Megan's Taboo</h2><button class="ghost icon" data-open="rules">Rules</button></div>
   <button class="switch" id="to-games"><span><b>Saved game</b><span id="h-game">Game with your partner</span></span><span aria-hidden="true">▾</span></button>
   <p class="sync" id="h-sync" role="status" hidden></p>
+  <p class="turn" id="h-turn" hidden></p>
+  <p class="final" id="h-final" hidden></p>
   <div class="hero">
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
       <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
@@ -48,6 +50,7 @@
   <div style="flex:1"></div>
   <button class="primary" id="start" disabled>Loading cards…</button>
   <button class="ghost" id="h-manual" hidden>Phones not connecting? Pick a player yourself</button>
+  <button class="ghost" id="final-btn" data-final>Final round</button>
   <div class="row"><button class="ghost" id="to-settings">Settings</button><button class="ghost" id="to-maker">Card maker</button></div>
 </section>
 
@@ -56,13 +59,13 @@
   <div class="hud">
     <div class="timer" id="timer" aria-live="off">1:00</div>
     <div><div class="meter" id="meter"></div><div class="note" id="p-info" style="margin-top:6px"></div></div>
-    <div class="score"><small>Score</small><span id="p-score">0</span></div>
+    <div class="score"><small>Guessed</small><span id="p-score">0</span></div>
   </div>
   <div class="card"><div class="band"><div class="w" id="p-word">Word</div></div><ul class="list" id="p-list"></ul></div>
   <div class="acts">
-    <button class="buzz" id="b-buzz"><span class="g">✕</span>Buzz<small id="buzzn"></small></button>
+    <button class="buzz" id="b-buzz"><span class="g">✕</span>Buzz</button>
     <button class="skipb" id="b-skip"><span class="g">↷</span>Skip<small id="skipn"></small></button>
-    <button class="okb" id="b-ok"><span class="g">✓</span>Correct<small id="okn"></small></button>
+    <button class="okb" id="b-ok"><span class="g">✓</span>Correct</button>
   </div>
   <div class="minor"><button id="b-undo">Undo</button><button id="b-pause">Pause</button><button data-open="rules">Rules</button><button id="b-end">End</button></div>
 </section>
@@ -70,21 +73,20 @@
 <!-- SUMMARY -->
 <section class="screen" id="s-sum" aria-label="Round summary">
   <div class="top"><h2 id="sum-title">Your round</h2><span class="note" id="sum-why"></span></div>
-  <div class="tot">
-    <div><b id="t-c">0</b><small>Correct</small></div><div><b id="t-x">0</b><small>Buzzed</small></div>
-    <div><b id="t-b">0</b><small>Bonus</small></div><div class="big"><b id="t-t">0</b><small>Total</small></div>
-  </div>
+  <div class="tot three"><div class="big"><b id="t-c">0</b><small>Guessed</small></div><div><b id="t-s">0</b><small>Skipped</small></div><div><b id="t-x">0</b><small>Buzzed</small></div></div>
   <ul class="res" id="sum-list"></ul>
   <p class="note" id="sum-back"></p>
   <div style="flex:1"></div>
   <p class="sub" id="sum-next" style="text-align:center;font-weight:800"></p>
   <button class="primary" id="sum-done">Done</button>
+  <button class="ghost" id="sum-final" data-final>Final round</button>
 </section>
 
 <!-- SETTINGS -->
 <section class="screen" id="s-set" aria-label="Settings">
   <div class="top"><h2>Settings</h2><button class="ghost" data-back>Done</button></div>
   <p class="sect" id="set-game-h">This game</p>
+  <label class="f">Play as <small>The name your partner sees in this game.</small><input type="text" id="set-playas" maxlength="16" autocomplete="off"></label>
   <label class="f">Partner's name<input type="text" id="set-partner" maxlength="16" autocomplete="off"></label>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="game"></div>
     <p class="note">You and your partner can pick different decks. You'll still never draw each other's cards. <span id="mixed-note"></span></p></div>
@@ -98,7 +100,7 @@
   <button class="danger" id="del-game">Delete this game</button>
 
   <p class="sect">Everything</p>
-  <label class="f">Your name<input type="text" id="set-name" maxlength="16" autocomplete="off"></label>
+  <label class="f">Your usual name <small>New games start with this.</small><input type="text" id="set-name" maxlength="16" autocomplete="off"></label>
   <div class="group"><b>Sound</b><div class="seg" data-field="sound" data-scope="all"></div>
     <p class="note">iPhones usually mute web sounds during a call or on silent. Vibration works on Android only.</p></div>
   <div class="group"><b>Backup</b>
@@ -107,6 +109,13 @@
     <textarea id="bk-text" hidden aria-label="Backup code" spellcheck="false"></textarea>
     <button class="primary" id="bk-restore" hidden>Restore from this code</button></div>
   <p class="note" id="ver"></p>
+</section>
+
+<!-- CREDITS: when a game ends -->
+<section class="screen" id="s-credits" aria-label="Game summary">
+  <p class="note" id="cr-why"></p>
+  <div class="roll" id="cr-roll"><div class="roll-in" id="cr-in"></div></div>
+  <div class="row"><button class="ghost" id="cr-skip">Skip</button><button class="primary" id="cr-done">Done</button></div>
 </section>
 
 <!-- CARD MAKER -->
@@ -131,6 +140,11 @@
 <div class="count" id="count"><div id="count-n">3</div></div>
 <div class="paused" id="paused"><h1>Paused</h1><p class="sub" id="paused-t"></p><button class="primary" id="resume" style="min-width:220px">Resume</button></div>
 <div class="toast" id="toast" role="status"></div>
+<div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="sp-name">
+  <div class="sp-card"><div class="band"><div class="w" id="sp-name">Mom</div></div>
+    <div class="sp-body"><p class="sp-line" id="sp-line">is giving clues</p><div class="sp-timer" id="sp-timer">1:00</div>
+      <p class="sp-sub" id="sp-sub">Just guess!</p><button class="primary" id="sp-ok" hidden>Got it</button></div></div>
+</div>
 
 <div class="modal" id="m-rules" role="dialog" aria-modal="true" aria-labelledby="rules-h"><div class="sheet">
   <h2 id="rules-h">How to play</h2><ul id="rules-list"></ul>
@@ -147,6 +161,6 @@
   <div class="row"><button class="ghost" id="cf-no">Cancel</button><button class="primary" id="cf-yes">Yes</button></div>
 </div></div>
 
-<script src="app.js?v=20261125-1430"></script>
+<script src="app.js?v=20261125-1558"></script>
 </body>
 </html>

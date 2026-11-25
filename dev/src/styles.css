@@ -117,3 +117,24 @@ textarea{width:100%;min-height:96px;border-radius:14px;border:2px solid var(--li
 .sect{font:400 20px/1.2 'Archivo Black',sans-serif;margin:10px 0 0}
 .seg[data-field=deck]{grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr))}
 .sync{margin:0;font-weight:700;font-size:15px;color:#d9c8e8}.sync.on{color:#3ddc97}.sync.warn{color:#ffd23f}
+/* turn flow */
+.turn{margin:0;font-weight:800;font-size:17px;text-align:center}.final{margin:0;background:var(--sun);color:var(--sunink);font-weight:800;border-radius:14px;padding:10px 14px;text-align:center}
+.tot.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.splash{position:fixed;inset:0;background:rgba(20,7,31,.94);display:none;align-items:center;justify-content:center;z-index:45;padding:20px}
+.splash.on{display:flex}
+.sp-card{background:var(--card);color:var(--cink);border-radius:var(--r);overflow:hidden;width:min(100%,400px);box-shadow:0 18px 40px rgba(0,0,0,.4)}
+.sp-body{padding:20px;text-align:center;display:flex;flex-direction:column;gap:10px}
+.sp-line{margin:0;font-weight:800;font-size:20px}.sp-sub{margin:0;color:var(--muted);font-weight:700}
+.sp-timer{font:400 72px/1 'Archivo Black',sans-serif;font-variant-numeric:tabular-nums}
+.sp-counts{font:400 26px/1.2 'Archivo Black',sans-serif}
+/* credits */
+#s-credits{justify-content:space-between}
+.roll{flex:1;overflow:hidden;position:relative;-webkit-mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(transparent,#000 12%,#000 88%,transparent)}
+.roll-in{text-align:center;padding:40vh 0;animation:roll var(--dur,40s) linear forwards}
+.roll h3{font:400 15px/1.2 Archivo,sans-serif;color:#cdb8e0;letter-spacing:.02em;margin:26px 0 4px;font-weight:700}
+.roll p{margin:0;font:400 24px/1.25 'Archivo Black',sans-serif;text-wrap:balance}
+.roll .big{font-size:40px;color:var(--sun)}.roll .list{font:700 18px/1.5 Archivo,sans-serif}
+@keyframes roll{from{transform:translateY(0)}to{transform:translateY(calc(-100% + 30vh))}}
+@media (prefers-reduced-motion:reduce){.roll{overflow:auto;-webkit-mask-image:none;mask-image:none}.roll-in{animation:none;padding:10px 0}}
+.roll.static{overflow:auto;-webkit-mask-image:none;mask-image:none}.roll.static .roll-in{animation:none;padding:10px 0}
+.toast{pointer-events:none}
