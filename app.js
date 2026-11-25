@@ -1,8 +1,8 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'5.0',build:'20261125-1558',perRound:10,skips:3,correct:1,buzz:-1,bonus:1,
+const CONFIG={version:'5.1',build:'20261125-1647',perRound:10,skips:3,
  times:[30,60,90,120],defaultTime:60,countdown:3,warnAt:10,mixedName:'Mixed',
- sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,creditSecondsPerLine:2.2};
+ sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
 // ============ helpers ============
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
@@ -24,15 +24,17 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v==null?(k in m
 const KEY='mt:v3';
 
 // ============ state: everything about a game lives in one record ============
-// S = {name, sound, current, games:{id:{id,partner,player,code,deck,time,seen:[ids],cycle,rnd,created,last}}, defaults:{player,deck,time}}
-const newSession=()=>({rounds:[],final:null,startedAt:Date.now()});
+// S = {name, sound, device, rulesSeen, liveRound, current, defaults:{deck,time},
+//      games:{id:{id, partner, partnerT, partnerDevice, playAs, player, code, deck, time, timeT, seen:[card ids], cycle, rnd, created, last, lastMsg,
+//                 session:{sid, prev, rounds:[{who:'me'|'them', rid, c, s, x, n, dur, deck, words|guessed}], final:{target}}}}}
+const newSession=sid=>({sid:sid||uid(),prev:null,rounds:[],final:null,startedAt:Date.now()});
 const newGame=o=>Object.assign({id:uid(),partner:'',playAs:null,session:newSession(),player:null,code:'',deck:'c',time:CONFIG.defaultTime,seen:[],cycle:0,rnd:Math.random().toString(36).slice(2,10),created:Date.now(),last:0},o);
 function migrate(){// version 2 kept one setup in mt:prefs with played cards per player number
- const p=store.get('mt:prefs',null),s={name:'',sound:'on',current:null,games:{},defaults:{player:'1',deck:'c',time:CONFIG.defaultTime}};
+ const p=store.get('mt:prefs',null),s={name:'',sound:'on',current:null,games:{},defaults:{deck:'c',time:CONFIG.defaultTime}};
  if(p&&p.player){const g=newGame({partner:p.partner||'',player:String(p.player),code:p.code||'',deck:{classic:'c',adult:'a',mixed:'all'}[p.deck]||'c',time:p.time||CONFIG.defaultTime,
   seen:store.get('mt:seen:'+p.player,[]),cycle:store.get('mt:cycle:'+p.player,0),rnd:p.rnd||undefined,last:Date.now()});
   if(!g.rnd)g.rnd=Math.random().toString(36).slice(2,10);
-  s.games[g.id]=g;s.current=g.id;s.name=p.name||'';s.sound=p.sound||'on';s.defaults={player:g.player,deck:g.deck,time:g.time}}
+  s.games[g.id]=g;s.current=g.id;s.name=p.name||'';s.sound=p.sound||'on';s.defaults={deck:g.deck,time:g.time}}
  return s}
 let S=store.get(KEY,null)||migrate();
 if(!S.device)S.device=uid();
@@ -43,7 +45,7 @@ const useGame=id=>{S.current=id;seen=new Set(G()?G().seen:[]);save();syncStart()
 const saveSeen=()=>{if(G()){G().seen=[...seen];save()}};
 const partner=()=>(G()&&G().partner)||'your partner';
 const myName=(g=G())=>(g&&g.playAs)||S.name||'You';
-const sess=(g=G())=>{if(!g)return newSession();if(!g.session)g.session=newSession();return g.session};
+const sess=(g=G())=>{if(!g)return newSession();if(!g.session)g.session=newSession();if(!g.session.sid)g.session.sid=uid();return g.session};
 const cap=t=>t.charAt(0).toUpperCase()+t.slice(1);
 
 // ============ cards (from cards.json) ============
@@ -72,7 +74,7 @@ const SHAPES={star:'M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9
  cloud:'M7 19a5 5 0 0 1-.9-9.9A6.5 6.5 0 0 1 18.6 8 5.5 5.5 0 0 1 18 19z',drop:'M12 2s7 7.6 7 12.5a7 7 0 0 1-14 0C5 9.6 12 2 12 2z',crown:'M3 18h18l-1.5-10-4.5 4-3-7-3 7-4.5-4z'};
 const COLS={red:'#ff5a5f',orange:'#ff9f1c',yellow:'#ffd23f',green:'#3ddc97',teal:'#2ec4b6',blue:'#4ea8ff',purple:'#b388ff',pink:'#ff7eb6'};
 function badgeHTML(g=G()){if(!g||!g.code)return'None';if(!loaded)return'…';
- const h=hash('badge|'+g.code+'|'+deckName(g.deck).toLowerCase()),sk=Object.keys(SHAPES),ck=Object.keys(COLS),s=sk[h%sk.length],c=ck[(h>>>8)%ck.length];
+ const h=hash('badge|'+g.code),sk=Object.keys(SHAPES),ck=Object.keys(COLS),s=sk[h%sk.length],c=ck[(h>>>8)%ck.length];
  return'<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="'+SHAPES[s]+'" fill="'+COLS[c]+'"/></svg>'+c[0].toUpperCase()+c.slice(1)+' '+s}
 
 // ============ sound, vibration, screen wake ============
@@ -89,6 +91,9 @@ async function wake(on){try{if(on&&'wakeLock' in navigator&&!wl){wl=await naviga
 
 // ============ screens and dialogs ============
 let screen='',draft=null;
+// many messages can arrive at once: redraw once per frame
+let renderQueued=false;const queueRender=()=>{if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;if(screen==='play')renderSync();else render()})};
+const setVal=(sel,v)=>{const el=$(sel);if(el&&document.activeElement!==el)el.value=v};
 function show(id){screen=id;$$('.screen').forEach(s=>s.classList.toggle('on',s.id==='s-'+id));window.scrollTo(0,0);render()}
 function toast(msg,ms=2600){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),ms)}
 const openModal=id=>$('#m-'+id).classList.add('on');
@@ -104,12 +109,14 @@ function renderSegs(){$$('.seg').forEach(seg=>{const t=target(seg.dataset.scope)
 document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(!b)return;const seg=b.parentElement,t=target(seg.dataset.scope),f=seg.dataset.field;
  if(f==='deck'&&seg.dataset.scope==='game'&&t.deck!==b.dataset.v&&sess(t).rounds.length){
   confirmBox('Switching decks ends this game and shows your game summary.',()=>{endGame('deck',null);t.deck=b.dataset.v;S.defaults.deck=t.deck;save();render();afterCredits=()=>suggestTime(t)},'Switch and end');return}
+ if(f==='player'&&seg.dataset.scope==='game'&&t.player&&t.player!==b.dataset.v&&(t.seen.length||sess(t).rounds.length)){
+  confirmBox('Switch to Player '+b.dataset.v+'? You\'ll get the other half of the cards, and '+partner()+' may have already given clues for some of them. Only do this if your phones picked the same player.',()=>{t.player=b.dataset.v;save();announce();render()},'Switch');return}
  t[f]=f==='time'?Number(b.dataset.v):b.dataset.v;if(f==='time'&&t===G())t.timeT=Date.now();
  if(seg.dataset.scope==='game'){if(f!=='player')S.defaults[f]=t[f];if(f==='time'||f==='player')announce()}save();render();
  if(f==='deck')suggestTime(t)});
 // a deck can carry a suggested round length (cards.json decks[].suggestTime)
 function suggestTime(t){const d=DECKS.find(x=>x.id===t.deck);if(!d||!d.suggestTime||t.time>=d.suggestTime)return;
- confirmBox(d.name+' plays best with '+fmt(d.suggestTime)+' rounds. Switch to '+fmt(d.suggestTime)+'?',()=>{t.time=d.suggestTime;if(t===G()){S.defaults.time=t.time;t.timeT=Date.now();announce()}save();render();toast('Rounds set to '+fmt(d.suggestTime))},'Switch')}
+ confirmBox(d.name+' plays best with '+fmt(d.suggestTime)+' rounds. Switch to '+fmt(d.suggestTime)+'?',()=>{t.time=d.suggestTime;t.timeChosen=true;if(t===G()){S.defaults.time=t.time;t.timeT=Date.now();announce()}save();render();toast('Rounds set to '+fmt(d.suggestTime))},'Switch')}
 
 function renderRules(){$('#rules-list').innerHTML=[
  ['Roles.','One of you gives clues, the other guesses. Swap after every round.'],
@@ -123,7 +130,7 @@ function renderRules(){$('#rules-list').innerHTML=[
  ['Final round.','Tap Final round to wrap up. You both finish with the same number of rounds, each of you plays one more, then the credits roll. Switching decks also ends the game.'],
  ['Your own cards.','The app makes one of you Player 1 and the other Player 2 the first time your phones connect, and you keep that for the whole saved game. Every card belongs to one player, so you never draw each other\'s cards, and cards you\'ve played don\'t come back.'],
  ['Saved games.','Each partner gets their own saved game with its own played cards. Switch games from the home screen.'],
- ['Code word.','You both type the same code word. That\'s how your phones find each other to share names, players and round length. Matching badges mean you\'re set up right.']
+ ['Code word.','You both type the same code word. That\'s how your phones find each other to share names, players and round length. Matching badges mean you typed the same word. Pick something only you two would use.']
 ].map(([b,t])=>'<li><b>'+esc(b)+'</b> '+esc(t)+'</li>').join('')}
 
 function render(){const g=G();renderSegs();
@@ -132,7 +139,7 @@ function render(){const g=G();renderSegs();
   const b=$('#start'),st=startState();b.disabled=!!st;b.textContent=st||'Start round';
   $('#h-manual').hidden=!!g.player;renderTurn();renderSync()}
  if(screen==='sum')renderTurn();
- if(screen==='set'&&g){$('#set-playas').value=g.playAs||'';$('#set-playas').placeholder=S.name;$('#set-partner').value=g.partner;$('#set-code').value=g.code;$('#set-name').value=S.name;$('#set-game-h').textContent='Game with '+partner();
+ if(screen==='set'&&g){setVal('#set-playas',g.playAs||'');$('#set-playas').placeholder=S.name;setVal('#set-partner',g.partner);setVal('#set-code',g.code);setVal('#set-name',S.name);$('#set-game-h').textContent='Game with '+partner();
   const p=pool();$('#set-seen').textContent=loaded?(p.length-unseenCount())+' of your '+p.length+' '+deckName(g.deck).toLowerCase()+' cards played in this game.':'';
   const out=DECKS.filter(d=>d.mixed===false).map(d=>d.name);$('#mixed-note').textContent=DECKS.length>1?CONFIG.mixedName+' shuffles every deck'+(out.length?' except '+out.join(' and '):'')+'.':'';
   $('#ver').textContent='Version '+CONFIG.version+' · build '+CONFIG.build+' · '+CARDS.length+' cards in '+DECKS.length+' decks'}
@@ -143,8 +150,10 @@ function startSetup(){draft={deck:S.defaults.deck,time:S.defaults.time};
  $('#setup-name').value=S.name;$('#setup-code').value='';closeModals();show('setup')}
 $('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCode($('#setup-code').value);
  if(!name){toast('Add a name so your partner sees it');return}if(!code){toast('Add a code word. Your partner types the same one.');return}
- if(!S.name)S.name=name;const g=newGame({deck:draft.deck,time:draft.time,code,last:Date.now(),timeT:0,playAs:name===S.name?null:name});
- S.games[g.id]=g;S.defaults={deck:g.deck,time:g.time};useGame(g.id);show('home');setTimeout(()=>openModal('rules'),250)};
+ // a team name in your very first game shouldn't become your usual name
+ if(!S.name&&!/\bteam\b/i.test(name))S.name=name;
+ const g=newGame({deck:draft.deck,time:draft.time,code,last:Date.now(),timeT:draft.timeChosen?Date.now():0,playAs:name===S.name?null:name});
+ S.games[g.id]=g;S.defaults={deck:g.deck,time:g.time};useGame(g.id);show('home');if(!S.rulesSeen){S.rulesSeen=true;save();setTimeout(()=>openModal('rules'),250)}};
 $('#setup-cancel').onclick=()=>show('home');
 function renderGames(){const list=Object.values(S.games).sort((a,b)=>(b.last||b.created)-(a.last||a.created));
  $('#games-list').innerHTML=list.map(g=>{const when=g.last?new Date(g.last).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'not played yet',cur=g.id===S.current;
@@ -178,8 +187,7 @@ $('#bk-copy').onclick=async()=>{const code=makeBackup(),box=$('#bk-text');
 $('#bk-open').onclick=()=>{const box=$('#bk-text');box.hidden=false;box.value='';box.placeholder='Paste your backup code here';$('#bk-restore').hidden=false;box.focus()};
 function restoreFrom(text){let next;try{next=readBackup(text)}catch(e){toast('That code didn\'t work. Check you copied all of it.');return}
  const n=Object.keys(next.games).length;confirmBox('Replace the saved games on this phone with the '+plural(n,'game')+' in this backup?',()=>{
-  next.device=S.device;S=next;save();useGame(S.current);['#bk-text','#bk-restore','#setup-bk-text','#setup-bk-go'].forEach(q=>$(q).hidden=true);if(G())show('home');else startSetup();
-syncStart();toast('Restored '+plural(n,'game'))},'Restore')}
+  next.device=S.device;S=next;save();useGame(S.current);['#bk-text','#bk-restore','#setup-bk-text','#setup-bk-go'].forEach(q=>$(q).hidden=true);if(G())show('home');else startSetup();toast('Restored '+plural(n,'game'))},'Restore')}
 $('#bk-restore').onclick=()=>restoreFrom($('#bk-text').value);
 $('#setup-bk').onclick=()=>{$('#setup-bk-text').hidden=false;$('#setup-bk-go').hidden=false;$('#setup-bk-text').focus()};
 $('#setup-bk-go').onclick=()=>restoreFrom($('#setup-bk-text').value);
@@ -190,13 +198,13 @@ function startRound(){if(startState())return;audio();const d=deal();if(!d.cards.
  if(d.fresh)toast('You\'ve played every card in this deck. Shuffling them all back in.',3800);
  G().last=Date.now();save();
  const rid=uid();
- game={rid,cards:d.cards,i:0,res:Array(d.cards.length).fill('none'),secs:[],shownAt:0,hist:[],skips:CONFIG.skips,score:0,left:G().time*1000,dur:G().time*1000,end:0,running:false,counting:true,lastTick:null,warned:false,pausedByDialog:false,deck:G().deck};
+ game={rid,cards:d.cards,i:0,res:Array(d.cards.length).fill('none'),secs:[],shownAt:0,hist:[],skips:CONFIG.skips,left:G().time*1000,dur:G().time*1000,end:0,running:false,counting:true,lastTick:null,warned:false,pausedByDialog:false,deck:G().deck};
  hideSplash();show('play');renderCard();renderHud();wake(true);
- const cd=CONFIG.countdown*800;send('start',{rid,left:game.left+cd,dur:game.dur});
+ const cd=CONFIG.countdown*800;send('start',{rid,left:game.left+cd,dur:game.dur});S.liveRound={game:S.current,rid};save();
  const c=$('#count'),n=$('#count-n');let k=CONFIG.countdown;c.classList.add('on');
  const step=()=>{if(!game||game.rid!==rid||game.cancelled){c.classList.remove('on');return}
   if(k===0){c.classList.remove('on');game.counting=false;sfx.go();go();return}n.textContent=k;n.style.animation='none';void n.offsetWidth;n.style.animation='';sfx.tick();k--;setTimeout(step,800)};step()}
-function cancelRound(msg){if(!game||!game.counting)return;game.cancelled=true;wake(false);game=null;$('#count').classList.remove('on');show('home');toast(msg,3500)}
+function cancelRound(msg){if(!game||!game.counting)return;game.cancelled=true;S.liveRound=null;save();wake(false);game=null;$('#count').classList.remove('on');show('home');toast(msg,3500)}
 function go(){game.running=true;game.end=performance.now()+game.left;if(!game.shownAt)game.shownAt=performance.now();if(game.pausedAt){game.shownAt+=performance.now()-game.pausedAt;game.pausedAt=0}loop()}
 function loop(){cancelAnimationFrame(raf);if(!game||!game.running)return;game.left=game.end-performance.now();const s=Math.ceil(game.left/1000);
  if(game.left<=0){finish('time');return}
@@ -213,11 +221,11 @@ function renderHud(){const n=game.cards.length;
  $('#p-info').textContent='Card '+Math.min(game.i+1,n)+' of '+n+' · '+plural(game.skips,'skip')+' left';
  $('#p-score').textContent=game.res.filter(r=>r==='correct').length;$('#skipn').textContent=game.skips?game.skips+' left':'none left';
  $('#b-skip').disabled=game.skips<=0;$('#b-undo').disabled=!game.hist.length;$('#timer').textContent=fmt(game.left/1000)}
-function act(kind){if(!game||!game.running)return;const now=performance.now();game.hist.push({i:game.i,score:game.score,skips:game.skips,shownAt:game.shownAt});
+function act(kind){if(!game||!game.running)return;const now=performance.now();game.hist.push({i:game.i,skips:game.skips,shownAt:game.shownAt});
  game.secs[game.i]=Math.round((now-game.shownAt)/100)/10;game.shownAt=now;game.res[game.i]=kind;markSeen(game.cards[game.i],true);saveSeen();
- if(kind==='correct'){game.score+=CONFIG.correct;sfx.ok()}else if(kind==='buzz'){game.score+=CONFIG.buzz;sfx.buzz();vibrate([80,60,80])}else{game.skips--;sfx.skip()}
+ if(kind==='correct')sfx.ok();else if(kind==='buzz'){sfx.buzz();vibrate([80,60,80])}else{game.skips--;sfx.skip()}
  game.i++;if(game.i>=game.cards.length){renderHud();finish('all');return}renderCard();renderHud()}
-function undo(){if(!game||!game.hist.length)return;const h=game.hist.pop();game.i=h.i;game.score=h.score;game.skips=h.skips;game.res[h.i]='none';game.shownAt=h.shownAt;
+function undo(){if(!game||!game.hist.length)return;const h=game.hist.pop();game.i=h.i;game.skips=h.skips;game.res[h.i]='none';game.shownAt=h.shownAt;
  markSeen(game.cards[h.i],false);saveSeen();renderCard();renderHud()}
 function finish(why){game.running=false;cancelAnimationFrame(raf);wake(false);$('#paused').classList.remove('on');sfx.end();vibrate(300);
  // the card on screen when time runs out or the round ends gets revealed, so it's retired too
@@ -226,7 +234,7 @@ function finish(why){game.running=false;cancelAnimationFrame(raf);wake(false);$(
  $('#sum-title').textContent=myName()+"'s round";$('#sum-why').textContent=why==='all'?'All '+game.cards.length+' done!':why==='time'?"Time's up":'Ended early';
  $('#t-c').textContent=c;$('#t-s').textContent=sk;$('#t-x').textContent=x;
  const used=Math.round(game.dur-Math.max(0,game.left)),words=game.cards.map((card,i)=>[card[4],game.res[i],game.secs[i]||null]).filter(w=>w[1]!=='none');
- sess().rounds.push({who:'me',rid:game.rid,at:Date.now(),c,s:sk,x,n:words.length,dur:used,deck:game.deck,words});save();
+ sess().rounds.push({who:'me',rid:game.rid,at:Date.now(),c,s:sk,x,n:words.length,dur:used,deck:game.deck,words});S.liveRound=null;save();
  send('end',{rid:game.rid,c,s:sk,x,cnt:words.length,dur:used,deck:game.deck,guessed:words.filter(w=>w[1]==='correct').map(w=>[w[0],w[2]])});
  const lab={correct:'✓ Correct',buzz:'✕ Buzzed',skip:'↷ Skipped',time:"Time's up",ended:'Ended'};
  $('#sum-list').innerHTML=game.cards.map((card,i)=>{const r=game.res[i];return r==='none'?'':'<li><span>'+esc(card[4])+'</span><span class="tag '+({time:'none',ended:'none'}[r]||r)+'">'+esc(lab[r])+'</span></li>'}).join('');
@@ -236,7 +244,7 @@ $('#start').onclick=startRound;
 $('#b-ok').onclick=()=>act('correct');$('#b-buzz').onclick=()=>act('buzz');$('#b-skip').onclick=()=>{if(game&&game.skips>0)act('skip')};
 $('#b-undo').onclick=undo;$('#b-pause').onclick=()=>pause(false);$('#resume').onclick=resume;
 $('#b-end').onclick=()=>{pause(true);confirmBox('End this round now? The card on screen counts as played. Cards you haven\'t reached go back into your deck.',()=>finish('end'),'End round')};
-$('#sum-done').onclick=()=>{const after=game&&game.endAfter;game=null;if(after)endGame(after.reason,after.n||partner());else if(!checkFinal())show('home')};
+$('#sum-done').onclick=()=>{const after=game&&game.endAfter;game=null;if(after)endGame(after.reason,after.n||partner(),after.next);else if(!checkFinal())show('home')};
 
 // ============ navigation ============
 $$('[data-open]').forEach(b=>b.addEventListener('click',()=>{if(game&&game.running)pause(true);openModal(b.dataset.open)}));
@@ -281,106 +289,132 @@ $('#mk-save').onclick=async()=>{const name='megans-taboo-'+($('#mk-w').value.tri
 // ============ partner sync: a free relay (ntfy.sh), keyed by the code word ============
 // One send() and one table of handlers. Every message carries the sender's name, player, round length and game state,
 // so a lost message heals itself at the next one (or the 90-second check-in).
+// Games are matched by a shared game id (sid), never by clock times, so two phones' clocks can disagree.
 const SYNC_URL=store.get('mt:syncUrl',null)||'https://ntfy.sh/';
-let es=null,syncTopic=null,heard={},beat=null,plive=null,spTimer=null,backoffUntil=0,pending=null;
+const LIVE_WINDOW=store.get('mt:liveWindow',null)||CONFIG.liveWindow;   // tests shorten this
+let es=null,syncTopic=null,heard={},beat=null,plive=null,spTimer=null,backoffUntil=0,pending=null,replaying=false,replayTimer=null,replayBuf={};
 const topicFor=code=>'mtaboo-'+hash('megans-taboo|'+code).toString(36)+hash(code+'|mt|'+code.length).toString(36);
 const other=p=>p==='1'?'2':'1';let assignTimer=null;
-const peerNow=()=>{const now=Date.now();return Object.entries(heard).filter(([,h])=>now-h.at<CONFIG.syncHeardFor)};
+// a partner counts as connected if their phone checked in recently (check-ins come every 90 seconds while the app is open)
+const peerNow=()=>{const now=Date.now(),g=G();return Object.entries(heard).filter(([d,h])=>now-h.seenAt<LIVE_WINDOW&&(!g||!g.partnerDevice||d===g.partnerDevice))};
 const connected=()=>peerNow().length>0;
+const theyPlayed=(g=G())=>sess(g).rounds.some(r=>r.who==='them');
+const isSolo=(g=G())=>!connected()&&!theyPlayed(g);   // one rule for "playing alone", used everywhere
 function syncStart(){if(!CONFIG.sync)return;const g=G(),t=g&&g.code?topicFor(g.code):null;if(t===syncTopic){send('hi');return}
  syncStop();syncTopic=t;if(!t){renderSync();return}
- try{es=new EventSource(SYNC_URL+t+'/sse?since=12h');
-  es.onmessage=e=>{try{receive(JSON.parse(JSON.parse(e.data).message))}catch(_){}};
-  es.onopen=()=>{send('hi');renderSync()};es.onerror=()=>renderSync()}catch(e){es=null}
+ // fetch only what we haven't seen: since the last message id, or the last 10 minutes
+ // while catching up, keep only each phone's newest message: it carries that phone's whole game state
+ const since=g.lastMsg||'10m';replaying=true;replayBuf={};clearTimeout(replayTimer);
+ try{es=new EventSource(SYNC_URL+t+'/sse?since='+encodeURIComponent(since));
+  es.onmessage=e=>{try{const o=JSON.parse(e.data);if(o.id){const gg=G();if(gg)gg.lastMsg=o.id}const m=JSON.parse(o.message);
+   if(replaying){if(m&&m.d&&(!replayBuf[m.d]||replayBuf[m.d].at<m.at))replayBuf[m.d]=m;return}receive(m)}catch(_){}};
+  es.onopen=()=>{clearTimeout(replayTimer);replayTimer=setTimeout(()=>{const buf=Object.values(replayBuf).sort((a,b)=>a.at-b.at),ended=new Set(buf.map(m=>m.st&&m.st.prev).filter(Boolean));
+   // a phone still announcing a game that another phone has since ended is out of date: use only its name and settings
+   buf.forEach(m=>{if(m.st&&ended.has(m.st.sid)&&m.type!=='over')m=Object.assign({},m,{st:{}});try{receive(m)}catch(_){}});replayBuf={};
+   replaying=false;save();if(plive)paintSplash();queueRender()},1200);send('hi');renderSync()};
+  es.onerror=()=>renderSync()}catch(e){es=null}
  clearInterval(beat);beat=setInterval(()=>{if(document.visibilityState==='visible')send('hi');renderSync();renderTurn()},CONFIG.syncBeat);renderSync()}
 function syncStop(){if(es){es.close();es=null}syncTopic=null;heard={};plive=null;hideSplash();clearInterval(beat)}
 const announce=()=>send('hi');
 function myState(){const g=G(),se=sess(g),mine=se.rounds.filter(r=>r.who==='me'),last=mine.slice(-1)[0];
- return{rs:mine.map(r=>[r.rid,r.at,r.c,r.s,r.x,r.n,r.dur,r.deck]),ov:se.after||0,fin:se.final?se.final.target:null,
+ return{sid:se.sid,prev:se.prev||null,n:se.rounds.length,rs:mine.map(r=>[r.rid,r.c,r.s,r.x,r.n,r.dur,r.deck]),fin:se.final?se.final.target:null,
   live:game&&!game.cancelled&&(game.running||game.counting||game.pausedAt)?{rid:game.rid,left:Math.max(0,game.running?game.end-performance.now():game.left),paused:!game.running&&!game.counting}:null,
-  last:last?{rid:last.rid,at:last.at,c:last.c,s:last.s,x:last.x,n:last.n,dur:last.dur,deck:last.deck,guessed:last.words.filter(w=>w[1]==='correct').map(w=>[w[0],w[2]])}:null}}
+  last:last?{rid:last.rid,c:last.c,s:last.s,x:last.x,n:last.n,dur:last.dur,deck:last.deck,guessed:last.words.filter(w=>w[1]==='correct').map(w=>[w[0],w[2]])}:null}}
 function send(type,data={}){const g=G();if(!CONFIG.sync||!syncTopic||!g)return;
- const body=JSON.stringify(Object.assign({v:2,ver:CONFIG.build,type,d:S.device,n:myName(g),p:g.player||null,tm:g.time,tt:g.timeT||0,at:Date.now(),st:myState()},data));
+ const body=JSON.stringify(Object.assign({v:3,ver:CONFIG.build,type,d:S.device,n:myName(g),p:g.player||null,tm:g.time,tt:g.timeT||0,at:Date.now(),st:myState()},data));
  if(Date.now()<backoffUntil&&type==='hi'){pending=body;return}post(body)}
 function post(body,tries=0){fetch(SYNC_URL+syncTopic,{method:'POST',body}).then(r=>{
   if(r.status===429){backoffUntil=Date.now()+30000;if(tries<2)setTimeout(()=>post(body,tries+1),30000*(tries+1))}
   else if(pending&&Date.now()>=backoffUntil){const p=pending;pending=null;post(p)}}).catch(()=>{if(tries<2)setTimeout(()=>post(body,tries+1),5000*(tries+1))})}
-// --- handlers: one per message type ---
+// live messages count as just sent (so clocks don't matter); only replayed history uses the message's age
+const age=m=>replaying?Math.max(0,Date.now()-m.at):0;
+const fresh=(m,ms=CONFIG.syncHeardFor)=>age(m)<ms;
+const sameGame=(g,m)=>m.st&&m.st.sid===sess(g).sid;
+const roundKnown=(g,rid)=>sess(g).rounds.some(r=>r.rid===rid);
+function addTheirRound(g,r){const se=sess(g);if(!r||roundKnown(g,r.rid))return false;
+ se.rounds.push({who:'them',rid:r.rid,at:Date.now(),c:r.c,s:r.s,x:r.x,n:r.cnt??r.n,dur:r.dur,deck:r.deck,guessed:r.guessed||[]});save();return true}
+// --- handlers: one per message type; each only acts on messages from the same game ---
 const HANDLERS={
  hi:()=>{},
- start:(m,g)=>{if(roundKnown(g,m.rid)||m.at<sess(g).startedAt)return;
+ start:(m,g)=>{if(!sameGame(g,m)||roundKnown(g,m.rid))return;
   if(game&&!game.cancelled){if(game.counting&&S.device>m.d)cancelRound(cap(m.n||partner())+' started first. Their round is on.');else return}
   livePartner(m.rid,m.left-age(m),false,m.dur)},
  pause:(m)=>{if(plive&&plive.rid===m.rid){plive.paused=true;plive.left=m.left;paintSplash()}},
- resume:(m)=>{if(plive&&plive.rid===m.rid){livePartner(m.rid,m.left-age(m),false,plive.dur)}},
- end:(m,g)=>{addTheirRound(g,m);if(plive&&plive.rid===m.rid){plive=null;hideSplash()}if(fresh(m)&&!game&&roundKnown(g,m.rid)&&m.at>=sess(g).startedAt)splashSummary(m);else checkFinal()},
- final:(m,g)=>{const se=sess(g);if(m.at<se.startedAt-60000)return;if(!se.final||se.final.target<m.target){se.final={target:m.target,at:m.at};save();if(fresh(m))toast(cap(m.n||partner())+' started the final round.');render()}},
- over:(m,g)=>{const se=sess(g);if(m.at<se.startedAt||!fresh(m,120000)||!se.rounds.length)return;if(game)game.endAfter=m;else endGame(m.reason,m.n||partner())}};
-const age=m=>Math.max(0,Date.now()-m.at);
-const fresh=(m,ms=CONFIG.syncHeardFor)=>age(m)<ms;
-const roundKnown=(g,rid)=>sess(g).rounds.some(r=>r.rid===rid);
-function addTheirRound(g,r){const se=sess(g);if(!r||roundKnown(g,r.rid)||r.at<se.startedAt-5000)return false;
- se.rounds.push({who:'them',rid:r.rid,at:r.at,c:r.c,s:r.s,x:r.x,n:r.cnt??r.n,dur:r.dur,deck:r.deck,guessed:r.guessed||[]});se.rounds.sort((a,b)=>a.at-b.at);save();return true}
-function receive(m){const g=G();if(!g||!m||m.v!==2||m.d===S.device||typeof m.at!=='number')return;
- const prev=heard[m.d];heard[m.d]={name:clean(m.n),player:m.p==='1'||m.p==='2'?m.p:null,at:Math.max(m.at,prev?prev.at:0),ver:m.ver};
- if(prev&&prev.at>m.at&&m.type==='hi')return;
+ resume:(m)=>{if(plive&&plive.rid===m.rid)livePartner(m.rid,m.left-age(m),false,plive.dur)},
+ abort:(m)=>{if(plive&&plive.rid===m.rid){plive=null;hideSplash();if(!replaying)toast(cap(m.n||partner())+"'s round was interrupted. It's still their turn.")}},
+ end:(m,g)=>{if(!sameGame(g,m))return;addTheirRound(g,m);if(plive&&plive.rid===m.rid){plive=null;hideSplash()}
+  if(roundKnown(g,m.rid)&&!replaying&&!game)splashSummary(m);else checkFinal()},
+ final:(m,g)=>{if(!sameGame(g,m))return;const se=sess(g);if(!se.final||se.final.target<m.target){se.final={target:m.target};save();if(!replaying)toast(cap(m.n||partner())+' started the final round.')}},
+ over:(m,g)=>{if(!sameGame(g,m)||!sess(g).rounds.length){if(m.next&&!sess(g).rounds.length)sess(g).sid=m.next;return}
+  if(game)game.endAfter=m;else endGame(m.reason,m.n||partner(),m.next)}};
+function receive(m){const g=G();if(!g||!m||m.v!==3||m.d===S.device||typeof m.at!=='number')return;
+ // once players are set, this game only listens to its partner's phone (strangers can pick the same code word)
+ if(g.partnerDevice&&m.d!==g.partnerDevice)return;
+ const prev=heard[m.d];heard[m.d]={name:clean(m.n),player:m.p==='1'||m.p==='2'?m.p:null,at:m.at,seenAt:replaying?Date.now()-age(m):Date.now(),ver:m.ver};
+ if(prev&&prev.at>m.at&&m.type==='hi'){heard[m.d]=prev;return}
  let changed=false;const theirs=heard[m.d].player;
  // players are picked on first contact: a phone that already has a player keeps it; otherwise the lower phone id is Player 1
- if(!g.player&&fresh(m)){clearTimeout(assignTimer);assignTimer=setTimeout(()=>assign(m.d),1200)}
+ if(!g.player&&Date.now()-heard[m.d].seenAt<LIVE_WINDOW){clearTimeout(assignTimer);assignTimer=setTimeout(()=>assign(m.d),200)}
+ if(g.player&&!g.partnerDevice&&theirs&&theirs!==g.player){g.partnerDevice=m.d;changed=true}
  const nm=clean(m.n);if(nm&&nm!==g.partner&&m.at>(g.partnerT||0)){g.partner=nm;g.partnerT=m.at;changed=true}
  if(CONFIG.times.includes(m.tm)&&(m.tt||0)>(g.timeT||0)){const was=g.time;g.time=m.tm;g.timeT=m.tt;changed=true;
-  if(was!==m.tm&&fresh(m))toast(cap(nm||partner())+' set rounds to '+fmt(m.tm)+(game?'. It starts next round.':''))}
- // game state carried by every message: heals lost messages
+  if(was!==m.tm&&!replaying)toast(cap(nm||partner())+' set rounds to '+fmt(m.tm)+(game?'. It starts next round.':''))}
+ // game state carried by every message: line up on one game id, then heal anything we missed
  const st=m.st||{},se=sess(g);
- // they ended a game after our latest round, and we missed the message
- const lastAt=se.rounds.length?se.rounds[se.rounds.length-1].at:0;
- if(m.type!=='over'&&st.ov&&st.ov>se.startedAt&&st.ov>lastAt&&se.rounds.length&&fresh(m)){endGame('over',nm||partner());return}
- if(st.last&&addTheirRound(g,st.last))changed=true;
- (st.rs||[]).forEach(r=>{if(addTheirRound(g,{rid:r[0],at:r[1],c:r[2],s:r[3],x:r[4],n:r[5],dur:r[6],deck:r[7]}))changed=true});
- if(st.fin&&(!se.final||se.final.target<st.fin)&&!(st.ov&&st.ov<se.startedAt-60000)&&se.rounds.some(r=>r.who==='them')){se.final={target:st.fin,at:m.at};changed=true}
- if(m.type==='hi'&&fresh(m,30000)){if(st.live&&!plive&&!roundKnown(g,st.live.rid))livePartner(st.live.rid,st.live.left-age(m),st.live.paused,null);
-  else if(!st.live&&plive){plive=null;hideSplash()}}
+ if(st.sid&&st.sid!==se.sid){
+  if(st.prev&&st.prev===se.sid&&se.rounds.length&&m.type!=='over'){endGame('over',nm||partner(),st.sid);return}   // they ended our game and we missed it
+  // join their game, unless it's one we already finished
+  if(!se.rounds.length&&!(g.ended||[]).includes(st.sid)&&(st.n>0||st.sid<se.sid)){se.sid=st.sid;changed=true}}
+ if(sameGame(g,m)){
+  if(st.last&&addTheirRound(g,st.last))changed=true;
+  (st.rs||[]).forEach(r=>{if(addTheirRound(g,{rid:r[0],c:r[1],s:r[2],x:r[3],n:r[4],dur:r[5],deck:r[6]}))changed=true});
+  if(st.fin&&(!se.final||se.final.target<st.fin)){se.final={target:st.fin};changed=true}
+  if(m.type==='hi'&&fresh(m,30000)){if(st.live&&!plive&&!roundKnown(g,st.live.rid))livePartner(st.live.rid,st.live.left-age(m),st.live.paused,null);
+   else if(!st.live&&plive){plive=null;hideSplash()}}}
  if(changed)save();
  (HANDLERS[m.type]||(()=>{}))(m,g);
  if(m.ver&&m.ver>CONFIG.build)showUpdate();
- if(screen!=='play')render();else renderSync()}
+ queueRender()}
 function assign(dev){const g=G(),h=heard[dev];if(!g||g.player||!h)return;
- g.player=h.player?other(h.player):(S.device<dev?'1':'2');seen=new Set(g.seen);save();send('hi');render();
+ g.player=h.player?other(h.player):(S.device<dev?'1':'2');g.partnerDevice=dev;seen=new Set(g.seen);save();send('hi');render();
  toast('You\'re Player '+g.player+'. '+cap(h.name||partner())+' is Player '+other(g.player)+'.')}
 function showUpdate(){if($('#upd'))return;const b=document.createElement('button');b.id='upd';b.className='primary';b.textContent='Update available. Tap to reload';
  b.style.cssText='position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top));z-index:60;min-height:48px';b.onclick=()=>location.reload();document.body.appendChild(b)}
 
 // ---------- the guesser's splash card ----------
-function livePartner(rid,left,paused,dur){if(left<=0&&!paused)return;plive={rid,left,paused,dur:dur||plive&&plive.dur||null,at:performance.now()};paintSplash()}
+function livePartner(rid,left,paused,dur){if(left<=0&&!paused)return;plive={rid,left,paused,dur:dur||plive&&plive.dur||null,at:performance.now()};if(!replaying)paintSplash()}
 function liveLeft(){if(!plive)return 0;return plive.paused?plive.left:plive.left-(performance.now()-plive.at)}
 function paintSplash(){const sp=$('#splash');if(!plive||screen==='play'){if(sp.dataset.mode==='live')hideSplash();return}
  sp.dataset.mode='live';$('#sp-name').textContent=cap(partner());$('#sp-line').textContent='is giving clues';$('#sp-sub').textContent=plive.paused?'Paused':'Just guess!';
- $('#sp-ok').hidden=true;$('#sp-timer').hidden=false;sp.classList.add('on');clearInterval(spTimer);
- const tick=()=>{if(!plive){hideSplash();return}const l=liveLeft();if(l<=-4000){plive=null;hideSplash();render();return}$('#sp-timer').textContent=fmt(Math.min(l,plive.dur||l)/1000)};tick();spTimer=setInterval(tick,250);render()}
+ $('#sp-ok').hidden=true;$('#sp-timer').hidden=false;$('#sp-final').hidden=!!sess().final;sp.classList.add('on');clearInterval(spTimer);
+ const tick=()=>{if(!plive){hideSplash();return}const l=liveLeft();if(l<=-4000){plive=null;hideSplash();queueRender();return}$('#sp-timer').textContent=fmt(Math.min(l,plive.dur||l)/1000)};tick();spTimer=setInterval(tick,250);queueRender()}
 function splashSummary(m){clearInterval(spTimer);const sp=$('#splash');sp.dataset.mode='sum';
  $('#sp-name').textContent=cap(m.n||partner())+"'s round";$('#sp-line').innerHTML='<span class="sp-counts">'+esc(m.c+' guessed · '+m.s+' skipped · '+m.x+' buzzed')+'</span>';
- const done=finalDone();$('#sp-timer').hidden=true;$('#sp-sub').textContent=done?'That was the last round.':'Your turn to give clues.';
- $('#sp-ok').textContent=done?'See the credits':'Got it';$('#sp-ok').hidden=false;sp.classList.add('on');render()}
+ const done=finalDone();$('#sp-timer').hidden=true;$('#sp-final').hidden=true;$('#sp-sub').textContent=done?'That was the last round.':turnText();
+ $('#sp-ok').textContent=done?'See the credits':'Got it';$('#sp-ok').hidden=false;sp.classList.add('on');queueRender()}
 function hideSplash(){clearInterval(spTimer);const sp=$('#splash');sp.classList.remove('on');sp.dataset.mode=''}
 $('#sp-ok').onclick=()=>{hideSplash();if(!checkFinal())render()};
 
 // ---------- whose turn, final round ----------
 function counts(g=G()){const se=sess(g);return{mine:se.rounds.filter(r=>r.who==='me').length,theirs:se.rounds.filter(r=>r.who==='them').length+(plive?1:0)}}
-const finalLeftMine=()=>{const se=sess();if(!se.final)return null;return Math.max(0,se.final.target-counts().mine)};
+function finalLeft(g=G()){const se=sess(g);if(!se.final)return null;const c=counts(g);return{mine:Math.max(0,se.final.target-c.mine),theirs:isSolo(g)?0:Math.max(0,se.final.target-c.theirs)}}
+const finalLeftMine=()=>{const f=finalLeft();return f?f.mine:null};
+// one place decides what "whose turn" says, so the home screen, splash and summary always agree
+function turnText(g=G()){const se=sess(g),last=se.rounds[se.rounds.length-1],P=cap(partner()),f=finalLeft(g);
+ if(plive)return P+' is giving clues now.';
+ if(f){if(!f.mine&&f.theirs)return P+"'s final "+(f.theirs>1?'rounds are':'round is')+' next.';if(f.mine&&!f.theirs)return'Your final '+(f.mine>1?'rounds are':'round is')+' next.'}
+ return!last?'Either of you can start.':last.who==='me'&&!isSolo(g)?P+"'s turn to give clues.":'Your turn to give clues.'}
 function startState(){const g=G();if(!loaded)return'Loading cards…';if(!g||!g.player)return'Waiting for '+partner()+"'s phone…";
  if(plive)return cap(partner())+' is giving clues…';if(finalLeftMine()===0)return'Waiting for '+partner()+"'s final round…";return''}
-function renderTurn(){const g=G(),t=$('#h-turn'),f=$('#h-final');if(!g||!t)return;const se=sess(g),last=se.rounds[se.rounds.length-1];
- const show=connected()||se.rounds.some(r=>r.who==='them');t.hidden=!show;
- if(show)t.textContent=plive?cap(partner())+' is giving clues now.':!last?'Either of you can start.':last.who==='me'?cap(partner())+"'s turn to give clues.":'Your turn to give clues.';
- if(se.final){const c=counts(g),solo=!connected()&&!se.rounds.some(r=>r.who==='them'),mine=Math.max(0,se.final.target-c.mine),theirs=Math.max(0,se.final.target-c.theirs);
-  f.hidden=false;f.textContent='Final round: '+(solo?'':cap(partner())+' has '+plural(theirs,'round')+' left, ')+'you have '+plural(mine,'round')+' left.'}else f.hidden=true;
- $$('[data-final]').forEach(b=>b.hidden=!!se.final||!se.rounds.length);
- const sn=$('#sum-next');if(sn&&screen==='sum')sn.textContent=se.final&&finalLeftMine()===0?'That was your final round.':cap(partner())+"'s turn to give clues."}
+function renderTurn(){const g=G(),t=$('#h-turn'),f=$('#h-final');if(!g||!t)return;const se=sess(g);
+ const show=connected()||theyPlayed(g);t.hidden=!show;if(show)t.textContent=turnText(g);
+ const fl=finalLeft(g);if(fl){f.hidden=false;f.textContent='Final round: '+(isSolo(g)?'':cap(partner())+' has '+plural(fl.theirs,'round')+' left, ')+'you have '+plural(fl.mine,'round')+' left.'}else f.hidden=true;
+ $$('#final-btn,#sum-final').forEach(b=>b.hidden=!!se.final||!se.rounds.length);
+ const sn=$('#sum-next');if(sn&&screen==='sum')sn.textContent=fl&&!fl.mine?'That was your final round.':turnText(g)}
 $$('[data-final]').forEach(b=>b.onclick=()=>confirmBox('Start the final round? You\'ll both finish with the same number of rounds, then the credits roll.',()=>{
- const se=sess(),c=counts(),solo=!connected();se.final={target:(solo?c.mine:Math.max(c.mine,c.theirs))+1,at:Date.now()};save();send('final',{target:se.final.target});
- if(screen==='sum'){game=null;show('home')}else render()},'Final round'));
-function finalDone(g=G()){const se=sess(g);if(!se.final)return false;const c=counts(g),solo=!connected()&&!se.rounds.some(r=>r.who==='them');
- return c.mine>=se.final.target&&(solo||c.theirs>=se.final.target)&&!plive}
+ const se=sess(),c=counts();se.final={target:(isSolo()?c.mine:Math.max(c.mine,c.theirs))+1};save();send('final',{target:se.final.target});
+ $('#sp-final').hidden=true;if(screen==='sum'){game=null;show('home')}else render()},'Final round'));
+function finalDone(g=G()){const f=finalLeft(g);return!!f&&!f.mine&&!f.theirs&&!plive}
 function checkFinal(){if(game&&(game.running||game.counting))return false;if(!finalDone())return false;game=null;endGame('final',null);return true}
 
 // ---------- the end of a game: credits ----------
@@ -407,14 +441,17 @@ function creditFacts(se){const mineR=se.rounds.filter(r=>r.who==='me'),theirR=se
   tough:(allWords.find(w=>w[1]==='skip')||[])[0]||null,perfect:perfectMine+perfectTheirs?myName()+' '+perfectMine+' · '+cap(partner())+' '+perfectTheirs:'',
   buzz:sum(mineR,'x')+sum(theirR,'x'),buzzMine:sum(mineR,'x'),buzzTheirs:sum(theirR,'x'),decks:decks.join(', '),
   gave:allWords.map(w=>w[0]),heardW:heardWords.map(w=>w[0])}}
-function endGame(reason,byName){const g=G();if(!g)return;const se=sess(g);hideSplash();plive=null;
- if(!se.rounds.length){g.session=newSession();save();render();return}
+function endGame(reason,byName,nextSid){const g=G();if(!g)return;const se=sess(g);hideSplash();plive=null;
+ const next=newSession(nextSid);next.prev=se.sid;
+ if(!se.rounds.length){g.ended=[se.sid].concat(g.ended||[]).slice(0,10);g.session=next;save();render();return}
  const k=creditFacts(se),lines=CREDITS.map(f=>f(k)).filter(Boolean);
  $('#cr-why').textContent=reason==='deck'&&byName?cap(byName)+' switched decks. Here\'s your game summary.':reason==='deck'?'You switched decks, so this game is over.':reason==='over'&&byName?cap(byName)+' ended the game.':'';
  $('#cr-in').innerHTML=lines.map(l=>l[0]==='big'?'<p class="big">'+esc(l[1])+'</p>':l[0]==='list'?'<h3>'+esc(l[1])+'</h3><p class="list">'+esc(l[2])+'</p>':'<h3>'+esc(l[0])+'</h3><p>'+esc(l[1])+'</p>').join('');
  $('#cr-in').style.setProperty('--dur',Math.max(18,lines.length*CONFIG.creditSecondsPerLine+(k.gave.length+k.heardW.length)*.25)+'s');
  $('#cr-roll').classList.remove('static');$('#cr-in').style.animation='none';void $('#cr-in').offsetWidth;$('#cr-in').style.animation='';
- g.session=newSession();g.session.after=Date.now();save();if(!byName)send('over',{reason});game=null;show('credits')}
+ const endedSid=se.sid;g.ended=[endedSid].concat(g.ended||[]).slice(0,10);g.session=next;save();
+ // tell the partner which game ended (sid) and which game comes next, so both phones move on together
+ if(!byName)send('over',{reason,st:Object.assign(myState(),{sid:endedSid}),next:next.sid});game=null;show('credits')}
 $('#cr-skip').onclick=()=>$('#cr-roll').classList.add('static');
 let afterCredits=null;
 $('#cr-done').onclick=()=>{show('home');const f=afterCredits;afterCredits=null;if(f)f()};
@@ -425,12 +462,15 @@ function renderSync(){const el=$('#h-sync');if(!el)return;const g=G();el.hidden=
  if(clash){el.textContent='⚠ You and '+(clash.name||partner())+' are both Player '+g.player+'. One of you should switch in Settings.';el.className='sync warn'}
  else if(peers.length){el.textContent='● Synced with '+(peers[0].name||partner());el.className='sync on'}
  else{el.textContent=es&&es.readyState===1?'Waiting for '+partner()+"'s phone…":es&&es.readyState===2?"Can't reach "+partner()+"'s phone. Playing solo.":'Connecting…';el.className='sync'}}
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&CONFIG.sync){if(!es||es.readyState===2){syncTopic=null;syncStart()}else send('hi')}});
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&CONFIG.sync){if(!es||es.readyState===2){syncTopic=null;syncStart()}else send('hi');queueRender()}});
 
 // ============ start ============
 renderRules();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(screen==='mk')drawMaker()});
 if(G())show('home');else startSetup();
+syncStart();
+// the app closed mid-round last time: tell the partner's phone so its splash clears (the round doesn't count)
+if(S.liveRound){const lr=S.liveRound;S.liveRound=null;save();if(lr.game===S.current)setTimeout(()=>send('abort',{rid:lr.rid}),1500)}
 fetch('cards.json?v='+CONFIG.build,{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{
  DECKS=d.decks;CARDS=d.cards;CARDS.forEach(c=>{BYID.set(c[0],c);const w=c[6]??c[0];if(!GROUP.has(w))GROUP.set(w,[]);GROUP.get(w).push(c[0])});loaded=true;
  // tidy: drop played cards that no longer exist, and decks that were removed

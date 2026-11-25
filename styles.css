@@ -138,3 +138,4 @@ textarea{width:100%;min-height:96px;border-radius:14px;border:2px solid var(--li
 @media (prefers-reduced-motion:reduce){.roll{overflow:auto;-webkit-mask-image:none;mask-image:none}.roll-in{animation:none;padding:10px 0}}
 .roll.static{overflow:auto;-webkit-mask-image:none;mask-image:none}.roll.static .roll-in{animation:none;padding:10px 0}
 .toast{pointer-events:none}
+.modal{z-index:50}.toast{z-index:56}.sp-card .ghost{background:var(--line);color:var(--cink)}

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261125-1558">
+<link rel="stylesheet" href="styles.css?v=20261125-1647">
 </head>
 <body>
 <div class="app">
@@ -92,7 +92,7 @@
     <p class="note">You and your partner can pick different decks. You'll still never draw each other's cards. <span id="mixed-note"></span></p></div>
   <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div>
     <p class="note">Set automatically when your phones connect. Only change it if they can't connect, and make sure your partner picks the other one.</p></div>
-  <label class="f">Code word <small>Sets your shuffle and the match badge. Same word and deck on both phones gives the same badge. Capitals and spaces don't matter.</small>
+  <label class="f">Code word <small>Your phones use it to find each other. The same word gives the same badge. Capitals and spaces don't matter. Pick something only you two would use.</small>
     <input type="text" id="set-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="None (plain shuffle)"></label>
   <div class="group"><b>Round length</b><div class="seg" data-field="time" data-scope="game"></div></div>
   <div class="group"><b>Cards you've played</b><p class="note" id="set-seen"></p>
@@ -143,7 +143,8 @@
 <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="sp-name">
   <div class="sp-card"><div class="band"><div class="w" id="sp-name">Mom</div></div>
     <div class="sp-body"><p class="sp-line" id="sp-line">is giving clues</p><div class="sp-timer" id="sp-timer">1:00</div>
-      <p class="sp-sub" id="sp-sub">Just guess!</p><button class="primary" id="sp-ok" hidden>Got it</button></div></div>
+      <p class="sp-sub" id="sp-sub">Just guess!</p><button class="primary" id="sp-ok" hidden>Got it</button>
+      <button class="ghost" id="sp-final" data-final hidden>Final round</button></div></div>
 </div>
 
 <div class="modal" id="m-rules" role="dialog" aria-modal="true" aria-labelledby="rules-h"><div class="sheet">
@@ -161,6 +162,6 @@
   <div class="row"><button class="ghost" id="cf-no">Cancel</button><button class="primary" id="cf-yes">Yes</button></div>
 </div></div>
 
-<script src="app.js?v=20261125-1558"></script>
+<script src="app.js?v=20261125-1647"></script>
 </body>
 </html>

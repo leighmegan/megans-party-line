@@ -1,6 +1,7 @@
 """Megan's Taboo regression suite. Builds nothing: run python3 build.py first, then  python3 tests/run.py [--slow]
 Serves dist/site plus a local stand-in for the ntfy.sh relay, and drives phones in headless Chrome."""
-import asyncio, json, os, queue, sys, threading
+import asyncio, json, os, queue, sys, threading, time
+from urllib.parse import urlparse, parse_qs
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); SITE = os.path.join(ROOT, "dist/site"); PORT = 8802
@@ -11,7 +12,7 @@ for c in CARDS.values(): BYWORD.setdefault(c[4], []).append(c)
 
 # ---------- stand-in relay (same API shape as ntfy.sh: POST /topic, GET /topic/sse) ----------
 topics, lock, posts = {}, threading.Lock(), []
-DROP = set()   # message types the stand-in relay throws away, to test self-healing
+DROP = set(); SINCE = []   # message types the stand-in relay throws away, to test self-healing
 class H(SimpleHTTPRequestHandler):
     def __init__(s, *a, **k): super().__init__(*a, directory=SITE, **k)
     def log_message(s, *a): pass
@@ -20,15 +21,19 @@ class H(SimpleHTTPRequestHandler):
         if json.loads(body).get("type") in DROP:
             s.send_response(200); s.send_header("Access-Control-Allow-Origin", "*"); s.end_headers(); s.wfile.write(b"{}"); return
         with lock:
-            t = topics.setdefault(topic, {"msgs": [], "subs": []}); t["msgs"].append(body)
-            for q in t["subs"]: q.put(body)
+            t = topics.setdefault(topic, {"msgs": [], "subs": []}); msg = {"id": f"m{len(posts)}", "time": time.time(), "message": body}; t["msgs"].append(msg)
+            for q in t["subs"]: q.put(msg)
         s.send_response(200); s.send_header("Access-Control-Allow-Origin", "*"); s.end_headers(); s.wfile.write(b"{}")
     def do_GET(s):
         if not s.path.startswith("/ntfy/"): return super().do_GET()
-        topic = s.path.split("/")[2]; q = queue.Queue()
-        with lock: t = topics.setdefault(topic, {"msgs": [], "subs": []}); old = list(t["msgs"]); t["subs"].append(q)
+        topic = s.path.split("/")[2]; q = queue.Queue(); since = parse_qs(urlparse(s.path).query).get("since", ["all"])[0]; SINCE.append(since)
+        with lock:
+            t = topics.setdefault(topic, {"msgs": [], "subs": []}); old = list(t["msgs"]); t["subs"].append(q)
+        if since.endswith("m") and since[:-1].isdigit(): old = [m for m in old if m["time"] >= time.time() - 60 * int(since[:-1])]
+        elif since != "all":
+            ids = [m["id"] for m in old]; old = old[ids.index(since) + 1:] if since in ids else old
         s.send_response(200); s.send_header("Access-Control-Allow-Origin", "*"); s.send_header("Content-Type", "text/event-stream"); s.end_headers()
-        send = lambda m: (s.wfile.write(("data: " + json.dumps({"event": "message", "message": m}) + "\n\n").encode()), s.wfile.flush())
+        send = lambda m: (s.wfile.write(("data: " + json.dumps({"id": m["id"], "time": int(m["time"]), "event": "message", "message": m["message"]}) + "\n\n").encode()), s.wfile.flush())
         try:
             s.wfile.write(b": open\n\n"); s.wfile.flush()
             for m in old: send(m)
@@ -43,10 +48,12 @@ results = []
 def check(name, ok, detail=""):
     results.append(ok); print(("PASS " if ok else "FAIL ") + name + (f"  [{detail}]" if detail and not ok else ""))
 
-async def phone(b, vp=None, device=None, scheme="light"):
+async def phone(b, vp=None, device=None, scheme="light", clock=0, live=None):
     ctx = await b.new_context(viewport=vp or {"width": 390, "height": 844}, is_mobile=True, has_touch=True, color_scheme=scheme)
     await ctx.grant_permissions(["clipboard-read", "clipboard-write"], origin=f"http://localhost:{PORT}")
     init = f"localStorage.setItem('mt:syncUrl',JSON.stringify('{RELAY}'));"
+    if clock: init += f"(()=>{{const n=Date.now;Date.now=()=>n()+({clock})}})();"
+    if live: init += f"localStorage.setItem('mt:liveWindow','{live}');"
     if device: init += f"if(!localStorage.getItem('mt:v3'))localStorage.setItem('mt:v3',JSON.stringify({{name:'',sound:'on',current:null,games:{{}},defaults:{{deck:'c',time:60}},device:'{device}'}}));"
     await ctx.add_init_script(init)
     pg = await ctx.new_page(); pg.errs = []; pg.on("pageerror", lambda e: pg.errs.append(str(e)))
@@ -58,7 +65,10 @@ async def setup(pg, name, code, deck="Classic"):
     if await pg.is_visible("#m-rules"): await pg.click("#m-rules [data-close]")
 
 async def pick(pg, player):   # the manual fallback
-    await dismiss(pg); await pg.click("#to-settings"); await pg.click(f'#s-set [data-field=player] button:has-text("Player {player}")'); await pg.click("#s-set [data-back]")
+    await dismiss(pg); await pg.click("#to-settings"); await pg.click(f'#s-set [data-field=player] button:has-text("Player {player}")')
+    await pg.wait_for_timeout(100)
+    if await pg.is_visible("#m-confirm"): pg.warned = "half of the cards" in await pg.text_content("#cf-p"); await pg.click("#cf-yes")
+    await pg.click("#s-set [data-back]")
 
 async def answer(pg, suggestion="#cf-no"):
     """Deck switches can ask two things: 'ends this game' (yes, then close the credits) and a round-length suggestion."""
@@ -139,8 +149,9 @@ async def main(slow):
         check("decks stay individual", await me.text_content("#h-deck") == "Classic")
         await pick(mom, g1["player"]); await me.wait_for_timeout(1200)
         check("warns when both are the same player", f"both Player {g1['player']}" in await me.text_content("#h-sync"), await me.text_content("#h-sync"))
-        await pick(mom, g2["player"])
-        c3, late = await phone(b); await setup(late, "Mom", "pug42"); await late.wait_for_timeout(1500); await dismiss(late); await late.click("#to-settings")
+        await pick(mom, g2["player"]); check("switching players after playing asks first", getattr(mom, "warned", False))
+        c3, late = await phone(b); await setup(late, "Mom", "pug42"); await late.wait_for_timeout(1500); await dismiss(late)
+        await late.click("#to-settings")
         check("late joiner gets latest round length", await late.get_attribute('#s-set [data-field=time] button[aria-pressed=true]', "data-v") == "120")
         await c3.close()
         c4, other = await phone(b); await setup(other, "Stranger", "different"); await other.wait_for_timeout(1200)
@@ -197,6 +208,7 @@ async def main(slow):
         t1 = await z.text_content("#sp-timer"); await z.wait_for_timeout(2600); t2 = await z.text_content("#sp-timer")
         check("splash timer counts down", t1 != t2, f"{t1} {t2}")
         check("guesser can't start during partner's round", await z.is_disabled("#start"))
+        check("splash offers Final round", await z.is_visible("#sp-final"))
         await a.wait_for_timeout(1500); await a.click("#b-pause"); await z.wait_for_timeout(1000)
         p1 = await z.text_content("#sp-timer"); await z.wait_for_timeout(1600)
         check("pause shows on the guesser's splash", "Paused" in await z.text_content("#sp-sub") and p1 == await z.text_content("#sp-timer"))
@@ -225,6 +237,7 @@ async def main(slow):
         check("final round evens out uneven rounds", "Mom has 2 rounds left, you have 1 round left" in await a.text_content("#h-final") and "you have 2 rounds left" in await z.text_content("#h-final"), await a.text_content("#h-final") + " | " + await z.text_content("#h-final"))
         await dismiss(a); await a.click("#start"); await a.wait_for_timeout(2800); await a.click("#b-ok"); await a.click("#b-end"); await a.click("#cf-yes"); await a.click("#sum-done")
         check("after my final round I wait for partner's", await a.is_disabled("#start") and "final round" in await a.text_content("#start"))
+        check("turn line agrees with the Start button", "final round" in await a.text_content("#h-turn") and "Your turn" not in await a.text_content("#h-turn"), await a.text_content("#h-turn"))
         await z.wait_for_timeout(900)
         await dismiss(z)
         for _ in range(2):
@@ -238,6 +251,19 @@ async def main(slow):
         check("credits name both players and partner's guessed cards", "Megan & Mom" in cr and "You guessed" in cr, cr[:200])
         await a.click("#cr-done"); await z.click("#cr-done")
         check("new game after credits", len((await state(a))["g"]["session"]["rounds"]) == 0 and "Either of you" in await a.text_content("#h-turn"))
+        # deck switch while the partner is mid-round: their round doesn't leak into the new game
+        await play(z); await z.click("#sum-done"); await a.wait_for_timeout(900)
+        await dismiss(a); await a.click("#start"); await a.wait_for_timeout(2800); await a.click("#b-ok")
+        await dismiss(z); await z.evaluate("document.getElementById('splash').classList.remove('on')")
+        await z.click("#to-settings"); await z.click('#s-set [data-field=deck] button:has-text("Kids")'); await z.wait_for_timeout(150)
+        if await z.is_visible("#m-confirm"): await z.click("#cf-yes")
+        await z.wait_for_timeout(300)
+        if await z.is_visible("#s-credits"): await z.click("#cr-done")
+        await a.click("#b-end"); await a.click("#cf-yes"); await a.wait_for_timeout(300); await a.click("#sum-done"); await z.wait_for_timeout(1500)
+        check("a round from the old game stays out of the new one", len((await state(z))["g"]["session"]["rounds"]) == 0, str((await state(z))["g"]["session"]["rounds"]))
+        for ph in (a, z):
+            if await ph.is_visible("#s-credits"): await ph.click("#cr-done")
+        await settings_deck(z, "Classic"); await settings_deck(a, "Classic")
         # deck switch ends the game for both
         await dismiss(a); await a.click("#start"); await a.wait_for_timeout(2800); await a.click("#b-ok"); await a.click("#b-end"); await a.click("#cf-yes"); await a.click("#sum-done")
         await z.wait_for_timeout(900)
@@ -263,6 +289,53 @@ async def main(slow):
         await dismiss(off); await off.click("#start"); await off.wait_for_timeout(2800); await off.click("#b-ok"); await off.click("#b-end"); await off.click("#cf-yes"); await off.click("#sum-done"); await off.wait_for_timeout(300)
         check("solo final round ends with credits", await off.is_visible("#s-credits"))
         allerr += off.errs; await c12.close()
+
+        # ---------- review fixes ----------
+        c20, x = await phone(b, device="2222", live=4000); c21, y = await phone(b, device="8888", live=4000)
+        await setup(x, "Xena", "fixes"); await setup(y, "Yuri", "fixes", deck="Adult"); await x.wait_for_timeout(2600)
+        check("badge depends on the code word only (decks differ)", await x.text_content("#h-badge") == await y.text_content("#h-badge"))
+        # typing in Settings survives partner messages
+        await dismiss(x); await x.click("#to-settings"); await x.click("#set-partner"); await x.keyboard.type("Typing")
+        await y.evaluate("document.dispatchEvent(new Event('visibilitychange'))"); await x.wait_for_timeout(1200)
+        check("typing in Settings isn't wiped by sync", (await x.input_value("#set-partner")).endswith("Typing"), await x.input_value("#set-partner"))
+        await x.fill("#set-partner", "Yuri"); await x.click("#s-set [data-back]")
+        # clock skew doesn't shorten the guesser's timer
+        c22, skew = await phone(b, device="3333", clock=-20000); await setup(skew, "Sky", "skewed"); c23, giver = await phone(b, device="7777"); await setup(giver, "Gus", "skewed"); await giver.wait_for_timeout(2600)
+        await dismiss(giver); await giver.click("#start"); await skew.wait_for_timeout(4000)
+        st_ = await skew.text_content("#sp-timer"); check("splash timer ignores a 20-second clock difference", st_ in ("0:57", "0:58", "0:59", "1:00"), st_)
+        # the clue-giver reloads mid-round: the guesser's splash clears and it's still their turn
+        n_before = len(posts); await giver.reload(); await giver.wait_for_selector("#s-home.on"); await skew.wait_for_timeout(3500)
+        check("reopening the app reconnects on its own", any(json.loads(x)["type"] == "hi" and json.loads(x)["d"] == "7777" for x in posts[n_before:]))
+        check("reconnecting fetches only new messages", SINCE[-1].startswith("m") and SINCE[-1][1:].isdigit(), SINCE[-1])
+        check("abandoned round clears the guesser's splash", not await skew.is_visible("#splash"))
+        check("abandoned round doesn't count", len((await state(skew))["g"]["session"]["rounds"]) == 0)
+        # a stranger with the same code word is ignored once players are set
+        c24, stranger = await phone(b); await setup(stranger, "Stranger", "skewed"); await skew.wait_for_timeout(2000)
+        check("stranger on the same code word is ignored", await skew.text_content("#h-game") == "Game with Gus", await skew.text_content("#h-game"))
+        allerr += skew.errs + giver.errs; await c22.close(); await c23.close(); await c24.close()
+        # final round when the partner's phone went quiet: their rounds still count
+        await play(x); await x.click("#sum-done"); await y.wait_for_timeout(800); await play(y); await y.click("#sum-done"); await play(y); await y.click("#sum-done")
+        await x.wait_for_timeout(1000); await c21.close(); await x.wait_for_timeout(5000); await x.evaluate("document.dispatchEvent(new Event('visibilitychange'))"); await x.wait_for_timeout(300)
+        check("status stops saying Synced when the partner goes quiet", "Synced" not in await x.text_content("#h-sync"), await x.text_content("#h-sync"))
+        await dismiss(x); await x.click("#final-btn"); await x.click("#cf-yes"); await x.wait_for_timeout(200)
+        check("final round counts a quiet partner's rounds (2 vs 1 -> 3)", "you have 2 rounds left" in await x.text_content("#h-final"), await x.text_content("#h-final"))
+        allerr += x.errs; await c20.close()
+        # Hard mode suggestion accepted at setup is a real choice
+        c25, p1 = await phone(b, device="4444"); await setup(p1, "Pam", "choice"); await p1.click("#to-settings"); await p1.click('#s-set [data-field=time] button:has-text("1:30")'); await p1.click("#s-set [data-back]")
+        c26, p2 = await phone(b, device="6666")
+        await p2.fill("#setup-name", "Pat"); await p2.click('#s-setup [data-field=deck] button:has-text("Hard mode")'); await p2.wait_for_timeout(150)
+        if await p2.is_visible("#m-confirm"): await p2.click("#cf-yes")
+        await p2.fill("#setup-code", "choice"); await p2.click("#setup-go"); await p2.wait_for_timeout(400)
+        if await p2.is_visible("#m-rules"): await p2.click("#m-rules [data-close]")
+        await p1.wait_for_timeout(2600)
+        check("Hard mode 2:00 picked at setup wins over older choice", (await state(p2))["g"]["time"] == 120 and (await state(p1))["g"]["time"] == 120, f'{(await state(p2))["g"]["time"]} {(await state(p1))["g"]["time"]}')
+        allerr += p1.errs + p2.errs; await c25.close(); await c26.close()
+        # first-ever game with a team name, and rules only once
+        c27, t1 = await phone(b); await setup(t1, "Red team", "teamcode")
+        check("a team name in the first game isn't saved as your usual name", (await state(t1))["s"]["name"] == "" and (await state(t1))["g"]["playAs"] == "Red team")
+        await t1.click("#to-games"); await t1.click("#new-game"); await t1.fill("#setup-name", "Megan"); await t1.fill("#setup-code", "another"); await t1.click("#setup-go"); await t1.wait_for_timeout(500)
+        check("rules pop up only for the first game", not await t1.is_visible("#m-rules"))
+        allerr += t1.errs; await c27.close()
 
         # ---------- saved games ----------
         solo_left = await left(solo)
