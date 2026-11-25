@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261125-1404">
+<link rel="stylesheet" href="styles.css?v=20261125-1430">
 </head>
 <body>
 <div class="app">
@@ -17,15 +17,9 @@
 <!-- SETUP: first run and every new game -->
 <section class="screen" id="s-setup" aria-label="New game">
   <h1 id="setup-title">Megan's Taboo</h1>
-  <p class="sub">Each partner gets their own saved game. You can change any of this later in Settings.</p>
-  <div class="fields">
-    <label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
-    <label class="f">Partner's name<input type="text" id="setup-partner" maxlength="16" autocomplete="off" placeholder="e.g. Sam"></label>
-  </div>
-  <div class="group"><b>Which player are you?</b>
-    <div class="seg" data-field="player" data-scope="setup"></div>
-    <p class="note">Pick different players. You each get your own half of every card family, so you never draw each other's cards.</p></div>
-  <label class="f">Code word <small>Optional. Sets the shuffle and a match badge to compare.</small>
+  <p class="sub">Each partner gets their own saved game. Your partner's name fills in from their phone.</p>
+  <label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
+  <label class="f">Code word <small>Agree on one with your partner and both type it. Your phones use it to find each other, then pick who's Player 1 and Player 2.</small>
     <input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"></label>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="setup"></div></div>
   <div style="flex:1"></div>
@@ -53,6 +47,7 @@
   </div>
   <div style="flex:1"></div>
   <button class="primary" id="start" disabled>Loading cards…</button>
+  <button class="ghost" id="h-manual" hidden>Phones not connecting? Pick a player yourself</button>
   <div class="row"><button class="ghost" id="to-settings">Settings</button><button class="ghost" id="to-maker">Card maker</button></div>
 </section>
 
@@ -93,7 +88,8 @@
   <label class="f">Partner's name<input type="text" id="set-partner" maxlength="16" autocomplete="off"></label>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="game"></div>
     <p class="note">You and your partner can pick different decks. You'll still never draw each other's cards. <span id="mixed-note"></span></p></div>
-  <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div></div>
+  <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div>
+    <p class="note">Set automatically when your phones connect. Only change it if they can't connect, and make sure your partner picks the other one.</p></div>
   <label class="f">Code word <small>Sets your shuffle and the match badge. Same word and deck on both phones gives the same badge. Capitals and spaces don't matter.</small>
     <input type="text" id="set-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="None (plain shuffle)"></label>
   <div class="group"><b>Round length</b><div class="seg" data-field="time" data-scope="game"></div></div>
@@ -151,6 +147,6 @@
   <div class="row"><button class="ghost" id="cf-no">Cancel</button><button class="primary" id="cf-yes">Yes</button></div>
 </div></div>
 
-<script src="app.js?v=20261125-1404"></script>
+<script src="app.js?v=20261125-1430"></script>
 </body>
 </html>

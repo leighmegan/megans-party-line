@@ -301,3 +301,11 @@ Noisemaker | loud, party, spin, rattle, horn
 == valentines sib
 Dozen roses | red, bouquet, twelve, florist, romantic
 Heart-shaped pizza | Papa John's, cute, dinner, cheesy, delivery
+
+== christmas sib
+Candy cane | stripes, red, hook, Christmas, minty
+Peppermint bark | chocolate, white, broken, Christmas treat, layers
+
+== christmas sib
+Gingerbread house | icing, cookie, build, gumdrops, Christmas
+Gingerbread man | run, cookie, catch me, raisins, shape

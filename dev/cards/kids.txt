@@ -302,3 +302,11 @@ Rainbow sticker | colors, peel, arc, sheet, reward
 == events sib
 Bedtime story | read, book, night, sleep, tuck in
 Lullaby | song, sleep, baby, sing, soft
+
+== nature sib
+Snowman | frosty, carrot, winter, cold, build
+Snow fort | igloo, walls, ice, hide, winter
+
+== nature sib
+Rainbow | colors, unicorn, sky, arc, pot of gold
+Sunshine | sun, bright, warm, yellow, happy
