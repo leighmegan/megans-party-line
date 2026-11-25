@@ -1,0 +1,303 @@
+# Megan's Taboo cards: holidays deck
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated [| other deck, if the card belongs to a different deck]
+
+== thanksgiving sib
+Stuffing | bread, bird, side, Stove Top, inside
+Mashed potatoes | gravy, butter, side, creamy, spuds
+
+== thanksgiving sib
+Cranberry sauce | can, red, jelly, ridges, tart
+Green bean casserole | crispy onions, soup, side, mushroom, baked
+
+== thanksgiving sib
+Wishbone | break, dry, bird, pull, bigger half
+Drumstick | leg, chicken, bite, dark meat, grab
+
+== thanksgiving sib
+Pumpkin pie | whipped cream, slice, dessert, orange, crust
+Pecan pie | nuts, Southern, sticky, dessert, crust
+
+== thanksgiving sib
+Food coma | full, nap, sleepy, ate, too much
+Second helping | more, plate, again, hungry, refill
+
+== thanksgiving sib
+Black Friday | sale, shopping, doorbusters, Thanksgiving, lines
+Cyber Monday | online, deals, shopping, internet, sales
+
+== thanksgiving sib
+Macy's parade | balloons, New York, floats, Snoopy, TV
+Football on TV | Lions, Cowboys, couch, game, afternoon
+
+== thanksgiving sib
+Kids' table | children, cousins, small, separate, grow up
+Folding chair | metal, extra, seat, collapse, guests
+
+== thanksgiving sib
+Leftovers | fridge, Tupperware, next day, reheat, sandwich
+Doggy bag | take home, restaurant, box, extra, pet
+
+== thanksgiving sib
+Gravy boat | pour, sauce, dish, table, brown
+Carving knife | slice, sharp, electric, meat, cut
+
+== thanksgiving tan
+Grace | pray, thank, bless, before eating, hands
+Toast | glass, raise, cheers, speech, clink
+
+== christmas sib
+Stocking | fireplace, hang, sock, stuff, gifts
+Wrapping paper | presents, tape, bows, rip, roll
+
+== christmas sib
+Mistletoe | kiss, hang, doorway, plant, under
+Poinsettia | red, flower, plant, December, leaves
+
+== christmas sib
+Ugly sweater | party, tacky, knit, contest, reindeer
+Matching pajamas | family, photo, same, plaid, morning
+
+== christmas sib
+Elf on the Shelf | doll, watch, move, report, Santa
+Advent calendar | doors, count, December, chocolate, days
+
+== christmas sib
+Christmas lights | string, tangle, house, twinkle, Clark Griswold
+Inflatable yard decoration | blow up, lawn, giant, deflate, snowman
+
+== christmas sib
+Eggnog | drink, creamy, rum, nutmeg, holiday
+Hot cocoa | marshmallows, warm, mug, chocolate, winter
+
+== christmas sib
+Christmas carol | sing, songs, door, Jingle Bells, group
+Nutcracker | ballet, soldier, Tchaikovsky, Clara, nuts
+
+== christmas sib
+Grinch | green, stole, Whoville, heart, Seuss
+Scrooge | bah humbug, ghosts, Dickens, cheap, miser
+
+== christmas sib
+North Pole | elves, workshop, top, Arctic, Santa
+Sleigh | reindeer, sled, fly, bells, ride
+
+== christmas sib
+Gift card | plastic, store, lazy, balance, present
+Regifting | pass along, again, unwanted, present, sneaky
+
+== christmas sib
+Christmas tree | ornaments, pine, star, decorate, fake
+Wreath | door, circle, green, hang, bow
+
+== christmas sib
+Fruitcake | dense, nobody eats, candied, brick, loaf
+Sugar cookies | frosting, cutters, sprinkles, bake, decorate
+
+== christmas tan
+Snow day | school, canceled, sled, home, flakes
+Cabin fever | stuck, inside, restless, winter, bored
+
+== christmas sib
+Hanukkah | menorah, eight, Jewish, candles, dreidel
+Kwanzaa | seven, African, candles, December, principles
+
+== christmas sib
+Latkes | potato, pancakes, fried, applesauce, Hanukkah
+Gelt | chocolate, coins, gold, foil, Hanukkah
+
+== christmas sib
+Ornament | hang, ball, glass, tree, decorate
+Tinsel | silver, shiny, strands, tree, sparkle
+
+== christmas tan
+Mall Santa | lap, photo, line, beard, kids
+Salvation Army bell | ring, red kettle, donate, store, coins
+
+== christmas sib
+Home Alone | Kevin, burglars, Macaulay, left, traps
+Elf | Will Ferrell, Buddy, syrup, North Pole, tall
+
+== new-year sib
+Ball drop | Times Square, countdown, New York, crystal, Ryan Seacrest
+Midnight kiss | twelve, lips, new year, partner, countdown
+
+== new-year sib
+Champagne | bubbly, pop, toast, cork, celebrate
+Sparkling cider | kids, bubbly, apple, alcohol-free, glass
+
+== new-year tan
+Auld Lang Syne | song, sing, Scottish, old, acquaintance
+Party horn | blow, noisemaker, paper, roll, toot
+
+== valentines sib
+Box of chocolates | heart-shaped, gift, Forrest Gump, assorted, Whitman's
+Candy hearts | sayings, chalky, Necco, messages, pastel
+
+== valentines sib
+Cupid | arrow, bow, baby, wings, Valentine
+Love letter | write, romantic, envelope, crush, note
+
+== valentines sib
+Galentine's Day | friends, ladies, brunch, Leslie Knope, February
+Singles Awareness Day | alone, lonely, February, no date, SAD
+
+== easter sib
+Egg hunt | find, basket, hide, yard, plastic
+Egg dyeing | color, vinegar, cups, decorate, Paas
+
+== easter sib
+Peeps | marshmallow, chick, yellow, sugar, Easter
+Jelly beans | candy, colors, flavors, gourmet, chewy
+
+== easter tan
+Easter bonnet | hat, church, spring, flowers, parade
+Sunday best | church, dressed up, outfit, fancy, clothes
+
+== spring sib
+April Fools' Day | prank, joke, trick, gotcha, first
+Whoopee cushion | fart, sit, prank, sound, rubber
+
+== spring sib
+Cinco de Mayo | Mexico, May, fiesta, celebrate, holiday
+Mardi Gras | beads, New Orleans, parade, Fat Tuesday, king cake
+
+== spring sib
+Mother's Day | mom, May, flowers, brunch, card
+Father's Day | dad, June, tie, grill, card
+
+== summer sib
+Fourth of July | independence, America, fireworks, red white and blue, BBQ
+Memorial Day | May, remember, soldiers, weekend, pool opens
+
+== summer sib
+Flag | stars, stripes, pole, wave, country
+Uncle Sam | I want you, poster, hat, beard, America
+
+== summer sib
+Firecracker | bang, loud, fuse, pop, light
+Glow stick | bend, crack, dark, neon, bracelet
+
+== summer sib
+Labor Day | September, weekend, end of summer, white, off
+Summer vacation | school out, break, June, trip, pool
+
+== fall sib
+Trick-or-treat | costume, door, bag, Halloween, neighborhood
+Full-size candy bar | big, house, best, chocolate, rare
+
+== fall sib
+Jack-o'-lantern | carve, pumpkin, face, candle, glow
+Candy corn | triangle, orange, yellow, white, waxy
+
+== fall sib
+Costume party | dress up, theme, masks, outfits, Halloween
+Couples costume | match, pair, two, partner, together
+
+== fall sib
+Pumpkin spice latte | Starbucks, fall, coffee, basic, PSL
+Apple cider | fall, warm, cinnamon, donuts, orchard
+
+== fall sib
+Hayride | tractor, straw, wagon, farm, bumpy
+Apple picking | orchard, basket, fall, tree, farm
+
+== fall tan
+Daylight saving | clocks, hour, fall back, spring forward, time
+Leaf pile | jump, rake, fall, crunchy, yard
+
+== fall sib
+Veterans Day | November, soldiers, military, honor, served
+Election Day | vote, November, ballot, polls, Tuesday
+
+== winter sib
+New Year's Eve | December, party, countdown, midnight, last night
+New Year's Day | January, first, hangover, resolution, parade
+
+== winter sib
+Groundhog Day | Punxsutawney Phil, shadow, February, winter, Bill Murray
+Leap year | February, extra day, 29, rare birthday, calendar
+
+== winter sib
+Presidents' Day | February, Washington, Lincoln, Monday, sales
+Martin Luther King Day | January, civil rights, dream, Monday, holiday
+
+== family sib
+Family photo | pose, smile, matching, camera, say cheese
+Holiday card | mail, envelope, Shutterfly, season's greetings, list
+
+== family sib
+Road trip to grandma's | drive, car, are we there yet, visit, holiday
+Airport delay | flight, late, gate, canceled, wait
+
+== family tan
+In-laws | spouse, family, married, visit, mother
+Awkward small talk | weather, chat, uncomfortable, relatives, silence
+
+== family sib
+White elephant | steal, game, party, cheap, funny
+Gift exchange | swap, presents, names, draw, group
+
+== family sib
+Holiday playlist | songs, Mariah, carols, music, December
+Yule log | fireplace, TV, channel, burn, video
+
+== birthday sib
+Surprise party | hide, jump out, secret, lights, yell
+Birthday cake | candles, frosting, wish, slice, sing
+
+== birthday sib
+Goody bag | party, favors, take home, kids, treats
+Pin the tail on the donkey | blindfold, game, party, kids, spin
+
+== religious tan
+Ramadan | fasting, Muslim, month, sunset, Eid
+Diwali | lights, Hindu, festival, lamps, India
+
+== religious sib
+Passover | Seder, matzo, Jewish, Moses, Egypt
+Lent | forty days, give up, Easter, Catholic, Ash Wednesday
+
+== events sib
+Bonfire night | burn, Guy Fawkes, England, November, effigy
+Lantern festival | float, lights, sky, lunar, paper
+
+== events sib
+Chinese New Year | red envelopes, dragon, zodiac, lunar, fireworks
+Day of the Dead | Mexico, skulls, altar, marigolds, ancestors
+
+== events sib
+Oktoberfest | beer, Germany, pretzels, lederhosen, Munich
+Polar plunge | cold, water, jump, January, charity
+
+== christmas sib
+Snow globe | shake, glass, water, flakes, tiny
+Music box | wind up, ballerina, tune, crank, jewelry
+
+== christmas sib
+Christmas Eve | night before, December 24, cookies, church, Santa
+Boxing Day | December 26, British, Canada, sales, after
+
+== winter sib
+Ice skating rink | Rockefeller, blades, spin, frozen, rental
+Sledding hill | slope, snow, toboggan, kids, steep
+
+== fall sib
+Pumpkin patch | farm, pick, orange, field, gourds
+Corn maze | lost, stalks, farm, paths, October
+
+== thanksgiving sib
+Turkey trot | race, run, morning, 5K, Thanksgiving
+Parade float | balloon, giant, street, decorated, Macy's
+
+== summer sib
+Hot dog eating contest | Coney Island, Nathan's, fast, July, champion
+Watermelon seed spitting | far, mouth, summer, picnic, distance
+
+== new-year sib
+Countdown | ten, numbers, seconds, zero, clock
+Noisemaker | loud, party, spin, rattle, horn
+
+== valentines sib
+Dozen roses | red, bouquet, twelve, florist, romantic
+Heart-shaped pizza | Papa John's, cute, dinner, cheesy, delivery

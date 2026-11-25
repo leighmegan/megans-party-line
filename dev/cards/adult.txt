@@ -1,0 +1,556 @@
+# Megan's Taboo cards: adult deck
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated [| other deck, if the card belongs to a different deck]
+# Family members are split between Player 1 and Player 2 unless one is forbidden on another's card.
+# IDs and player sides are permanent and live in ids.json. Never reuse a removed word for a different card.
+
+== adult-dating syn
+Walk of shame | morning, last night, home, heels, yesterday's
+Stride of pride | confident, strut, morning after, proud, head high
+
+== adult-drinking tan
+Hangover | drunk, headache, morning, water, regret
+Hair of the dog | drink, cure, morning, more, Bloody Mary
+
+== adult-dating sib
+Tinder | swipe, app, dating, match, right
+Swipe right | Tinder, like, app, match, yes
+Bumble | app, women first, yellow, bee, BFF
+
+== adult-dating sib
+Ghosting | disappear, text, ignore, date, vanish
+Benching | backup, option, dating, maybe, sidelines
+
+== adult-dating tan
+Booty call | late night, text, hookup, u up, come over
+Last-minute plans | spontaneous, tonight, invite, quick, whatever
+
+== adult-dating ctr
+Wingman | bar, friend, help, flirt, pilot
+Wing woman | female, sidekick, lady, assist, ladies' night
+
+== adult-dating tan
+Netflix and chill | movie, couch, code, hookup, stream
+Come up for coffee | invite, apartment, code, nightcap, after date
+
+== adult-dating sib
+Friends with benefits | hookup, casual, no strings, buddy, relationship
+Polyamory | partners, multiple, love, relationship, several
+
+== adult-dating sib
+Situationship | undefined, relationship, label, dating, what are we
+Talking stage | texting, early, dating, not official, getting to know
+
+== adult-dating sib
+First date | nervous, dinner, meet, awkward, romance
+Second date | again, follow up, another, went well, dinner
+
+== adult-dating sib
+Speed dating | minutes, bell, table, rotate, singles
+Matchmaker | set up, pair, Yenta, love, professional
+
+== adult-dating sib
+Blind date | set up, stranger, meet, friend, surprise
+Online dating | profile, app, match, website, swipe
+
+== adult-dating syn
+Pickup line | flirt, cheesy, bar, smooth, approach
+Opening line | first, say, start, conversation, hello
+
+== adult-parties ctr
+Bachelorette party | bride, tiara, Vegas, sash, last night
+Bachelor party | groom, strippers, Vegas, guys, last night
+
+== adult-spicy sib
+Strip club | dancer, pole, dollar bills, tips, lap dance
+Lap dance | stripper, sit, chair, grind, club
+Burlesque | tease, feathers, corset, cabaret, Dita
+Dollar bills | singles, cash, throw, money, tips
+
+== adult-spicy ctr
+Thong | underwear, panties, butt, string, wedgie
+Wedgie | underwear, butt, pull, stuck, bully
+Boxer briefs | men, underwear, Calvin Klein, tight, shorts
+Swirly | toilet, flush, bully, head, school
+
+== adult-spicy sib
+Push-up bra | cleavage, boost, lingerie, boobs, padded
+Sports bra | workout, tight, support, gym, running
+
+== adult-spicy tan
+Lingerie | lace, Victoria's Secret, sexy, underwear, night
+Boudoir shoot | photographer, sexy, pictures, bedroom, gift
+
+== adult-parties sib
+Skinny dipping | naked, swim, pool, lake, night
+Hot tub party | jets, steam, soak, crowded, drinks
+
+== adult-spicy tan
+Mile High Club | airplane, bathroom, sex, flight, join
+Parked car | steamy windows, backseat, lookout, date, fog
+
+== adult-spicy sib
+Handcuffs | police, arrest, kinky, wrists, metal
+Riding crop | horse, whip, leather, kinky, jockey
+
+== adult-spicy sib
+Fifty Shades | Grey, book, kinky, Christian, movie
+Romance novel | Fabio, bodice ripper, steamy, book, paperback
+
+== adult-body sib
+Love handles | fat, hips, belly, grab, muffin top
+Muffin top | waist, fat, jeans, spill, over
+Cellulite | thighs, dimples, skin, cottage cheese, legs
+Back fat | bra, bulge, roll, skin, squeeze
+
+== adult-drinking sib
+Beer goggles | drunk, attractive, ugly, glasses, bar
+Liquid courage | drink, brave, confidence, shot, bar
+
+== adult-drinking sib
+Drunk dial | call, ex, phone, late, regret
+Drunk text | typos, regret, send, night, autocorrect
+
+== adult-dating sib
+Rebound | breakup, next, relationship, fast, bounce
+Revenge body | breakup, gym, glow up, ex, hot
+
+== adult-dating sib
+Sugar daddy | older, rich, money, young, spoil
+Gold digger | money, rich, marry, Kanye, greedy
+
+== adult-dating ctr
+Cougar | older woman, younger, men, cat, dating
+Silver fox | older, man, hot, gray, handsome
+
+== adult-life ctr
+Midlife crisis | sports car, forties, old, divorce, young
+Quarter-life crisis | twenties, lost, career, confused, young
+
+== adult-life syn
+Divorce | marriage, split, lawyer, end, alimony
+Separation | apart, trial, married, break, living
+
+== adult-life sib
+Prenup | marriage, agreement, money, lawyer, sign
+Joint account | bank, shared, couple, money, checking
+
+== adult-life sib
+Honeymoon | wedding, trip, newlyweds, vacation, sex
+Babymoon | pregnant, vacation, before, couple, trip
+
+== adult-life sib
+Bridezilla | wedding, crazy, bridal party, monster, demands
+Momzilla | mother, bride, wedding, controlling, demands
+
+== adult-life ctr
+Mother-in-law | spouse, parent, annoying, husband, wife
+Father-in-law | dad, grill, golf, dinner, approval
+
+== adult-spicy tan
+Hickey | neck, bite, mark, bruise, kiss
+Turtleneck | cover, sweater, collar, hide, Steve Jobs
+
+== adult-dating syn
+Spooning | cuddle, bed, behind, little, big
+Cuddling | hug, snuggle, bed, warm, hold
+
+== adult-body sib
+Morning breath | wake, stinky, mouth, kiss, brush
+Coffee breath | stinky, mouth, latte, mint, smell
+
+== adult-body ctr
+Dad bod | belly, soft, father, body, beer
+Mom bod | after kids, soft, mother, stretch marks, body
+
+== adult-body sib
+Beer belly | gut, drink, fat, stomach, keg
+Food baby | full, stomach, bloated, ate, pregnant
+
+== adult-drinking sib
+Tequila | shot, Mexico, lime, salt, drunk
+Body shot | lick, salt, tequila, belly, lime
+Margarita | salt, frozen, Mexican, rocks, Cinco de Mayo
+Whiskey | bourbon, Jack Daniel's, brown, rocks, Scotch
+Piña colada | rum, coconut, pineapple, rain, frozen
+Lime wedge | green, squeeze, salt, shot, lick
+
+== adult-drinking sib
+Jell-O shots | party, gelatin, alcohol, cups, college
+Punch bowl | ladle, party, spiked, red, cups
+
+== adult-drinking sib
+Beer pong | cups, ball, table, college, throw
+Quarters | bounce, cup, drinking game, table, 25 cents
+
+== adult-drinking sib
+Keg stand | beer, upside down, party, college, hold
+Funnel | chug, tube, beer, fast, college
+
+== adult-life sib
+Designated driver | sober, car, home, friends, keys
+Uber | ride, app, surge, Lyft, rating
+
+== adult-drinking syn
+Last call | bar, closing, drinks, bartender, final
+Bar crawl | hop, pub, friends, stops, night out
+
+== adult-life sib
+Bar tab | bill, drinks, close, pay, credit card
+Split the check | bill, divide, friends, Venmo, pay
+
+== adult-drinking sib
+Happy hour | drinks, cheap, after work, bar, discount
+Ladies' night | women, free, drinks, club, Thursday
+
+== adult-life sib
+Wine mom | kids, glass, mommy, drink, juice
+Hockey mom | sports, rink, kids, Sarah Palin, cheer
+
+== adult-drinking sib
+Boxed wine | cheap, bag, slap, Franzia, drink
+White Claw | hard seltzer, can, no laws, summer, spiked
+
+== adult-life sib
+Taxes | IRS, April, refund, pay, file
+Audit | IRS, check, records, scary, accountant
+
+== adult-life sib
+Mortgage | house, loan, payment, bank, interest
+Home inspection | buyer, inspector, roof, report, termites
+
+== adult-life sib
+Student loans | debt, college, pay, forever, interest
+Car payment | monthly, vehicle, auto, dealership, financing
+
+== adult-life sib
+Credit score | FICO, number, loan, debt, report
+Overdraft fee | bank, negative, charge, account, broke
+
+== adult-life sib
+Rent | landlord, monthly, apartment, pay, lease
+Security deposit | landlord, refund, move out, damage, lease
+
+== adult-life tan
+Adulting | grown up, responsible, bills, chores, hard
+Grocery haul | bags, Costco, unload, week, TikTok
+
+== adult-life sib
+Group chat | text, friends, thread, muted, messages
+Family group chat | mom, cousins, thread, memes, muted
+
+== adult-work sib
+Reply all | email, everyone, mistake, send, office
+Out of office | vacation, email, away, auto, reply
+CC | copy, email, boss, line, include
+Inbox zero | email, clean, read, empty, organized
+
+== adult-work sib
+Performance review | boss, annual, raise, feedback, job
+Two weeks' notice | quit, resign, leave, job, letter
+
+== adult-work ctr
+Monday | week, first, work, hate, start
+Friday | weekend, TGIF, end, week, payday
+
+== adult-work sib
+Sick day | work, call in, ill, stay, home
+Mental health day | off, work, break, recharge, personal
+
+== adult-work sib
+Office party | holiday, coworkers, drunk, work, awkward
+Secret Santa | gift, exchange, coworkers, name, draw
+
+== adult-work sib
+HR | human resources, complaint, department, fired, office
+Boss | manager, supervisor, work, fired, in charge
+
+== adult-dating ctr
+Ex | former, boyfriend, girlfriend, breakup, old
+Crush | like, secretly, heart, butterflies, in love
+
+== adult-life sib
+Catfish | fake, profile, online, lie, MTV
+Finsta | fake, Instagram, private, account, friends
+
+== adult-dating sib
+Thirst trap | selfie, post, hot, attention, photo
+Soft launch | hint, new relationship, Instagram, hand, post
+
+== adult-dating sib
+Sexting | text, dirty, phone, messages, naughty
+Flirting | wink, tease, smile, interested, charm
+
+== adult-dating ctr
+Dirty talk | bedroom, words, naughty, sexy, say
+Sweet nothings | whisper, ear, romantic, love, cute
+
+== adult-dating sib
+Safe word | stop, kinky, code, pineapple, BDSM
+Codeword | secret, signal, escape, friends, date
+
+== adult-dating sib
+Third wheel | couple, date, alone, extra, awkward
+Fifth wheel | RV, trailer, camper, odd one out, two couples
+
+== adult-dating sib
+Double date | couples, two, four, dinner, friends
+Game night | Monopoly, friends, cards, snacks, competitive
+
+== adult-dating sib
+Meet the parents | boyfriend, family, dinner, nervous, mom
+Wedding toast | speech, best man, glass, cheers, embarrassing
+
+== adult-dating sib
+Engagement ring | propose, diamond, knee, marry, finger
+Promise ring | young, future, commitment, purity, before
+
+== adult-life sib
+Proposal | marry, ring, knee, question, will you
+Elopement | run away, courthouse, secret, marry, quick
+
+== adult-life sib
+Shotgun wedding | pregnant, rush, quick, elope, marry
+Courthouse wedding | judge, quick, cheap, license, clerk
+
+== adult-life sib
+Vegas wedding | Elvis, chapel, drunk, quick, Nevada
+Destination wedding | beach, travel, guests, expensive, Mexico
+
+== adult-life sib
+Wedding crasher | uninvited, party, sneak, guest, movie
+Plus-one | date, invite, guest, bring, RSVP
+
+== adult-life sib
+Bouquet toss | wedding, flowers, catch, bride, single
+Cake cutting | smash, face, newlyweds, knife, slice
+
+== adult-life sib
+Garter | wedding, leg, thigh, toss, bride
+Something blue | old, new, borrowed, bride, tradition
+
+== adult-body sib
+Pregnancy test | stick, pee, positive, lines, baby
+Ovulation | fertile, cycle, egg, days, trying
+
+== adult-life sib
+Gender reveal | baby, boy, girl, party, pink
+Push present | gift, birth, jewelry, new mom, husband
+
+== adult-life ctr
+Mom jeans | high waist, denim, pants, mother, uncool
+Dad sneakers | white, New Balance, chunky, shoes, lawn
+
+== adult-life sib
+Soccer mom | minivan, kids, practice, suburbs, mother
+Minivan | kids, family, car, sliding, soccer mom
+Carpool | ride, share, kids, lane, school
+
+== adult-life ctr
+Karen | manager, complain, haircut, entitled, speak
+Chad | frat, bro, guy, popped collar, name
+
+== adult-dating sib
+Sugar baby | older, money, young, allowance, arrangement
+Trophy wife | young, rich, husband, beautiful, arm candy
+
+== adult-body sib
+Hot flash | menopause, sweat, heat, woman, sudden
+Mood swings | emotional, up, down, cranky, hormones
+
+== adult-body sib
+Viagra | pill, blue, old, men, performance
+Rogaine | hair, grow, bald, men, foam
+
+== adult-body sib
+Brazilian wax | hair, bikini, ouch, strip, salon
+Eyebrow threading | string, face, shape, salon, hair
+
+== adult-body sib
+Spray tan | orange, fake, booth, bronze, skin
+Tanning bed | UV, lie, booth, bronze, salon
+
+== adult-body sib
+Botox | wrinkles, injection, face, forehead, frozen
+Lip filler | injection, plump, Kylie, bigger, pout
+
+== adult-body sib
+Boob job | implants, breasts, surgery, bigger, plastic
+Tummy tuck | stomach, surgery, flat, skin, plastic
+
+== adult-body sib
+Facelift | surgery, wrinkles, tight, plastic, old
+Chemical peel | skin, acid, face, layer, dermatologist
+
+== adult-body sib
+Comb-over | bald, hair, side, hide, head
+Man bun | hair, tied, top, hipster, knot
+
+== adult-body sib
+Toupee | wig, bald, fake, hair, piece
+Receding hairline | forehead, thinning, widow's peak, men, going
+
+== adult-life sib
+Beer run | store, more, drinks, go, out
+Snack run | chips, store, munchies, late night, quick
+
+== adult-parties ctr
+Pregame | drink, before, party, dorm, shots
+Afterparty | late, continue, club, house, 2 a.m.
+
+== adult-life tan
+Brunch | mimosas, Sunday, eggs, late, bottomless
+Mimosa | orange juice, champagne, brunch, drink, bottomless
+Avocado toast | millennial, bread, green, trendy, expensive
+
+== adult-drinking sib
+Wine tasting | vineyard, sip, swirl, spit, glass
+Brewery tour | beer, hops, flight, craft, taproom
+
+== adult-drinking sib
+Sommelier | wine, expert, taste, restaurant, pair
+Mixologist | cocktails, fancy, bartender, craft, shaker
+
+== adult-life ctr
+Cheat day | diet, eat, junk, pizza, break
+Meal prep | Sunday, containers, cook, week, lunches
+
+== adult-life sib
+Diet starts Monday | tomorrow, food, eat, week, weight
+Dry January | no drinking, sober, month, New Year, challenge
+
+== adult-life sib
+Gym selfie | mirror, flex, workout, photo, post
+Progress pic | before, after, weight loss, gains, photo
+
+== adult-body sib
+Yoga pants | leggings, tight, butt, stretchy, workout
+Spanx | shapewear, tight, smooth, tummy, squeeze
+
+== adult-body sib
+Camel toe | pants, tight, crotch, front, leggings
+Panty lines | visible, underwear, tight, leggings, seams
+
+== adult-body sib
+Plumber's crack | butt, pants, low, bend, exposed
+Mooning | butt, pull down, car window, prank, pants
+
+== adult-dating sib
+Pet name | babe, honey, sweetie, couple, call
+Inside joke | only us, funny, private, reference, laugh
+
+== adult-life sib
+Cuddle puddle | pile, hug, group, snuggle, bodies
+Weighted blanket | heavy, anxiety, sleep, cozy, pressure
+
+== adult-life tan
+Netflix password | share, account, ex, login, stream
+Streaming wars | Hulu, Disney+, subscriptions, services, battle
+
+== adult-dating ctr
+Makeout session | kiss, tongue, couch, heavy, lips
+Peck | kiss, quick, lips, little, cheek
+
+== adult-dating sib
+Pillow talk | bed, after, chat, whisper, couple
+Breakfast in bed | tray, morning, serve, romantic, crumbs
+
+== adult-life sib
+Walk-in closet | clothes, shoes, room, big, wardrobe
+Vanity | mirror, makeup, table, lights, sit
+
+== adult-spicy sib
+Pole dancing | stripper, fitness, spin, class, climb
+Twerking | butt, shake, dance, Miley, booty
+
+== adult-spicy sib
+Chippendales | male, strippers, bow tie, cuffs, Vegas
+Thunder from Down Under | Australian, accents, abs, show, mates
+
+== adult-spicy sib
+Magic Mike | movie, stripper, Channing Tatum, dance, male
+Dirty Dancing | Patrick Swayze, baby, corner, lift, movie
+
+== adult-spicy syn
+Booty shorts | butt, tiny, cheeks, summer, pants
+Daisy Dukes | denim, cutoffs, Hazzard, jeans, cowgirl
+
+== adult-spicy sib
+Commando | no underwear, naked, under, free, army
+Pasties | stickers, cover, burlesque, nipples, tape
+
+== adult-body sib
+Bikini line | wax, shave, swimsuit, hair, trim
+Razor burn | bumps, shave, red, itchy, skin
+
+== adult-body sib
+Tan lines | sun, bathing suit, white, skin, strap
+Farmer's tan | arms, sleeves, neck, sun, white
+
+== adult-spicy syn
+Wardrobe malfunction | Janet Jackson, Super Bowl, nipple, exposed, oops
+Nip slip | accidental, exposed, dress, oops, boob
+
+== adult-dating sib
+Double text | send, again, reply, message, twice
+Read receipts | seen, iMessage, turn off, blue, delivered
+
+== adult-dating sib
+Breadcrumbing | lead on, text, tease, dating, string along
+Orbiting | watch, stories, social media, ex, lurk
+
+== adult-dating sib
+Love bombing | attention, gifts, overwhelm, fast, manipulate
+Gaslighting | manipulate, crazy, doubt, lie, toxic
+
+== adult-dating ctr
+Red flag | warning, bad, sign, date, danger
+Green flag | good sign, healthy, positive, date, safe
+
+== adult-dating ctr
+Ick | turnoff, gross, instantly, crush, cringe
+Turn-on | attractive, hot, sexy, like, into
+
+== adult-life ctr
+Daddy issues | father, therapy, older, men, complex
+Mommy issues | mother, therapy, complex, son, Freud
+
+== adult-life sib
+Therapy | counselor, talk, feelings, couch, session
+Life coach | goals, motivation, advice, career, guidance
+
+== adult-drinking syn
+Wine o'clock | time, drink, evening, glass, five
+Beer thirty | time, drink, afternoon, cold one, work
+
+== adult-drinking sib
+Sake bomb | Japanese, beer, chopsticks, drop, shot
+Irish car bomb | Guinness, whiskey, Baileys, chug, drop
+
+== adult-drinking sib
+Shotgun a beer | can, hole, chug, fast, crack
+Shotski | ski, apres, line, together, lodge
+
+== adult-drinking sib
+Flip cup | game, drink, chug, table, relay
+Rage cage | cups, bounce, drinking game, stack, chaos
+
+== adult-drinking sib
+Kings Cup | card game, alcohol, circle, rules, deck
+Drunk Jenga | blocks, tower, rules, drinking, fall
+
+== adult-parties sib
+Never have I ever | game, fingers, drink, confess, done
+Two truths and a lie | guess, fake, facts, icebreaker, three
+
+== adult-parties sib
+Truth or dare | game, question, challenge, party, choose
+Would you rather | choose, option, question, gross, two
+
+== adult-parties sib
+Spin the bottle | kiss, game, party, circle, point
+Post office | closet, letters, stamps, mail, 1950s
+
+== adult-parties sib
+Seven minutes in heaven | closet, kiss, party, game, dark
+Slow dance | sway, hold, song, close, middle school

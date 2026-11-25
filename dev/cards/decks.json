@@ -1,0 +1,39 @@
+[
+ {
+  "id": "c",
+  "name": "Classic",
+  "file": "classic.txt",
+  "mixed": true
+ },
+ {
+  "id": "a",
+  "name": "Adult",
+  "file": "adult.txt",
+  "mixed": true
+ },
+ {
+  "id": "h",
+  "name": "Holidays",
+  "file": "holidays.txt",
+  "mixed": true
+ },
+ {
+  "id": "n",
+  "name": "2000s & 2010s",
+  "file": "throwback.txt",
+  "mixed": true
+ },
+ {
+  "id": "k",
+  "name": "Kids",
+  "file": "kids.txt",
+  "mixed": false
+ },
+ {
+  "id": "x",
+  "name": "Hard mode",
+  "file": "hard.txt",
+  "mixed": true,
+  "suggestTime": 120
+ }
+]

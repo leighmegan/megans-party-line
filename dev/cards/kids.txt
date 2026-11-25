@@ -1,0 +1,304 @@
+# Megan's Taboo cards: kids deck
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated [| other deck, if the card belongs to a different deck]
+# Kids cards: simple words, easy forbidden lists.
+
+== animals sib
+Dog | bark, pet, woof, puppy, bone
+Cat | meow, pet, kitten, purr, whiskers
+
+== animals sib
+Cow | moo, milk, farm, spots, barn
+Pig | oink, pink, mud, farm, bacon
+
+== animals sib
+Sheep | wool, baa, farm, fluffy, lamb
+Goat | horns, farm, beard, eat, kid
+
+== animals sib
+Lion | roar, king, mane, jungle, cat
+Bear | big, brown, honey, cave, growl
+
+== animals sib
+Fish | swim, water, fins, tank, gills
+Bird | fly, wings, tweet, nest, feathers
+
+== animals sib
+Mouse | squeak, cheese, small, tail, cat
+Bunny rabbit | hop, ears, carrot, fluffy, Easter
+
+== animals sib
+Ladybug | red, spots, bug, fly, small
+Ant | tiny, bug, picnic, hill, crawl
+
+== animals sib
+Dog house | Snoopy, pet, yard, sleep, kennel
+Bird nest | eggs, tree, twigs, robin, build
+
+== food sib
+Apple | red, fruit, tree, teacher, crunchy
+Grapes | purple, green, bunch, vine, raisins
+
+== food sib
+Strawberry | red, seeds, fruit, jam, sweet
+Blueberry | pancakes, small, muffin, fruit, bush
+
+== food sib
+Carrot | orange, vegetable, rabbit, crunchy, root
+Broccoli | green, trees, vegetable, healthy, steamed
+
+== food sib
+Spaghetti and meatballs | pasta, sauce, Italian, dinner, red
+Mac and cheese | macaroni, yellow, noodles, Kraft, creamy
+
+== food sib
+Chicken nuggets | McDonald's, fried, dip, Happy Meal, pieces
+Fish sticks | fried, frozen, tartar sauce, dinner, breaded
+
+== food sib
+Juice box | straw, apple, drink, lunch, squeeze
+Milk | cow, white, drink, glass, cereal
+
+== food sib
+Lollipop | candy, stick, lick, sucker, round
+Gummy bears | candy, chewy, gelatin, colors, Haribo
+
+== food sib
+Popsicle | cold, stick, summer, frozen, lick
+Snow cone | ice, syrup, summer, shaved, cup
+
+== food sib
+Birthday candles | blow, wish, cake, light, age
+Party balloons | helium, string, pop, float, colors
+
+== food sib
+Pancake breakfast | syrup, flapjacks, Saturday, morning, stack
+Waffle cone | ice cream, crunchy, holder, scoop, drip
+
+== home sib
+Bed | sleep, pillow, blanket, night, bedroom
+Couch cushion | fort, sofa, soft, pillow, living room
+
+== home sib
+Bathtub toys | rubber duck, water, splash, boats, play
+Sidewalk chalk | draw, colors, outside, driveway, hopscotch
+
+== home sib
+Toothpaste | brush, teeth, minty, tube, squeeze
+Hairbrush | comb, tangles, bristles, morning, knots
+
+== home sib
+Lamp | bulb, table, switch, shade, desk
+Night-light | dark, scared, plug, glow, bedroom
+
+== home sib
+Refrigerator | cold, food, kitchen, fridge, magnet
+Oven | hot, bake, kitchen, cook, stove
+
+== home sib
+Door | knock, open, close, handle, enter
+Stairs | steps, up, down, climb, railing
+
+== home sib
+Spoon and fork | eat, utensils, silverware, dinner, table
+Cup | drink, sippy, water, mug, glass
+
+== school sib
+Pencil | write, eraser, sharpen, lead, yellow
+Glue stick | school, paste, craft, Elmer's, purple
+
+== school sib
+School bus | yellow, ride, driver, kids, stop
+Lunchbox | metal, sandwich, cafeteria, carry, thermos
+
+== school sib
+Recess | playground, outside, break, play, bell
+Nap time | sleep, mat, quiet, rest, afternoon
+
+== school sib
+Teacher's pet | favorite, apple, smart, class, suck up
+Show and tell | bring, share, class, toy, explain
+
+== school sib
+Alphabet | ABC, letters, song, 26, learn
+Counting | numbers, one two three, math, fingers, add
+
+== school sib
+Backpack straps | shoulders, bag, school, carry, zipper
+Crayon box | colors, wax, draw, 64, coloring
+
+== play sib
+Sandbox | castle, dig, bucket, shovel, playground
+Swing set | push, high, backyard, playground, chains
+
+== play sib
+Building blocks | stack, tower, wood, letters, knock down
+Toy train | tracks, choo-choo, wooden, Thomas, engine
+
+== play sib
+Teddy bear picnic | stuffed animals, blanket, pretend, toys, outdoors
+Tea party | cups, pretend, pinkies, dolls, fancy
+
+== play sib
+Freeze tag | run, chase, stop, frozen, it
+Red light green light | stop, go, game, run, Squid Game
+
+== play sib
+Simon says | copy, game, leader, do this, out
+Peekaboo | baby, hide, face, hands, boo
+
+== play sib
+Coloring book | crayons, pages, lines, pictures, markers
+Sticker | sticky, peel, reward, star, sheet
+
+== play sib
+Kickball | rubber, four bases, recess, game, pitch
+Hopscotch | chalk, squares, jump, sidewalk, one foot
+
+== play sib
+Puzzle piece | fit, jigsaw, edge, picture, missing
+Board game | Candy Land, dice, spaces, family, play
+
+== play sib
+Pillow fort | couch, build, inside, hide, cushions
+Blanket cape | superhero, fly, wear, pretend, back
+
+== nature sib
+Rain boots | puddles, rubber, feet, wet, yellow
+Umbrella hat | head, silly, funny, wear, sun
+
+== nature sib
+Snowflake | cold, white, winter, crystal, unique
+Raindrop | water, wet, sky, fall, storm
+
+== nature sib
+Tree | leaves, trunk, branches, climb, bark
+Flower | petals, garden, smell, bee, pretty
+
+== nature sib
+Star | sky, night, twinkle, shine, wish
+Cloud | sky, white, fluffy, rain, float
+
+== nature sib
+Rock | stone, hard, ground, throw, pebble
+Stick | tree, wood, branch, poke, ground
+
+== nature sib
+Bug jar | catch, insects, lid, holes, outside
+Butterfly net | catch, bug, swing, mesh, handle
+
+== people sib
+Firefighter hat | helmet, red, hero, dress-up, wear
+Police badge | cop, shiny, star, officer, pin
+
+== people sib
+Doctor | sick, stethoscope, hospital, checkup, nurse
+Vet | animals, pets, sick, clinic, shots
+
+== people sib
+Mailman | letters, deliver, mailbox, uniform, stamps
+Garbage truck | trash, cans, loud, Tuesday, collect
+
+== people sib
+Grandma | old, cookies, hugs, knit, mom's mom
+Grandpa | old, stories, glasses, dad's dad, cane
+
+== people sib
+Baby brother | little, boy, sibling, cry, young
+Big sister | older, girl, sibling, bossy, family
+
+== body sib
+Tooth | mouth, teeth, brush, white, wiggle
+Nose | smell, face, sneeze, pick, two holes
+
+== body sib
+Belly button | tummy, hole, middle, innie, outie
+Elbow | arm, bend, funny bone, joint, middle
+
+== body sib
+Tickle | laugh, giggle, feet, fingers, armpit
+Hug | squeeze, arms, love, wrap, tight
+
+== body sib
+Yawn | tired, sleepy, mouth, open, bedtime
+Giggle | laugh, funny, little, silly, chuckle
+
+== characters sib
+Princess | crown, castle, tiara, dress, royal
+Knight | armor, sword, horse, castle, shield
+
+== characters sib
+Fairy | wings, magic, wand, tiny, sparkle
+Giant | big, tall, beanstalk, huge, fee-fi-fo-fum
+
+== characters sib
+Pirate ship | sail, Captain Hook, ocean, flag, plank
+Treasure chest | gold, box, X marks the spot, buried, coins
+
+== characters sib
+Monster under the bed | scary, night, hide, closet, afraid
+Imaginary friend | pretend, invisible, play, talk, made up
+
+== transport sib
+Fire engine | red, siren, ladder, hose, fast
+Dump truck | dirt, construction, tip, big, load
+
+== transport sib
+Rocket ship | space, blast off, moon, astronaut, launch
+Airplane | fly, wings, sky, pilot, airport
+
+== transport sib
+Tricycle | three wheels, ride, pedal, toddler, bike
+Wagon | pull, red, wheels, handle, Radio Flyer
+
+== events sib
+Sleepover | pajamas, friends, night, pillows, movie
+Field trip | bus, school, museum, permission slip, class
+
+== events sib
+Lost tooth | wiggle, gap, under the pillow, money, mouth
+First day of school | backpack, nervous, new, teacher, photo
+
+== animals sib
+Turtle shell | hard, back, hide, slow, green
+Snail trail | slimy, slow, shiny, garden, path
+
+== animals sib
+Puppy dog eyes | sad, beg, cute, look, please
+Kitty cat | meow, fluffy, purr, pet, whiskers
+
+== food sib
+Peanut butter and jelly | PB&J, sandwich, bread, grape, lunch
+Grilled cheese | melted, toast, tomato soup, golden, crispy
+
+== food sib
+Cookie jar | lid, cookies, kitchen, sneak, counter
+Cereal box | prize, cardboard, breakfast, toy, cartoon
+
+== home sib
+Bubble bath bottle | foam, soap, tub, suds, pour
+Rubber duck | yellow, squeak, float, toy, tub
+
+== play sib
+Jungle gym | climb, bars, playground, slide, monkey
+Merry-go-round | spin, dizzy, push, ride, park
+
+== play sib
+Paper airplane race | fold, throw, glide, far, class
+Water balloon | splash, throw, summer, pop, wet
+
+== play sib
+Jack-in-the-box | crank, pop up, clown, music, surprise
+Rocking horse | wooden, ride, toy, back and forth, pony
+
+== characters sib
+Superhero cape | fly, red, Superman, back, costume
+Magic wand | wave, spell, sparkle, fairy, stick
+
+== nature sib
+Mud puddle | jump, splash, wet, dirty, rain
+Rainbow sticker | colors, peel, arc, sheet, reward
+
+== events sib
+Bedtime story | read, book, night, sleep, tuck in
+Lullaby | song, sleep, baby, sing, soft

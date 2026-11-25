@@ -1,0 +1,304 @@
+# Megan's Taboo cards: hard mode deck
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated [| other deck, if the card belongs to a different deck]
+# Hard mode: abstract ideas, idioms and tricky concepts. Plays best at 2:00.
+
+== ideas sib
+Irony | opposite, expected, sarcastic, Alanis, twist
+Paradox | contradiction, impossible, both, logic, chicken and egg
+
+== ideas sib
+Loophole | rule, exception, gap, sneaky, legal
+Technicality | detail, rule, minor, actually, win
+
+== ideas sib
+Silver lining | bright side, cloud, positive, bad, hope
+Blessing in disguise | lucky, turned out, bad, good, hidden
+
+== ideas sib
+Karma | what goes around, deserve, universe, payback, comes around
+Poetic justice | fitting, deserved, ironic, punishment, fate
+
+== ideas sib
+Hindsight | looking back, 20/20, after, regret, past
+Foresight | ahead, plan, predict, future, prepare
+
+== ideas sib
+Empathy | feel, understand, others, shoes, compassion
+Sympathy | sorry, card, condolences, pity, feel
+
+== ideas sib
+Integrity | honest, moral, values, character, principles
+Loyalty | faithful, stick, dog, devoted, betray
+
+== ideas sib
+Ambition | goals, driven, success, climb, motivation
+Complacency | comfortable, lazy, settle, satisfied, stagnant
+
+== ideas sib
+Nostalgia trip | memory lane, old days, remember, looking back, throwback
+Bucket list item | before I die, dream, goal, someday, check off
+
+== ideas sib
+Gut feeling | instinct, stomach, intuition, sense, hunch
+Second-guessing | doubt, question, unsure, overthink, change mind
+
+== ideas sib
+Peer pressure | friends, push, cool, fit in, influence
+Conformity | follow, same, fit in, crowd, rules
+
+== ideas sib
+Imposter syndrome | fraud, fake, doubt, deserve, success
+Overthinking | brain, worry, analyze, too much, spiral
+
+== ideas sib
+Common sense | obvious, logic, practical, smart, basic
+Wisdom | old, knowledge, owl, experience, wise
+
+== ideas sib
+Patience | wait, calm, virtue, slow, tolerate
+Grit | determination, tough, perseverance, keep going, sand
+
+== ideas sib
+Willpower | resist, temptation, strength, discipline, mind
+Self-control | restrain, impulse, diet, patience, hold back
+
+== ideas sib
+Pet peeve | annoying, hate, small, bug, irritate
+Guilty pleasure | secretly, enjoy, shame, love, indulge
+
+== ideas sib
+Placebo | fake, sugar pill, believe, medicine, trial
+Butterfly effect | small change, big, chaos, wings, consequences
+
+== ideas sib
+Free will | choice, decide, philosophy, control, autonomy
+Destiny | fate, meant to be, future, written, path
+
+== ideas sib
+Infinity | endless, forever, number, eight, sideways
+Zero | nothing, number, none, circle, nada
+
+== ideas sib
+Gravity of the situation | serious, weight, important, grave, matter
+Elephant in the room | obvious, ignore, problem, avoid, awkward
+
+== idioms sib
+Break the ice | start, awkward, conversation, meet, cold
+Ice breaker | game, meeting, introductions, start, team
+
+== idioms sib
+Bite the bullet | do it, painful, endure, avoid, tough
+Face the music | consequences, accept, trouble, deal, punishment
+
+== idioms sib
+Once in a blue moon | rare, seldom, sky, color, hardly ever
+When pigs fly | never, impossible, flying, animal, yeah right
+
+== idioms sib
+Spill the tea | gossip, drama, tell, juicy, secrets
+Throw shade | insult, subtle, diss, mean, rude
+
+== idioms sib
+Cold feet | nervous, wedding, back out, scared, chilly
+Butterflies in your stomach | nervous, excited, flutter, crush, feeling
+
+== idioms sib
+Piece of cake | easy, simple, dessert, slice, no problem
+Walk in the park | easy, simple, stroll, no sweat, breeze
+
+== idioms sib
+Under the weather | sick, ill, feeling, cold, not well
+On cloud nine | happy, joyful, sky, ecstatic, high
+
+== idioms sib
+Cost an arm and a leg | expensive, price, pricey, money, body
+Break the bank | expensive, money, spend, afford, broke
+
+== idioms sib
+Hit the hay | sleep, bed, tired, night, straw
+Burn the midnight oil | late, work, lamp, study, up
+
+== idioms sib
+Let the cat out of the bag | secret, reveal, tell, spoil, slip
+Spill the beans | blab, accident, slip up, mouth, legumes
+
+== idioms sib
+Beat around the bush | avoid, point, indirect, stall, hint
+Cut to the chase | point, get to it, quick, skip, direct
+
+== idioms sib
+Barking up the wrong tree | mistake, dog, accuse, guess, misdirected
+Missing the boat | late, chance, opportunity, too late, ship
+
+== idioms sib
+Raining cats and dogs | pouring, heavy, downpour, animals, wet
+Calm before the storm | quiet, peace, trouble, weather, eerie
+
+== idioms sib
+Kill two birds with one stone | efficient, at once, rock, double, multitask
+Best of both worlds | Hannah Montana, two, combine, perfect, mix
+
+== idioms sib
+Devil's advocate | argue, opposite, debate, side, pretend
+Benefit of the doubt | trust, believe, assume, innocent, chance
+
+== idioms sib
+Jump the gun | early, start, too soon, rush, fire
+Put the cart before the horse | order, backwards, wrong, rush, sequence
+
+== idioms sib
+The last straw | final, enough, camel, done, back
+Breaking point | snap, limit, too much, stress, crack
+
+== idioms sib
+Bury the hatchet | make peace, forgive, fight, end, axe
+Water under the bridge | forgiven, past, forget, over, river
+
+== idioms sib
+Burn bridges | relationship, ruin, quit, enemy, back
+Burning the candle at both ends | exhausted, overwork, busy, tired, wax
+
+== idioms sib
+Actions speak louder than words | do, say, prove, show, talk
+Easier said than done | hard, talk, do, simple, difficult
+
+== idioms sib
+In the same boat | together, situation, both, ship, shared
+Birds of a feather | flock, together, alike, similar, friends
+
+== concepts sib
+Supply and demand | economics, price, market, buy, sell
+Compound interest | money, grows, savings, bank, Einstein
+
+== concepts sib
+Opportunity cost | trade-off, choice, give up, economics, value
+Sunk cost | already spent, money, can't get back, keep going, fallacy
+
+== concepts sib
+Natural selection | Darwin, evolution, fittest, survival, species
+Food chain | eat, predator, prey, top, animals
+
+== concepts sib
+Photosynthesis | plants, sunlight, leaves, chlorophyll, energy
+Evaporation | water, heat, gas, disappear, steam
+
+== concepts sib
+Black hole | space, gravity, light, suck, star
+Big Bang | universe, beginning, explosion, theory, start
+
+== concepts sib
+Time travel | past, future, machine, DeLorean, go back
+Parallel universe | multiverse, alternate, reality, another, dimension
+
+== concepts sib
+Artificial intelligence | AI, robot, computer, smart, ChatGPT
+Algorithm | steps, computer, code, feed, recommend
+
+== concepts sib
+Virtual reality | headset, goggles, VR, game, immersive
+Cloud storage | upload, online, files, Dropbox, backup
+
+== concepts sib
+Stockholm syndrome | captor, hostage, attached, Sweden, love
+Fight or flight | stress, run, danger, adrenaline, response
+
+== concepts sib
+Daylight | sun, day, bright, morning, outside
+Twilight zone | weird, eerie, show, strange, dimension
+
+== concepts sib
+Muscle memory | automatic, practice, body, remember, habit
+Second nature | habit, easy, automatic, natural, instinct
+
+== concepts sib
+Social media detox | break, phone, apps, offline, unplug
+Digital footprint | online, trail, history, permanent, internet
+
+== concepts sib
+Brain freeze | cold, ice cream, head, pain, fast
+Sugar rush | candy, energy, hyper, kids, crash
+
+== concepts sib
+Writer's block | stuck, ideas, author, blank, page
+Tip of the tongue | almost, remember, word, forget, can't think
+
+== concepts sib
+Small talk | weather, chat, polite, strangers, casual
+Heart-to-heart | deep, honest, feelings, serious, open up
+
+== concepts sib
+Rule of thumb | guideline, general, estimate, simple, finger
+Trial and error | try, mistakes, learn, test, again
+
+== concepts sib
+Status quo | normal, same, way things are, change, current
+Paradigm shift | change, thinking, big, new, perspective
+
+== concepts sib
+Catch-22 | no-win, trap, contradiction, stuck, book
+Double-edged sword | good, bad, both, cuts, benefit
+
+== concepts sib
+Survival of the fittest | strongest, Darwin, compete, last, nature
+Law of averages | odds, chance, eventually, probability, luck
+
+== concepts sib
+Snowball effect | grows, bigger, roll, momentum, faster
+Domino effect | chain, fall, one after another, reaction, topple
+
+== concepts sib
+Ghost town | empty, abandoned, deserted, Western, nobody
+Urban legend | myth, story, rumor, scary, city
+
+== concepts sib
+Rabbit hole | deep, internet, lost, Alice, hours
+Tangent | off topic, side, ramble, unrelated, math
+
+== concepts sib
+Mid-sentence | talking, interrupt, middle, words, stop
+Awkward silence | quiet, crickets, uncomfortable, pause, nobody talks
+
+== concepts sib
+Rose-colored glasses | optimistic, naive, positive, see, pink
+Tunnel vision | focus, narrow, ignore, one thing, blinders
+
+== concepts sib
+Comfort zone | safe, familiar, step out, cozy, scary
+Growth mindset | learn, improve, effort, yet, challenge
+
+== idioms sib
+Bend over backwards | try hard, effort, help, flexible, accommodate
+Go the extra mile | effort, more, above, beyond, distance
+
+== concepts sib
+Cognitive dissonance | conflict, beliefs, uncomfortable, contradict, mind
+Confirmation bias | believe, evidence, agree, ignore, already
+
+== ideas sib
+Bittersweet | happy, sad, mixed, both, emotion
+Anticlimax | letdown, disappointing, buildup, ending, meh
+
+== idioms sib
+Sitting on the fence | undecided, neutral, choose, sides, middle
+Wishy-washy | indecisive, flip-flop, vague, weak, unsure
+
+== concepts sib
+Peak | top, highest, best, mountain, summit
+Plateau | flat, level, stuck, progress, stop
+
+== concepts sib
+Mansplaining | explain, condescending, men, obvious, interrupt
+Projection | blame, others, feelings, movie, screen
+
+== ideas sib
+Closure | end, move on, answers, finally, relationship
+Unfinished business | loose ends, left, undone, regret, ghost
+
+== idioms sib
+Read between the lines | hidden, meaning, imply, subtle, understand
+Take it with a grain of salt | doubt, skeptical, believe, little, seasoning
+
+== concepts sib
+Overqualified | experience, too much, job, resume, skills
+Learning curve | new, hard at first, steep, practice, improve

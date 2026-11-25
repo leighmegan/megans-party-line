@@ -1,0 +1,1579 @@
+# Megan's Taboo cards: classic deck
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated [| other deck, if the card belongs to a different deck]
+# Family members are split between Player 1 and Player 2 unless one is forbidden on another's card.
+# IDs and player sides are permanent and live in ids.json. Never reuse a removed word for a different card.
+
+== food sib
+Banana | yellow, peel, monkey, fruit, split
+Monkey | banana, ape, swing, tail, zoo
+Plantain | green, fried, starchy, cook, Caribbean
+Lemur | Madagascar, ringed tail, primate, King Julien, eyes
+
+== objects sib
+Toothbrush | teeth, morning, paste, dentist, bristles
+Dentist | teeth, cavity, drill, floss, checkup
+Floss | string, teeth, gums, dentist, mint
+Orthodontist | braces, teeth, straight, retainer, doctor
+
+== objects sib
+Umbrella | rain, wet, open, shade, cover
+Raincoat | jacket, wet, yellow, hood, storm
+
+== objects sib
+Pillow | bed, sleep, head, soft, case
+Blanket | warm, bed, cover, cozy, quilt
+
+== objects sib
+Ladder | climb, rungs, steps, tall, roof
+Stepstool | reach, short, kitchen, climb, stand
+
+== nature sib
+Volcano | lava, erupt, mountain, ash, hot
+Hot spring | geothermal, bath, steam, soak, Iceland
+
+== animals sib
+Penguin | bird, ice, waddle, tuxedo, Antarctica
+Puffin | bird, orange, beak, Iceland, cliffs
+
+== food sib
+Sandwich | bread, lunch, meat, cheese, slice
+Wrap | tortilla, roll, lunch, burrito, fold
+
+== objects sib
+Microwave | heat, kitchen, popcorn, oven, beep
+Air fryer | crispy, kitchen, fries, gadget, oil
+
+== objects sib
+Hammock | swing, hang, trees, relax, rope
+Rocking chair | porch, grandpa, back and forth, wooden, seat
+
+== objects sib
+Bicycle | pedal, wheels, ride, helmet, chain
+Scooter | kick, wheels, ride, electric, handlebars
+
+== objects sib
+Fireworks | July, explode, sky, boom, colors
+Sparkler | stick, burn, July, hand, glitter
+
+== events sib
+Wedding | bride, groom, marry, ring, vows
+Bride | wedding, dress, veil, groom, white
+Anniversary | years, married, celebrate, date, couple
+Officiant | ceremony, marry, pronounce, priest, vows
+Bridesmaid | dress, matching, wedding, friend, bouquet
+
+== places sib
+Library | books, borrow, quiet, card, shelves
+Bookstore | buy, read, shelves, Barnes, novels
+
+== nature sib
+Cactus | desert, spikes, plant, prickly, water
+Succulent | plant, aloe, pot, jade, trendy
+
+== objects sib
+Mirror | reflection, glass, look, bathroom, face
+Window | glass, see, open, house, pane
+
+== activities sib
+Snowman | carrot, winter, build, frosty, scarf
+Snow angel | lie, arms, legs, winter, ground
+
+== people sib
+Pirate | ship, treasure, parrot, eyepatch, arr
+Parrot | bird, talk, colorful, pirate, repeat
+Viking | horns, Norway, ship, raid, helmet
+Toucan | beak, Froot Loops, colorful, bird, rainforest
+
+== nature ctr
+Thunder | lightning, storm, loud, rain, clap
+Hail | ice, balls, storm, dent, falling
+
+== food sib
+Popcorn | movie, butter, kernel, theater, salt
+Nachos | chips, cheese, salsa, jalapeño, theater
+
+== objects sib
+Backpack | school, carry, straps, zipper, bag
+Purse | handbag, wallet, carry, strap, woman
+
+== objects syn
+Calendar | date, month, year, days, schedule
+Planner | schedule, agenda, write, organize, notebook
+
+== characters sib
+Vampire | blood, fangs, bite, Dracula, bat
+Werewolf | moon, silver bullet, full, howl, transform
+
+== objects sib
+Chimney | smoke, fireplace, Santa, roof, brick
+Igloo | ice, snow, Arctic, dome, cold
+Thanksgiving | turkey, November, feast, pilgrims, thankful
+Santa Claus | Christmas, presents, reindeer, North Pole, chimney
+Wood stove | iron, cabin, heat, logs, burn
+Cabin | log, woods, mountains, cozy, vacation
+Christmas | December, Santa, tree, presents, Jesus
+Rudolph | red nose, reindeer, sleigh, Christmas, guide
+
+== objects sib
+Lighthouse | ocean, beam, ships, tower, coast
+Buoy | float, water, marker, boat, red
+
+== objects sib
+Passport | travel, country, stamp, photo, airport
+Driver's license | ID, card, DMV, photo, car
+
+== food sib
+Spaghetti | pasta, noodles, meatballs, sauce, Italian
+Macaroni | cheese, elbow, pasta, mac, noodle
+
+== body sib
+Hiccup | breath, diaphragm, scare, water, hold
+Burp | soda, belch, excuse me, stomach, gas
+
+== objects tan
+Scarecrow | birds, field, straw, farm, hat
+Pitchfork | hay, farm, tool, prongs, devil
+
+== objects sib
+Treadmill | run, gym, belt, walk, exercise
+Stair climber | gym, steps, machine, cardio, legs
+
+== objects syn
+Flashlight | dark, beam, batteries, camping, torch
+Lantern | camping, light, glow, carry, oil
+
+== actions sib
+Doorbell | ring, ding, visitor, button, front
+Knock | door, fist, tap, enter, who's there
+
+== food sib
+Hamburger | beef, patty, bun, grill, cheese
+Cheeseburger | Big Mac, American, slice, melted, patty
+French fries | potato, salt, ketchup, McDonald's, side
+
+== objects sib
+Suitcase | travel, pack, luggage, clothes, wheels
+Duffel bag | gym, carry, zipper, travel, strap
+
+== nature sib
+Tornado | wind, funnel, spin, storm, Kansas
+Blizzard | snow, storm, wind, white, cold
+
+== animals sib
+Jellyfish | sting, ocean, tentacles, squishy, clear
+Sea urchin | spiky, ocean, purple, step, sushi
+
+== objects sib
+Piano | keys, music, play, black, white
+Organ | church, keys, pipes, music, instrument
+
+== food sib
+Lemonade | citrus, sour, stand, sugar, drink
+Iced tea | sweet, cold, glass, Southern, drink
+
+== objects tan
+Birthday | cake, candles, party, age, presents
+Candle | wax, wick, flame, light, birthday
+Baby shower | gifts, pregnant, games, mom, registry
+Incense | smell, stick, burn, smoke, scent
+
+== animals sib
+Kangaroo | Australia, hop, pouch, joey, jump
+Wallaby | small, marsupial, cousin, bounce, rugby
+
+== activities sib
+Haircut | scissors, barber, salon, trim, short
+Barber | haircut, shave, scissors, shop, clippers
+Manicure | nails, polish, salon, fingers, paint
+Hairstylist | salon, cut, color, blowout, appointment
+
+== objects sib
+Parachute | jump, plane, sky, fall, open
+Hang glider | fly, wing, cliff, soar, sky
+
+== objects tan
+Alarm | clock, wake, morning, snooze, ring
+Rooster | crow, farm, dawn, chicken, cock-a-doodle-doo
+
+== objects ctr
+Telescope | stars, lens, space, look, far
+Microscope | small, lab, science, slide, zoom
+
+== food sib
+Hot dog | bun, sausage, mustard, ketchup, ballpark
+Corn dog | stick, fried, fair, batter, sausage
+
+== nature sib
+Rainbow | colors, leprechaun, sky, arc, pot
+Easter Bunny | eggs, basket, rabbit, candy, spring
+Rabbit | bunny, ears, hop, carrot, fluffy
+Sunset | evening, orange, horizon, sky, dusk
+Leprechaun | Irish, gold, green, St. Patrick's, rainbow
+
+== objects sib
+Seatbelt | car, buckle, safety, strap, click
+Airbag | crash, car, inflate, safety, steering
+
+== animals sib
+Mosquito | bite, itch, bug, buzz, blood
+Gnat | tiny, fly, bug, swarm, annoying
+
+== clothing sib
+Pajamas | sleep, night, bed, wear, PJs
+Bathrobe | fluffy, shower, wear, tie, spa
+
+== objects sib
+Skateboard | wheels, ride, tricks, Tony Hawk, ramp
+Rollerblades | skates, wheels, inline, feet, rink
+
+== people sib
+Detective | crime, clue, solve, mystery, Sherlock
+Sherlock Holmes | detective, Watson, pipe, London, mystery
+Spy | secret, agent, James Bond, undercover, CIA
+Nancy Drew | girl, detective, books, mystery, sleuth
+
+== food sib
+Waffle | breakfast, syrup, iron, squares, pancake
+French toast | bread, egg, breakfast, cinnamon, syrup
+
+== objects sib
+Fortune cookie | Chinese, paper, message, future, crack
+Magic 8 Ball | shake, answer, toy, future, yes
+
+== objects tan
+Elevator | floor, up, down, button, building
+Dumbwaiter | food, small, hotel, lift, kitchen
+
+== activities syn
+Campfire | marshmallow, wood, flames, s'mores, camping
+Bonfire | big, beach, burn, party, flames
+
+== activities sib
+Recycle | bin, plastic, reuse, green, trash
+Compost | scraps, soil, garden, rot, worms
+
+== objects sib
+Sunscreen | protect, burn, lotion, SPF, beach
+Bug spray | mosquito, repellent, camping, itch, can
+
+== characters sib
+Robot | machine, metal, beep, android, program
+Cyborg | half, machine, human, Terminator, android
+
+== animals sib
+Goldfish | bowl, orange, pet, swim, cracker
+Hamster | wheel, rodent, cage, pet, cheeks
+
+== characters sib
+Tooth Fairy | pillow, money, lost, night, child
+Sandman | sleep, dream, Metallica, night, eyes
+
+== objects tan
+Magnet | attract, metal, fridge, poles, stick
+Compass | north, direction, needle, navigate, map
+
+== objects sib
+Hula hoop | spin, hips, circle, toy, waist
+Jump rope | skip, double dutch, playground, hop, recess
+
+== events sib
+Graduation | cap, gown, diploma, school, ceremony
+Prom | dance, high school, date, dress, king
+
+== objects sib
+Escalator | stairs, moving, mall, up, down
+Revolving door | spin, hotel, lobby, enter, glass
+
+== objects tan
+Bubble | soap, blow, pop, float, wand
+Balloon animal | twist, clown, party, dog, shape
+
+== ideas ctr
+Nightmare | dream, scary, sleep, wake, bad
+Daydream | awake, imagine, zone out, stare, fantasy
+
+== characters sib
+Zombie | dead, brain, walk, undead, apocalypse
+Mummy | wrapped, Egypt, bandages, tomb, pharaoh
+
+== animals sib
+Squirrel | nuts, tree, tail, acorn, furry
+Chipmunk | Alvin, stripes, cheeks, small, nuts
+
+== objects sib
+Thermometer | temperature, fever, degrees, hot, cold
+Scale | weigh, pounds, bathroom, step, heavy
+
+== characters sib
+Unicorn | horn, horse, magic, rainbow, mythical
+Pegasus | wings, horse, flying, Greek, myth
+
+== ideas tan
+Traffic jam | cars, stuck, highway, rush, slow
+Road rage | angry, driver, honk, yell, highway
+
+== activities sib
+Bowling | pins, strike, ball, lane, spare
+Mini golf | putt, windmill, course, hole, club
+
+== objects sib
+Remote control | TV, channel, buttons, couch, clicker
+Game controller | joystick, buttons, PlayStation, Xbox, video
+
+== places sib
+Grocery store | food, cart, aisle, checkout, shopping
+Shopping cart | grocery, wheels, push, store, basket
+Farmers market | fresh, produce, local, stands, Saturday
+
+== nature tan
+Sandcastle | beach, build, bucket, tower, waves
+Sand dollar | shell, beach, round, flat, ocean
+
+== food sib
+Pancake | flip, syrup, breakfast, batter, stack
+Crepe | thin, French, Paris, fold, breakfast
+
+== objects syn
+Glasses | eyes, see, lenses, frames, wear
+Monocle | one, eye, fancy, rich, chain
+
+== objects sib
+Crayon | color, wax, draw, box, kids
+Marker | Sharpie, ink, cap, draw, whiteboard
+
+== objects sib
+Saxophone | jazz, instrument, brass, blow, music
+Trumpet | horn, valves, Louis Armstrong, blow, military
+
+== nature sib
+Hurricane | storm, wind, Florida, eye, category
+Monsoon | rain, India, season, flood, heavy
+
+== events syn
+Barbecue | grill, meat, smoke, sauce, backyard
+Cookout | grill, backyard, summer, burgers, friends
+
+== body sib
+Moustache | hair, lip, face, beard, shave
+Goatee | chin, beard, facial, hair, small
+
+== objects sib
+Anchor | ship, boat, heavy, drop, sea
+Life jacket | vest, float, boat, safety, orange
+
+== animals sib
+Spider | web, legs, eight, bug, crawl
+Scorpion | tail, sting, desert, claws, venom
+
+== activities sib
+Hide and seek | game, count, find, hiding, ready
+Tag | you're it, chase, run, touch, game
+
+== objects sib
+Lawn mower | grass, cut, yard, blade, engine
+Leaf blower | loud, yard, fall, leaves, gas
+
+== food sib
+Cupcake | frosting, bake, sprinkles, small, muffin
+Brownie | chocolate, square, bake, fudge, pan
+
+== body sib
+Sneeze | nose, achoo, bless, cold, allergy
+Allergy | sneeze, pollen, react, peanut, itchy
+Cough | throat, sick, cover, cold, mouth
+Hay fever | pollen, sneezing, spring, itchy eyes, season
+
+== objects sib
+Toaster | bread, pop, kitchen, crumbs, slice
+Coffee maker | brew, pot, kitchen, morning, Keurig
+
+== objects sib
+Hammer | nail, tool, pound, hit, build
+Plumber | pipes, toilet, leak, wrench, drain
+Screwdriver | Phillips, flathead, tool, twist, drill
+Wrench | bolt, tool, plumber, tighten, adjust
+
+== people syn
+Mailbox | letters, post, mailman, flag, stamp
+Mail carrier | letters, deliver, truck, postal, uniform
+
+== objects sib
+Postcard | mail, picture, vacation, stamp, send
+Greeting card | Hallmark, birthday, sign, envelope, message
+
+== objects sib
+Wig | hair, fake, head, costume, bald
+Beehive | hairdo, tall, 1960s, bun, updo
+
+== objects sib
+Ferris wheel | ride, carnival, circle, fair, tall
+Carousel | horses, merry-go-round, spin, ride, music
+
+== activities sib
+Chess | board, king, queen, checkmate, pawn
+Checkers | king me, jump, red, black, board
+
+== food sib
+Coffee | caffeine, morning, beans, cup, brew
+Tea | bag, steep, leaves, British, kettle
+
+== places sib
+Swimming pool | water, chlorine, dive, deep, lifeguard
+Splash pad | fountain, kids, sprinklers, park, summer
+
+== characters ctr
+Superhero | cape, powers, save, villain, costume
+Sidekick | partner, Robin, helper, hero, second
+
+== people sib
+Elvis Presley | king, rock, Graceland, singer, hips
+Johnny Cash | Man in Black, country, Folsom, ring of fire, June
+Graceland | Memphis, mansion, Tennessee, tour, king
+
+== places sib
+Eiffel Tower | Paris, France, tall, iron, landmark
+Leaning Tower of Pisa | Italy, tilt, crooked, photo, push
+
+== places tan
+Statue of Liberty | New York, torch, green, France, island
+Plymouth Rock | Pilgrims, 1620, Massachusetts, landed, Mayflower
+
+== places sib
+Grand Canyon | Arizona, deep, river, hike, cliffs
+Yellowstone | Old Faithful, park, Wyoming, bears, geyser
+
+== places sib
+Disney World | Orlando, Mickey, park, rides, Florida
+Mickey Mouse | Disney, ears, Minnie, cartoon, Pluto
+Universal Studios | theme park, Orlando, Harry Potter, rides, movies
+Donald Duck | Disney, quack, sailor, Daisy, nephews
+
+== people sib
+Abraham Lincoln | president, beard, penny, hat, Gettysburg
+George Washington | first, president, dollar, cherry tree, general
+
+== people sib
+Oprah | talk show, TV, host, book club, Winfrey
+Ellen | talk show, dance, DeGeneres, host, comedian
+
+== people sib
+Beyoncé | singer, Destiny's Child, Jay-Z, queen, Lemonade
+Rihanna | Barbados, singer, Umbrella, Fenty, pop
+
+== places sib
+Mount Rushmore | presidents, faces, South Dakota, carved, rock
+Stonehenge | England, rocks, circle, ancient, mystery
+
+== places sib
+Hollywood | movies, sign, Los Angeles, stars, actors
+Broadway | New York, theater, musical, stage, shows
+
+== places sib
+Las Vegas | casino, gamble, Nevada, strip, Sin City
+Atlantic City | New Jersey, casino, boardwalk, gamble, Monopoly
+
+== people sib
+Albert Einstein | genius, relativity, physics, hair, scientist
+Gravity | fall, Newton, pull, apple, force
+Isaac Newton | apple, gravity, laws, physics, English
+Friction | rub, heat, slow, force, surface
+
+== people sib
+Taylor Swift | singer, Eras, country, pop, songs
+Miley Cyrus | Hannah Montana, Wrecking Ball, Billy Ray, singer, twerk
+
+== people sib
+Michael Jordan | basketball, Bulls, Chicago, shoes, dunk
+LeBron James | basketball, Lakers, Cleveland, King, NBA
+
+== ideas tan
+Titanic | ship, iceberg, sink, movie, DiCaprio
+Leonardo DiCaprio | actor, Titanic, Oscar, Jack, Inception
+Shipwreck | sunk, ocean floor, sailors, treasure, boat
+Brad Pitt | actor, Angelina, Fight Club, Jennifer Aniston, handsome
+
+== places sib
+Pyramids | Egypt, pharaoh, triangle, desert, tomb
+Sphinx | Egypt, lion, riddle, statue, nose
+
+== places sib
+White House | president, Washington, D.C., home, Oval Office
+Capitol Building | Congress, dome, Washington, senators, laws
+
+== brands sib
+Starbucks | coffee, latte, barista, green, Frappuccino
+Donut | glazed, hole, sprinkles, Dunkin', fried
+Dunkin' | donuts, coffee, Boston, iced, America runs
+Bagel | cream cheese, New York, round, hole, toast
+
+== brands sib
+McDonald's | burger, fries, golden arches, Big Mac, Happy Meal
+Crown | king, queen, head, jewels, royal
+Burger King | Whopper, crown, fast food, flame, Have it your way
+Taco Bell | Mexican, fast food, chalupa, Crunchwrap, late night
+Tiara | princess, sparkly, headband, pageant, queen
+
+== brands sib
+Amazon | shopping, online, Prime, package, Bezos
+Target | red, bullseye, store, shopping, Starbucks
+
+== brands sib
+Netflix | streaming, shows, binge, movies, chill
+YouTube | videos, upload, channel, subscribe, watch
+
+== brands sib
+Google | search, internet, engine, Gmail, look up
+Wikipedia | encyclopedia, article, edit, online, facts
+
+== characters sib
+Harry Potter | wizard, Hogwarts, glasses, scar, magic
+Hermione | Granger, smart, witch, Ron, Emma Watson
+
+== art sib
+Mona Lisa | painting, smile, da Vinci, Louvre, art
+Starry Night | Van Gogh, painting, swirls, blue, Dutch
+
+== places sib
+New Orleans | Mardi Gras, jazz, Louisiana, beignets, Bourbon Street
+Nashville | Tennessee, country, music city, honky-tonk, hot chicken
+
+== places sib
+Hawaii | island, aloha, luau, volcano, state
+Alaska | cold, bears, Juneau, state, snow
+
+== places sib
+Niagara Falls | honeymoon, Canada, New York, barrel, mist
+Hoover Dam | Nevada, concrete, Colorado River, Lake Mead, power
+
+== events sib
+Super Bowl | football, February, halftime, commercials, NFL
+Football | NFL, touchdown, quarterback, tackle, Super Bowl
+World Series | baseball, October, championship, MLB, games
+Basketball | hoop, NBA, dribble, court, dunk
+
+== events sib
+Olympics | gold, medal, rings, athletes, games
+World Cup | soccer, FIFA, countries, tournament, every four years
+
+== characters ctr
+Barbie | doll, pink, Ken, Mattel, plastic
+Cabbage Patch Kids | dolls, adopt, 1980s, birth certificate, craze
+
+== brands sib
+LEGO | bricks, build, step, plastic, blocks
+Play-Doh | clay, squish, mold, kids, smell
+
+== brands sib
+Coca-Cola | soda, Pepsi, red, Coke, fizzy
+Dr Pepper | soda, 23 flavors, Texas, cherry, doctor
+
+== people sib
+Martin Luther King Jr. | dream, speech, civil rights, January, march
+Rosa Parks | bus, seat, civil rights, Montgomery, refused
+
+== people sib
+Marilyn Monroe | actress, blonde, dress, Hollywood, icon
+Audrey Hepburn | Breakfast at Tiffany's, actress, black dress, pearls, elegant
+
+== people sib
+Muhammad Ali | boxer, float, butterfly, champion, greatest
+Mike Tyson | boxer, ear, bite, tattoo, heavyweight
+
+== characters sib
+Batman | Gotham, Bruce Wayne, Robin, Joker, cape
+Superman | Clark Kent, cape, Krypton, fly, Metropolis
+Wonder Woman | lasso, Amazon, Diana, bracelets, DC
+
+== characters sib
+Spider-Man | web, Peter Parker, Marvel, swing, Avengers
+Iron Man | Tony Stark, suit, Marvel, Avengers, Robert Downey
+
+== characters sib
+Godzilla | monster, Japan, lizard, giant, Tokyo
+King Kong | ape, Empire State, giant, gorilla, monster
+
+== movies sib
+Star Wars | Jedi, Vader, Luke, force, space
+Star Trek | Spock, Enterprise, Kirk, beam me up, Captain
+
+== characters sib
+Cinderella | slipper, glass, midnight, ball, prince
+Snow White | dwarfs, apple, poison, mirror, Disney
+
+== characters sib
+Romeo and Juliet | Shakespeare, lovers, balcony, tragedy, poison
+Hamlet | Shakespeare, Denmark, prince, skull, to be
+
+== people sib
+Christopher Columbus | 1492, ships, explorer, sailed, America
+Lewis and Clark | explorers, west, Sacagawea, expedition, Louisiana
+
+== people sib
+Dolly Parton | country, singer, Tennessee, 9 to 5, Jolene
+Reba | McEntire, country, red hair, sitcom, singer
+
+== characters sib
+Bigfoot | hairy, woods, Sasquatch, footprint, legend
+Loch Ness Monster | Scotland, myth, lake, creature, neck
+
+== places sib
+Area 51 | aliens, Nevada, secret, UFO, military
+Roswell | New Mexico, UFO, crash, aliens, 1947
+
+== places sib
+Route 66 | highway, road trip, Chicago, California, old
+Interstate | highway, freeway, I-95, road, lanes
+
+== places sib
+Golden Gate Bridge | San Francisco, red, bay, suspension, California
+Brooklyn Bridge | New York, East River, cables, cross, Manhattan
+
+== events sib
+Kentucky Derby | horse, race, hats, May, Louisville
+Rodeo | bull, cowboy, ride, Texas, lasso
+
+== places sib
+Times Square | New York, ball drop, lights, New Year, Broadway
+Central Park | New York, green, Manhattan, carriage, lawn
+
+== places sib
+Big Ben | London, clock, tower, England, bell
+Buckingham Palace | Queen, London, guards, royal, Windsor
+
+== places sib
+Great Wall of China | Beijing, long, space, ancient, built
+Taj Mahal | India, white, marble, tomb, love
+
+== characters sib
+Waldo | stripes, find, glasses, hiding, book
+Carmen Sandiego | where in the world, red, coat, thief, geography
+
+== characters ctr
+Shrek | ogre, green, donkey, Fiona, swamp
+Puss in Boots | cat, sword, Antonio Banderas, eyes, hat
+
+== characters sib
+Scooby-Doo | dog, mystery, Shaggy, cartoon, snacks
+Lasagna | pasta, layers, cheese, Italian, Garfield
+Garfield | lasagna, cat, orange, Monday, lazy
+Ravioli | pasta, square, stuffed, canned, Chef Boyardee
+
+== characters sib
+SpongeBob | pineapple, sea, Patrick, square, cartoon
+Squidward | grumpy, clarinet, octopus, neighbor, cashier
+
+== places sib
+Airport | planes, flight, terminal, gate, security
+Train station | tracks, platform, Amtrak, tickets, depart
+
+== objects sib
+Ambulance | siren, hospital, emergency, paramedic, vehicle
+Police car | siren, cop, lights, chase, cruiser
+
+== characters tan
+Astronaut | space, rocket, moon, NASA, suit
+Alien | UFO, green, outer space, abduct, Mars
+
+== food sib
+Avocado | guacamole, green, pit, toast, fruit
+Mango | tropical, orange, fruit, smoothie, pit
+
+== people sib
+Baby | infant, diaper, cry, newborn, crib
+Crib | baby, sleep, bed, nursery, bars
+Diaper blowout | baby, poop, mess, explode, change | adult
+Toddler | walk, terrible twos, little, kid, tantrum
+Bunk beds | top, bottom, ladder, siblings, sleep
+Spit-up | baby, burp, shoulder, cloth, mess | adult
+
+== places sib
+Bakery | bread, croissant, pastry, oven, cakes
+Butcher | meat, shop, cleaver, cuts, deli
+
+== objects sib
+Balloon | helium, air, pop, float, party
+Confetti | paper, throw, party, colorful, celebrate
+
+== objects sib
+Bandage | cut, cover, wound, first aid, sticky
+Cast | broken, arm, sign, plaster, bone
+
+== places ctr
+Basement | downstairs, cellar, house, below, dark
+Attic | top, house, dusty, storage, stairs
+
+== objects sib
+Bathtub | faucet, water, soak, bubbles, rubber duck
+Jacuzzi | jets, hot, spa, bubbles, soak
+
+== body sib
+Beard | face, hair, chin, shave, grow
+Sideburns | cheeks, Elvis, hair, face, mutton chops
+
+== animals sib
+Bee | honey, sting, buzz, hive, yellow
+Honey | bees, sweet, sticky, hive, jar
+Wasp | sting, nest, yellow jacket, angry, insect
+
+== objects sib
+Blender | smoothie, puree, mix, kitchen, blades
+Food processor | chop, kitchen, blade, machine, dice
+
+== objects sib
+Blindfold | eyes, cover, see, piñata, dark
+Piñata | candy, hit, stick, party, blindfold
+Balloon pop | dart, carnival, burst, prize, pin
+Earplugs | noise, sleep, foam, quiet, ears
+
+== actions syn
+Bookmark | page, ribbon, place, reading, save
+Dog-ear | fold, corner, page, book, mark
+
+== objects sib
+Boomerang | throw, return, Australia, curve, back
+Frisbee | disc, throw, catch, park, dog
+
+== objects sib
+Bracelet | wrist, jewelry, charm, wear, beads
+Anklet | jewelry, foot, chain, summer, beach
+
+== objects sib
+Broom | sweep, floor, witch, dust, clean
+Mop | floor, bucket, wet, clean, kitchen
+
+== food sib
+Bubblegum | chew, blow, pink, Bazooka, sticky
+Cotton candy | fair, pink, fluffy, sugar, stick
+
+== objects sib
+Bulldozer | construction, dirt, push, machine, yellow
+Crane | lift, construction, tall, hook, bird
+
+== animals sib
+Butterfly | wings, caterpillar, flutter, insect, cocoon
+Caterpillar | butterfly, crawl, green, leaf, insect
+Moth | light, night, wings, closet, fly
+
+== objects sib
+Calculator | math, numbers, add, buttons, solve
+Abacus | beads, count, ancient, math, slide
+
+== animals sib
+Camel | desert, hump, ride, Egypt, animal
+Llama | spit, Peru, wool, fluffy, alpaca
+
+== objects sib
+Camera | photo, picture, lens, snap, flash
+Polaroid | instant, shake, photo, print, square
+
+== food sib
+Candy cane | Christmas, peppermint, stripes, red, hook
+Gingerbread house | build, icing, cookie, Christmas, gumdrops
+
+== objects sib
+Canoe | paddle, boat, river, row, kayak
+Paddleboard | stand, lake, ocean, balance, SUP
+
+== objects ctr
+Ceiling | roof, top, room, fan, above
+Floor | ground, walk, carpet, wood, bottom
+
+== food sib
+Cereal | breakfast, bowl, milk, spoon, flakes
+Oatmeal | oats, hot, breakfast, Quaker, porridge
+
+== objects sib
+Chalkboard | dusty, teacher, write, classroom, eraser
+Overhead projector | transparency, teacher, screen, old school, light
+
+== people sib
+Cheerleader | pom-poms, chant, team, game, jump
+Mascot | costume, team, school, character, cheer
+
+== people sib
+Chef | cook, kitchen, restaurant, hat, food
+Butler | mansion, serve, Alfred, tuxedo, rich
+
+== animals sib
+Chicken | bird, egg, cluck, farm, hen
+Quail | small, bird, eggs, hunt, speckled
+
+== food ctr
+Chocolate | candy, sweet, cocoa, bar, brown
+Vanilla | flavor, ice cream, white, bean, extract
+
+== objects sib
+Chopsticks | eat, Asian, food, wooden, sushi
+Toothpick | floss, teeth, wooden, olive, thin
+
+== events sib
+Circus | clown, tent, elephant, acrobat, ringmaster
+Clown | circus, red nose, funny, makeup, juggle
+Carnival | fair, games, rides, funnel cake, prizes
+
+== food sib
+Cookie | bake, chocolate chip, dough, sweet, jar
+Cracker | Ritz, salty, cheese, crunchy, snack
+
+== objects sib
+Couch | sofa, sit, living room, cushions, potato
+Recliner | La-Z-Boy, lean, chair, lever, footrest
+
+== people sib
+Cowboy | horse, hat, ranch, boots, Texas
+Sheriff | badge, town, law, star, Wild West
+
+== animals sib
+Crab | claws, sideways, ocean, shell, pinch
+Shrimp | small, cocktail, seafood, pink, boil
+
+== ideas tan
+Cruise | ship, vacation, ocean, deck, buffet
+Road trip playlist | songs, car, music, drive, shuffle
+
+== objects sib
+Crutches | broken, leg, walk, injury, armpit
+Wheelchair | push, sit, roll, ramp, accessible
+
+== food sib
+Cucumber | green, pickle, salad, vegetable, slice
+Pickle | cucumber, dill, jar, sour, green
+Zucchini | squash, green, vegetable, bread, summer
+
+== nature sib
+Daisy | flower, petals, white, yellow, loves me
+Tulip | Holland, flower, spring, bulb, petals
+
+== animals sib
+Dinosaur | extinct, T. rex, fossil, Jurassic, huge
+Woolly mammoth | ice age, elephant, tusks, extinct, hairy
+
+== objects sib
+Dishwasher | plates, clean, kitchen, machine, load
+Garbage disposal | sink, drain, grind, spoon, kitchen
+
+== actions sib
+Diving board | pool, jump, splash, spring, high
+Cannonball | knees, belly flop, big, lake, tuck
+
+== animals sib
+Dolphin | ocean, smart, swim, mammal, flipper
+Orca | killer whale, black, white, SeaWorld, Free Willy
+
+== characters sib
+Dragon | fire, breathe, wings, mythical, scales
+Phoenix | fire, rebirth, ashes, bird, rise
+
+== objects sib
+Drum | beat, sticks, band, bang, instrument
+Tambourine | shake, jingle, hit, band, circle
+
+== animals sib
+Duck | quack, pond, bird, feathers, waddle
+Goose | honk, bird, Canada, mean, V
+
+== nature sib
+Earthquake | shake, ground, California, Richter, tremble
+Sinkhole | ground, collapse, pit, swallow, Florida
+
+== nature sib
+Eclipse | sun, moon, dark, solar, block
+Northern lights | aurora, Alaska, green, sky, Iceland
+
+== food sib
+Eggplant | purple, vegetable, parmesan, aubergine, emoji
+Peach | fuzzy, fruit, Georgia, pit, emoji
+
+== animals sib
+Elephant | trunk, big, gray, ears, tusks
+Rhino | horn, gray, Africa, thick, charge
+
+== objects sib
+Envelope | letter, mail, stamp, seal, paper
+Package | box, deliver, UPS, porch, tape
+
+== objects sib
+Eraser | pencil, mistake, rub, pink, remove
+White-out | correction, fluid, mistake, paint, paper
+
+== people sib
+Farmer | crops, tractor, barn, animals, field
+Rancher | cattle, cows, land, cowboy, Texas
+
+== objects sib
+Fence | yard, wood, picket, gate, border
+Hedge | bush, trim, green, yard, maze
+
+== people sib
+Firefighter | Dalmatian, hose, truck, rescue, helmet
+Smoke detector | beep, battery, ceiling, alarm, fire
+
+== activities sib
+Fishing | rod, bait, hook, lake, catch
+Hunting | deer, rifle, season, orange, woods
+
+== animals sib
+Flamingo | pink, bird, leg, one, Florida
+Peacock | feathers, blue, tail, proud, bird
+
+== nature sib
+Fog | mist, cloud, see, gray, thick
+Drizzle | light, rain, gray, wet, mist
+
+== animals sib
+Frog | green, jump, ribbit, lily pad, toad
+Lizard | gecko, reptile, scales, tail, Florida
+
+== places sib
+Garage | car, park, door, house, tools
+Shed | backyard, tools, small, storage, lawn mower
+
+== places sib
+Garden | plants, flowers, grow, dirt, vegetables
+Greenhouse | glass, plants, warm, grow, nursery
+
+== characters syn
+Ghost | boo, haunted, spirit, sheet, scary
+Poltergeist | haunt, throw, spirit, noisy, movie
+
+== animals sib
+Giraffe | neck, tall, spots, Africa, long
+Ostrich | big bird, run, sand, head, egg
+
+== objects sib
+Globe | world, map, earth, spin, countries
+Atlas | maps, book, Rand McNally, road, pages
+
+== animals sib
+Gorilla | ape, monkey, big, chest, jungle
+Chimpanzee | ape, monkey, smart, banana, Jane Goodall
+
+== objects sib
+Guitar | strings, strum, rock, play, acoustic
+Ukulele | Hawaii, small, strings, strum, four
+
+== activities sib
+Gym | workout, weights, exercise, fitness, membership
+Spin class | bike, instructor, Peloton, sweat, music
+
+== places tan
+Halloween | costume, candy, trick-or-treat, October, pumpkin
+Pumpkin | orange, Halloween, carve, pie, jack-o'-lantern
+Haunted house | scary, spooky, actors, jump, maze
+
+== animals sib
+Hammerhead | shark, great white, ocean, fish, flat
+Stingray | flat, tail, barb, ocean, Steve Irwin
+
+== actions sib
+Handshake | firm, greet, palm, meet, deal
+High five | hand, slap, celebrate, palm, up top
+
+== clothing sib
+Hat | head, wear, cap, brim, cover
+Beanie | knit, winter, head, warm, cap
+
+== body sib
+Headache | pain, Tylenol, aspirin, migraine, hurt
+Toothache | molar, pain, dentist, cavity, ouch
+
+== objects sib
+Helicopter | blades, fly, spin, chopper, pilot
+Hot air balloon | basket, float, fire, sky, colorful
+
+== activities sib
+Hiking | trail, walk, mountain, boots, outdoors
+Rock climbing | wall, rope, harness, boulder, grip
+
+== animals sib
+Hippo | river, big, Africa, mouth, gray
+Alligator | swamp, Florida, teeth, reptile, crocodile
+
+== activities sib
+Hockey | ice, puck, stick, skate, goal
+Figure skating | ice, spin, jump, Olympics, skates
+
+== animals sib
+Horse | ride, saddle, gallop, mane, pony
+Donkey | mule, bray, ears, farm, stubborn
+
+== places sib
+Hospital | doctor, nurse, sick, emergency, patients
+Nurse | hospital, doctor, scrubs, patient, shot
+Pharmacy | drugs, prescription, CVS, Walgreens, pills
+
+== places sib
+Hot tub | water, bubbles, jacuzzi, warm, soak
+Sauna | steam, hot, sweat, wood, Finland
+
+== places syn
+Hotel | room, stay, check in, lobby, night
+Motel | cheap, road, highway, room, Bates
+
+== food sib
+Ice cream | cone, cold, scoop, sundae, flavor
+Frozen yogurt | froyo, tart, toppings, healthy, cup
+
+== brands sib
+Instagram | photos, app, post, followers, stories
+TikTok | videos, dance, short, trends, app
+
+== places sib
+Jail | prison, bars, cell, criminal, locked
+Courtroom | judge, jury, trial, lawyer, gavel
+
+== clothing sib
+Jeans | denim, pants, blue, wear, Levi's
+Overalls | denim, straps, farmer, bib, pockets
+
+== activities sib
+Jigsaw puzzle | pieces, fit, picture, edge, table
+Crossword | clues, across, down, newspaper, squares
+
+== objects sib
+Juggling | balls, toss, air, circus, catch
+Unicycle | wheel, one, balance, circus, ride
+
+== activities sib
+Karaoke | sing, microphone, lyrics, bar, song
+Lip sync | mouth, words, fake, song, battle
+
+== food sib
+Ketchup | tomato, red, fries, bottle, condiment
+Mustard | yellow, pretzel, condiment, Dijon, spicy
+
+== objects sib
+Kite | fly, wind, string, sky, tail
+Pinwheel | spin, wind, stick, toy, colorful
+
+== animals sib
+Koala | Australia, eucalyptus, bear, tree, gray
+Sloth | slow, hang, tree, lazy, rainforest
+
+== people sib
+Lawyer | court, judge, attorney, sue, case
+Paralegal | assistant, law firm, lawsuit, documents, office
+
+== objects sib
+Leash | dog, walk, collar, rope, pet
+Muzzle | dog, mouth, bite, cover, strap
+
+== food sib
+Lemon | sour, yellow, citrus, juice, fruit
+Lime | green, citrus, Key, sour, wedge
+
+== objects sib
+Lipstick | mouth, makeup, red, color, kiss
+Mascara | eyelashes, makeup, wand, black, run
+
+== animals sib
+Lobster | red, claws, seafood, Maine, butter
+Clam | shell, chowder, beach, dig, happy
+
+== objects sib
+Lottery | ticket, win, numbers, jackpot, millions
+Scratch-off | ticket, coin, gas station, win, dollar
+
+== people sib
+Magician | tricks, rabbit, hat, wand, disappear
+Fortune teller | crystal ball, palm, future, psychic, tarot
+
+== objects sib
+Map | directions, roads, world, lost, GPS
+Tour guide | sightseeing, group, flag, museum, walk
+
+== events sib
+Marathon | run, miles, 26, race, Boston
+Triathlon | swim, bike, run, three, Ironman
+
+== objects sib
+Mattress | bed, sleep, springs, firm, soft
+Futon | couch, fold, bed, dorm, frame
+
+== places sib
+Maze | lost, path, corn, exit, walls
+Labyrinth | Greek, Minotaur, David Bowie, winding, ancient
+
+== characters ctr
+Mermaid | tail, ocean, fish, Ariel, half
+Merman | King Triton, trident, beard, fins, sea
+
+== nature sib
+Meteor | space, rock, shooting star, crash, sky
+Comet | Halley's, tail, ice, sky, orbit
+
+== activities sib
+Mime | silent, invisible, box, white face, gestures
+Charades | act, guess, silent, movie, party game
+
+== nature ctr
+Moon | night, full, sky, crater, orbit
+Sun | hot, star, day, bright, shine
+
+== objects sib
+Motorcycle | bike, ride, Harley, helmet, engine
+Moped | scooter, slow, Vespa, small, ride
+
+== nature ctr
+Mountain | climb, peak, tall, snow, hike
+Valley | low, between, hills, river, green
+
+== nature sib
+Mud | dirt, wet, messy, pig, puddle
+Clay | pottery, wheel, mold, earth, brick
+
+== places sib
+Museum | art, exhibits, history, visit, display
+Aquarium | fish, tanks, sharks, ocean, visit
+
+== food sib
+Mushroom | fungus, pizza, toadstool, forest, cap
+Truffle | expensive, pig, oil, fancy, chocolate
+
+== objects sib
+Necklace | jewelry, diamonds, chain, pendant, wear
+Earrings | ears, pierced, hoops, studs, jewelry
+
+== objects sib
+Newspaper | journalist, read, headline, print, daily
+Magazine | glossy, cover, People, subscription, pages
+
+== people sib
+Ninja | warrior, Japan, stealth, sword, black
+Samurai | honor, armor, katana, feudal, Tom Cruise
+
+== food sib
+Noodles | pasta, ramen, slurp, bowl, soup
+Dumplings | steamed, Chinese, dough, filled, potstickers
+
+== animals sib
+Octopus | tentacles, eight, ink, ocean, arms
+Squid | ink, calamari, tentacles, sea, giant
+
+== food sib
+Orange | fruit, citrus, color, juice, peel
+Grapefruit | pink, sour, breakfast, citrus, half
+
+== animals sib
+Owl | hoot, night, bird, wise, eyes
+Bat | cave, fly, night, upside down, echolocation
+
+== events syn
+Pajama party | sleepover, friends, night, slumber, pillow
+Prank call | phone, joke, fridge running, kids, hang up
+
+== animals sib
+Panda | bear, bamboo, China, black, white
+Platypus | duck, bill, Australia, eggs, Perry
+
+== events sib
+Parade | march, floats, street, band, holiday
+Block party | street, neighbors, grill, music, closed
+
+== food sib
+Peanut butter | jelly, sandwich, jar, spread, nuts
+Nutella | hazelnut, chocolate, spread, jar, Italian
+
+== events sib
+Picnic | basket, blanket, park, ants, lunch
+Potluck | dish, bring, share, church, casserole
+
+== objects sib
+Piggy bank | coins, save, money, ceramic, slot
+Wallet | money, cash, cards, pocket, leather
+
+== food sib
+Pineapple | fruit, tropical, spiky, yellow, Hawaii
+Coconut | palm tree, milk, hard, shell, tropical
+
+== food sib
+Pizza | cheese, slice, pepperoni, crust, delivery
+Calzone | folded, Italian, stuffed, cheese, ricotta
+
+== people sib
+Police | cop, officer, badge, arrest, siren
+Security guard | mall, uniform, night, watch, badge
+
+== animals sib
+Puppy | dog, young, cute, bark, pet
+Kitten | cat, meow, baby, young, cute
+
+== nature sib
+Quicksand | sink, stuck, swamp, trap, desert
+Tar pit | La Brea, sticky, black, dinosaurs, trap
+
+== animals sib
+Raccoon | mask, trash, bandit, night, animal
+Opossum | play dead, tail, marsupial, night, pouch
+
+== objects sib
+Rocket | launch, space, NASA, blast off, fly
+Satellite | orbit, signal, dish, space, GPS
+
+== objects sib
+Roller coaster | ride, loops, amusement park, scream, drop
+Bumper cars | crash, drive, ride, fair, collide
+
+== objects sib
+Sailboat | wind, yacht, water, mast, ocean
+Speedboat | fast, motor, water, engine, wake
+
+== food sib
+Salad | lettuce, greens, dressing, healthy, bowl
+Coleslaw | cabbage, mayo, side, BBQ, shredded
+
+== objects sib
+Sandpaper | rough, smooth, wood, sander, grit
+Nail file | emery board, shape, filing, fingers, smooth
+
+== objects sib
+Scissors | cut, paper, blades, sharp, snip
+Knife | kitchen, butter, steak, chef, block
+
+== activities sib
+Scuba diving | underwater, tank, oxygen, ocean, fins
+Deep-sea fishing | boat, marlin, charter, ocean, rod
+
+== animals sib
+Shark | teeth, ocean, Jaws, fin, bite
+Barracuda | fish, teeth, silver, predator, fast
+
+== activities sib
+Shower | water, bathroom, wash, clean, head
+Bubble bath | tub, foam, relax, soak, suds
+
+== animals sib
+Skunk | smell, stink, black, white, spray
+Porcupine | quills, spiky, sharp, rodent, poke
+
+== activities sib
+Skydiving | parachute, jump, plane, fall, free
+Bungee jumping | cord, bridge, bounce, fall, leap
+
+== actions sib
+Sleepwalking | asleep, zombie, night, dream, bed
+Sleep talking | mumble, words, night, dream, partner
+
+== objects sib
+Slide | playground, down, kids, slippery, ladder
+Seesaw | teeter-totter, up, down, playground, balance
+
+== animals sib
+Snake | slither, reptile, venom, hiss, scales
+Iguana | lizard, green, pet, reptile, Florida
+
+== objects sib
+Snorkel | underwater, mask, breathe, tube, swim
+Flippers | fins, feet, swim, dive, rubber
+
+== activities sib
+Soccer | ball, goal, kick, FIFA, field
+Volleyball | net, spike, beach, serve, bump
+
+== objects sib
+Spoon | eat, soup, utensil, fork, silverware
+Ladle | soup, scoop, big, pot, serve
+
+== objects sib
+Stapler | Swingline, paper, office, attach, desk
+Hole punch | three, paper, binder, circle, confetti
+
+== animals sib
+Starfish | ocean, five, arms, sea, tide pool
+Seahorse | ocean, curly tail, dad, pregnant, tiny
+
+== objects sib
+Stop sign | red, octagon, traffic, corner, halt
+Speed bump | slow, road, parking lot, hump, car
+
+== objects sib
+Stroller | baby, push, wheels, walk, carriage
+Car seat | baby, buckle, rear-facing, safety, infant
+
+== objects sib
+Submarine | underwater, navy, periscope, sea, yellow
+Pontoon boat | lake, party, flat, float, deck
+
+== nature sib
+Sunflower | yellow, seeds, tall, petals, plant
+Rose | red, thorns, bouquet, Bachelor, petals
+
+== food sib
+Sushi | raw, fish, rice, Japanese, roll
+Tempura | fried, batter, shrimp, Japanese, crispy
+
+== objects sib
+Swing | playground, push, back, forth, chains
+Monkey bars | hang, playground, climb, arms, rungs
+
+== food sib
+Taco | shell, Mexican, Tuesday, beef, salsa
+Burrito | tortilla, Chipotle, beans, rice, Mexican
+
+== body sib
+Tattoo | ink, skin, needle, art, arm
+Piercing | ear, nose, needle, hole, ring
+
+== people sib
+Teacher | school, students, class, lesson, grade
+Principal | school, office, boss, detention, head
+
+== objects sib
+Teddy bear | stuffed, toy, hug, soft, child
+Security blanket | Linus, carry, comfort, baby, soft
+
+== activities sib
+Tennis | racket, ball, court, net, serve
+Pickleball | paddle, court, whiffle, retirees, net
+
+== objects sib
+Tent | camping, sleep, outdoors, poles, zip
+Sleeping bag | camping, zip, warm, roll, inside
+
+== animals sib
+Tiger | stripes, cat, jungle, orange, roar
+Cheetah | fastest, spots, cat, run, Africa
+
+== activities sib
+Tightrope | walk, balance, circus, high, wire
+Trapeze | swing, circus, acrobat, catch, high
+
+== objects sib
+Toilet | bathroom, flush, seat, paper, potty
+Urinal | men, bathroom, wall, stand, pee
+
+== objects sib
+Tractor | farm, field, drive, green, plow
+Combine | harvest, farm, wheat, machine, crops
+
+== objects sib
+Train | tracks, railroad, choo-choo, conductor, station
+Subway | underground, New York, metro, station, tunnel
+
+== objects sib
+Trampoline | jump, bounce, backyard, springs, flip
+Ball pit | plastic, colorful, kids, jump, Chuck E. Cheese
+
+== animals sib
+Turtle | shell, slow, reptile, green, hare
+Snail | slow, shell, slime, garden, trail
+
+== objects sib
+Typewriter | keys, ribbon, old, paper, letters
+Fax machine | send, paper, office, phone line, beep
+
+== objects sib
+Vacuum | clean, carpet, suck, dust, Hoover
+Roomba | robot, cleaning, round, bump, pets
+
+== events sib
+Valentine's Day | love, hearts, February, cards, roses
+St. Patrick's Day | green, Irish, March, pinch, shamrock
+
+== objects sib
+Violin | strings, bow, instrument, fiddle, orchestra
+Cello | big, sit, Yo-Yo Ma, low, between knees
+
+== people sib
+Waiter | restaurant, serve, tip, order, menu
+Bartender | drinks, bar, mix, tips, cocktail
+
+== food sib
+Watermelon | seeds, green, red, summer, fruit
+Cantaloupe | melon, orange, rind, fruit, honeydew
+
+== animals sib
+Whale | ocean, big, blue, mammal, blowhole
+Manatee | sea cow, slow, Florida, gentle, boats
+
+== objects sib
+Whistle | blow, referee, sound, lips, coach
+Kazoo | hum, buzz, toy, instrument, mouth
+
+== objects sib
+Windmill | Don Quixote, blades, Holland, spin, farm
+Wind turbine | energy, blades, white, power, renewable
+
+== characters sib
+Wizard | magic, spell, wand, hat, Merlin
+Witch | cauldron, spell, hat, Halloween, Salem
+
+== animals sib
+Wolf | howl, moon, pack, dog, wild
+Coyote | Road Runner, desert, yip, Wile E., prairie
+
+== activities sib
+Yoga | stretch, pose, mat, downward dog, breathe
+Pilates | core, reformer, mat, exercise, stretch
+
+== objects sib
+Yo-yo | string, toy, up, down, spin
+Slinky | spring, stairs, toy, metal, walk
+
+== animals sib
+Zebra | stripes, black, white, horse, Africa
+Okapi | giraffe, stripes, Congo, rare, forest
+
+== objects sib
+Zipper | jacket, close, teeth, pull, pants
+Velcro | strap, shoes, rip, sticky, hook
+
+== places sib
+Zoo | animals, cages, visit, lion, keeper
+Safari | Africa, jeep, animals, wild, tour
+
+== ideas ctr
+Procrastinate | delay, later, put off, lazy, tomorrow
+Multitask | juggle, many, once, several, busy
+
+== ideas syn
+Nostalgia | past, memories, remember, old days, miss
+Throwback | Thursday, TBT, old, photo, retro
+
+== ideas sib
+Déjà vu | before, familiar, feeling, French, again
+Coincidence | chance, same, happen, accident, luck
+
+== ideas ctr
+Democracy | vote, government, people, election, freedom
+Monarchy | king, queen, royal, throne, crown
+
+== activities tan
+Jet lag | tired, time zone, flight, travel, sleep
+Road trip | car, drive, highway, snacks, travel
+
+== ideas sib
+Sarcasm | joke, mean, tone, irony, eye roll
+Pun | wordplay, joke, groan, dad, double meaning
+
+== body sib
+Insomnia | sleep, awake, night, can't, tired
+Narcolepsy | fall asleep, sudden, disorder, tired, random
+
+== ideas sib
+Inflation | prices, rise, money, economy, expensive
+Recession | economy, jobs, downturn, stock market, bad
+
+== objects tan
+Autograph | signature, celebrity, sign, fan, pen
+Selfie stick | pole, phone, tourist, extend, photo
+
+== actions sib
+Hibernate | bear, winter, sleep, cave, months
+Migrate | birds, south, fly, winter, travel
+
+== activities sib
+Hypnosis | trance, watch, sleepy, swing, control
+Meditation | calm, breathe, mind, quiet, yoga
+
+== ideas sib
+Camouflage | hide, blend, military, pattern, green
+Invisibility | unseen, cloak, superpower, disappear, Harry Potter
+
+== objects tan
+Echo | repeat, canyon, sound, voice, bounce
+Megaphone | loud, cone, cheerleader, shout, speaker
+
+== ideas syn
+Quarantine | isolate, sick, stay, home, virus
+Lockdown | stay home, pandemic, closed, COVID, shelter
+
+== ideas sib
+Vegetarian | meat, vegan, eat, plants, diet
+Pescatarian | fish, seafood, diet, no meat, eat
+
+== people sib
+Ventriloquist | dummy, puppet, voice, lips, talk
+Puppeteer | strings, Muppets, hand, marionette, show
+
+== events tan
+Paparazzi | photographers, celebrity, cameras, chase, tabloid
+Red carpet | Oscars, celebrities, walk, premiere, gown
+
+== objects sib
+Origami | paper, fold, Japanese, crane, art
+Friendship bracelet | string, braid, camp, wrist, BFF
+
+== nature syn
+Avalanche | snow, mountain, slide, ski, bury
+Landslide | mud, hill, rocks, collapse, rain
+
+== nature sib
+Tsunami | wave, ocean, earthquake, flood, giant
+Whirlpool | spin, water, drain, ocean, suck
+
+== nature tan
+Oasis | desert, water, palm, mirage, camel
+Sand dune | desert, hill, wind, Sahara, ride
+
+== body ctr
+Sunburn | red, skin, tan, peel, aloe
+Frostbite | cold, fingers, freeze, toes, snow
+
+== objects sib
+Brainstorm | ideas, think, list, group, meeting
+Sticky note | Post-it, yellow, paper, remind, fridge
+
+== ideas sib
+Bucket list | before, die, goals, dreams, things
+New Year's resolution | January, goal, gym, promise, quit
+
+== actions sib
+Selfie | photo, phone, yourself, camera, stick
+Photobomb | ruin, picture, jump in, background, funny
+
+== objects sib
+Podcast | listen, episode, audio, host, show
+Audiobook | listen, narrator, read, Audible, car
+
+== objects sib
+Emoji | text, smiley, face, phone, icon
+GIF | animated, image, loop, meme, text
+
+== body sib
+Password | login, secret, account, forgot, type
+Fingerprint | thumb, unlock, touch, police, ID
+
+== objects sib
+Wi-Fi | internet, wireless, connect, password, router
+Bluetooth | wireless, headphones, pair, connect, speaker
+
+== ideas sib
+Hashtag | Twitter, pound, symbol, trending, post
+Meme | funny, internet, picture, viral, caption
+
+== objects sib
+Text message | phone, send, type, read, SMS
+Text your ex | phone, regret, midnight, former, drunk | adult
+New phone who dis | text, number, ignore, joke, reply | adult
+Left on read | seen, ignored, blue, waiting, crickets | adult
+Typing bubble | dots, three, waiting, iMessage, writing
+
+== objects syn
+Voicemail | phone, message, beep, leave, call
+Answering machine | tape, old, cassette, home phone, 1990s
+
+== activities sib
+Bingo | numbers, card, game, dauber, line
+Yahtzee | dice, roll, five, score, game
+
+== activities sib
+Rock paper scissors | game, hand, shoot, beats, throw
+Coin toss | heads, tails, flip, quarter, call it
+
+== activities sib
+Thumb war | wrestle, one two three, hands, game, pin
+Arm wrestling | table, strong, elbow, pin, hand
+
+== activities sib
+Musical chairs | song, stop, sit, game, circle
+Duck duck goose | circle, tap, chase, kids, game
+
+== activities sib
+Tug of war | rope, pull, teams, game, line
+Three-legged race | tie, partner, legs, picnic, fall
+
+== events sib
+Spelling bee | dictionary, words, contest, letters, school
+Geography bee | countries, capitals, maps, contest, school

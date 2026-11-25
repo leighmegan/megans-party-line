@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2b0d3f">
+<title>Megan's Taboo</title>
+<!--PWA-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=__BUILD__">
+</head>
+<body>
+<div class="app">
+
+<!-- SETUP: first run and every new game -->
+<section class="screen" id="s-setup" aria-label="New game">
+  <h1 id="setup-title">Megan's Taboo</h1>
+  <p class="sub">Each partner gets their own saved game. You can change any of this later in Settings.</p>
+  <div class="fields">
+    <label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
+    <label class="f">Partner's name<input type="text" id="setup-partner" maxlength="16" autocomplete="off" placeholder="e.g. Sam"></label>
+  </div>
+  <div class="group"><b>Which player are you?</b>
+    <div class="seg" data-field="player" data-scope="setup"></div>
+    <p class="note">Pick different players. You each get your own half of every card family, so you never draw each other's cards.</p></div>
+  <label class="f">Code word <small>Optional. Sets the shuffle and a match badge to compare.</small>
+    <input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"></label>
+  <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="setup"></div></div>
+  <div style="flex:1"></div>
+  <button class="primary" id="setup-go">Let's play</button>
+  <button class="ghost" id="setup-cancel" hidden>Cancel</button>
+  <button class="ghost" id="setup-bk">Restore from a backup code</button>
+  <textarea id="setup-bk-text" hidden aria-label="Backup code" spellcheck="false" placeholder="Paste your backup code here"></textarea>
+  <button class="primary" id="setup-bk-go" hidden>Restore</button>
+</section>
+
+<!-- HOME -->
+<section class="screen" id="s-home" aria-label="Home">
+  <div class="top"><h2>Megan's Taboo</h2><button class="ghost icon" data-open="rules">Rules</button></div>
+  <button class="switch" id="to-games"><span><b>Saved game</b><span id="h-game">Game with your partner</span></span><span aria-hidden="true">▾</span></button>
+  <p class="sync" id="h-sync" role="status" hidden></p>
+  <div class="hero">
+    <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
+      <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
+  </div>
+  <div class="status">
+    <div class="chip"><b>Match badge</b><span id="h-badge" class="badge">None</span></div>
+    <div class="chip"><b>Deck</b><span id="h-deck">Classic</span></div>
+    <div class="chip"><b>You are</b><span id="h-player">Player 1</span></div>
+    <div class="chip"><b>Cards left</b><span id="h-left">…</span></div>
+  </div>
+  <div style="flex:1"></div>
+  <button class="primary" id="start" disabled>Loading cards…</button>
+  <div class="row"><button class="ghost" id="to-settings">Settings</button><button class="ghost" id="to-maker">Card maker</button></div>
+</section>
+
+<!-- PLAY -->
+<section class="screen" id="s-play" aria-label="Round">
+  <div class="hud">
+    <div class="timer" id="timer" aria-live="off">1:00</div>
+    <div><div class="meter" id="meter"></div><div class="note" id="p-info" style="margin-top:6px"></div></div>
+    <div class="score"><small>Score</small><span id="p-score">0</span></div>
+  </div>
+  <div class="card"><div class="band"><div class="w" id="p-word">Word</div></div><ul class="list" id="p-list"></ul></div>
+  <div class="acts">
+    <button class="buzz" id="b-buzz"><span class="g">✕</span>Buzz<small id="buzzn"></small></button>
+    <button class="skipb" id="b-skip"><span class="g">↷</span>Skip<small id="skipn"></small></button>
+    <button class="okb" id="b-ok"><span class="g">✓</span>Correct<small id="okn"></small></button>
+  </div>
+  <div class="minor"><button id="b-undo">Undo</button><button id="b-pause">Pause</button><button data-open="rules">Rules</button><button id="b-end">End</button></div>
+</section>
+
+<!-- SUMMARY -->
+<section class="screen" id="s-sum" aria-label="Round summary">
+  <div class="top"><h2 id="sum-title">Your round</h2><span class="note" id="sum-why"></span></div>
+  <div class="tot">
+    <div><b id="t-c">0</b><small>Correct</small></div><div><b id="t-x">0</b><small>Buzzed</small></div>
+    <div><b id="t-b">0</b><small>Bonus</small></div><div class="big"><b id="t-t">0</b><small>Total</small></div>
+  </div>
+  <ul class="res" id="sum-list"></ul>
+  <p class="note" id="sum-back"></p>
+  <div style="flex:1"></div>
+  <p class="sub" id="sum-next" style="text-align:center;font-weight:800"></p>
+  <button class="primary" id="sum-done">Done</button>
+</section>
+
+<!-- SETTINGS -->
+<section class="screen" id="s-set" aria-label="Settings">
+  <div class="top"><h2>Settings</h2><button class="ghost" data-back>Done</button></div>
+  <p class="sect" id="set-game-h">This game</p>
+  <label class="f">Partner's name<input type="text" id="set-partner" maxlength="16" autocomplete="off"></label>
+  <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="game"></div>
+    <p class="note">You and your partner can pick different decks. You'll still never draw each other's cards. <span id="mixed-note"></span></p></div>
+  <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div></div>
+  <label class="f">Code word <small>Sets your shuffle and the match badge. Same word and deck on both phones gives the same badge. Capitals and spaces don't matter.</small>
+    <input type="text" id="set-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="None (plain shuffle)"></label>
+  <div class="group"><b>Round length</b><div class="seg" data-field="time" data-scope="game"></div></div>
+  <div class="group"><b>Cards you've played</b><p class="note" id="set-seen"></p>
+    <button class="danger" id="reset-seen">Reset played cards</button></div>
+  <button class="danger" id="del-game">Delete this game</button>
+
+  <p class="sect">Everything</p>
+  <label class="f">Your name<input type="text" id="set-name" maxlength="16" autocomplete="off"></label>
+  <div class="group"><b>Sound</b><div class="seg" data-field="sound" data-scope="all"></div>
+    <p class="note">iPhones usually mute web sounds during a call or on silent. Vibration works on Android only.</p></div>
+  <div class="group"><b>Backup</b>
+    <p class="note">Copy a backup code of all your saved games and paste it somewhere safe, like Notes. Paste it back here to restore.</p>
+    <div class="row"><button class="ghost" id="bk-copy">Copy backup code</button><button class="ghost" id="bk-open">Restore</button></div>
+    <textarea id="bk-text" hidden aria-label="Backup code" spellcheck="false"></textarea>
+    <button class="primary" id="bk-restore" hidden>Restore from this code</button></div>
+  <p class="note" id="ver"></p>
+</section>
+
+<!-- CARD MAKER -->
+<section class="screen" id="s-mk" aria-label="Card maker">
+  <div class="top"><h2>Card maker</h2><button class="ghost" data-back>Done</button></div>
+  <canvas id="mk" width="1080" height="1440" role="img" aria-label="Card preview"></canvas>
+  <div class="fields">
+    <input type="text" class="wide" id="mk-w" maxlength="22" placeholder="Main word" aria-label="Main word">
+    <input type="text" id="mk-1" maxlength="16" placeholder="Forbidden 1" aria-label="Forbidden word 1">
+    <input type="text" id="mk-2" maxlength="16" placeholder="Forbidden 2" aria-label="Forbidden word 2">
+    <input type="text" id="mk-3" maxlength="16" placeholder="Forbidden 3" aria-label="Forbidden word 3">
+    <input type="text" id="mk-4" maxlength="16" placeholder="Forbidden 4" aria-label="Forbidden word 4">
+    <input type="text" class="wide" id="mk-5" maxlength="16" placeholder="Forbidden 5" aria-label="Forbidden word 5">
+    <input type="text" class="wide" id="mk-from" maxlength="22" placeholder="From: (optional)" aria-label="From">
+  </div>
+  <div class="sw" id="mk-sw" aria-label="Band color"></div>
+  <button class="primary" id="mk-save" disabled>Save image</button>
+  <p class="note">Fill in all six words to save. A screenshot works too. Cards you make aren't kept.</p>
+</section>
+</div>
+
+<div class="count" id="count"><div id="count-n">3</div></div>
+<div class="paused" id="paused"><h1>Paused</h1><p class="sub" id="paused-t"></p><button class="primary" id="resume" style="min-width:220px">Resume</button></div>
+<div class="toast" id="toast" role="status"></div>
+
+<div class="modal" id="m-rules" role="dialog" aria-modal="true" aria-labelledby="rules-h"><div class="sheet">
+  <h2 id="rules-h">How to play</h2><ul id="rules-list"></ul>
+  <div class="row"><button class="primary" data-close>Got it</button></div>
+</div></div>
+
+<div class="modal" id="m-games" role="dialog" aria-modal="true" aria-labelledby="games-h"><div class="sheet">
+  <h2 id="games-h">Saved games</h2><ul class="games" id="games-list"></ul>
+  <div class="row"><button class="ghost" data-close>Close</button><button class="primary" id="new-game">New game</button></div>
+</div></div>
+
+<div class="modal" id="m-confirm" role="dialog" aria-modal="true" aria-labelledby="cf-h"><div class="sheet">
+  <h2 id="cf-h">Are you sure?</h2><p id="cf-p"></p>
+  <div class="row"><button class="ghost" id="cf-no">Cancel</button><button class="primary" id="cf-yes">Yes</button></div>
+</div></div>
+
+<script src="app.js?v=__BUILD__"></script>
+</body>
+</html>

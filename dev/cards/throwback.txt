@@ -1,0 +1,303 @@
+# Megan's Taboo cards: 2000s & 2010s deck
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated [| other deck, if the card belongs to a different deck]
+
+== toys sib
+Tamagotchi | pet, egg, digital, feed, beep
+Furby | owl, creepy, talk, fuzzy, eyes
+
+== toys sib
+Silly Bandz | rubber, shapes, wrist, trade, animals
+Livestrong bracelet | yellow, rubber, wrist, cancer, Lance
+
+== toys sib
+Webkinz | stuffed, code, online, plush, adopt
+Neopets | virtual, pets, website, feed, Neopia
+
+== toys sib
+Bratz | dolls, lips, big heads, fashion, Barbie rival
+Polly Pocket | tiny, dolls, rubber clothes, compact, small
+
+== toys sib
+Heelys | wheels, shoes, roll, sneakers, mall
+Razor scooter | kick, ankle, silver, fold, wheels
+
+== toys sib
+Beyblade | spin, top, arena, let it rip, battle
+Pokémon cards | Pikachu, trade, holographic, Charizard, collect
+
+== tech sib
+Blockbuster | rent, movies, late fees, store, VHS
+Netflix DVD | red envelope, mail, disc, return, queue
+
+== tech sib
+iPod | music, Apple, click wheel, songs, Nano
+Zune | Microsoft, music player, brown, failed, Apple rival
+
+== tech sib
+Flip phone | snap, shut, Razr, T9, Nokia
+BlackBerry | keyboard, email, business, BBM, trackball
+
+== tech sib
+Myspace | Tom, Top 8, profile, glitter, page
+AIM | away message, AOL, chat, screen name, buddy
+
+== tech sib
+Vine | six seconds, loop, videos, app, gone
+Snapchat streak | fire, days, friends, keep, emoji
+
+== tech sib
+Wii | Nintendo, bowling, remote, Mii, sports
+Guitar Hero | plastic, notes, fake, video game, rock
+
+== tech sib
+Burned CD | mix, Sharpie, songs, disc, blank
+Limewire | download, virus, songs, illegal, free music
+
+== tech sib
+Dial-up | internet, noise, beep, phone line, slow
+Kodak moment | camera, film, photo, special, picture
+
+== tech sib
+Facebook poke | finger, notification, nudge, profile, weird
+FarmVille | crops, game, requests, cows, Zynga
+
+== tech sib
+Angry Birds | slingshot, pigs, app, launch, red
+Flappy Bird | pipes, tap, hard, app, deleted
+
+== tech sib
+Pokémon Go | catch, walk, phone, Pikachu, gym
+Fidget spinner | twirl, toy, ball bearings, hand, trend
+
+== tech sib
+Bitmoji | cartoon, avatar, Snapchat, you, sticker
+Memoji | Apple, avatar, animated, face, iPhone
+
+== pop-culture sib
+Hannah Montana | Miley, wig, Disney, best of both worlds, pop star
+High School Musical | Zac Efron, Troy, Gabriella, Disney, Wildcats
+
+== pop-culture sib
+Jonas Brothers | three, purity rings, Disney, band, Nick
+Justin Bieber | Baby, Canada, hair flip, Beliebers, pop
+
+== pop-culture sib
+American Idol | Simon, Ryan Seacrest, vote, singing, Kelly Clarkson
+The Voice | chairs, turn, coaches, singing, Blake
+
+== pop-culture sib
+Twilight | Edward, Bella, vampire, sparkle, Team Jacob
+Hunger Games | Katniss, district, tributes, mockingjay, arena
+
+== pop-culture sib
+Gossip Girl | Upper East Side, xoxo, Blair, Serena, blog
+The O.C. | California, Seth Cohen, Orange County, Ryan, teen drama
+
+== pop-culture sib
+Jersey Shore | Snooki, GTL, The Situation, tan, MTV
+Keeping Up with the Kardashians | Kim, Kris, reality, E!, sisters
+
+== pop-culture sib
+Paris Hilton | that's hot, heiress, Chihuahua, The Simple Life, blonde
+Lindsay Lohan | Mean Girls, Parent Trap, redhead, actress, freckles
+
+== pop-culture sib
+Mean Girls | fetch, Regina, pink, Wednesdays, Plastics
+Legally Blonde | Elle Woods, Harvard, pink, lawyer, Chihuahua
+
+== pop-culture sib
+Gangnam Style | dance, Psy, Korean, horse, viral
+Harlem Shake | dance, viral, video, crazy, drop
+
+== pop-culture sib
+Ice Bucket Challenge | ALS, cold water, nominate, dump, viral
+Mannequin Challenge | freeze, still, video, viral, pose
+
+== pop-culture sib
+Planking | lie, flat, face down, photo, weird places
+Dabbing | arm, dance move, face, elbow, pose
+
+== pop-culture sib
+Kony 2012 | viral, video, Invisible Children, Africa, campaign
+Harambe | gorilla, zoo, Cincinnati, meme, RIP
+
+== pop-culture sib
+Charlie bit my finger | baby, brother, YouTube, ouch, British
+Leave Britney alone | crying, YouTube, viral, Chris Crocker, defend
+
+== pop-culture sib
+The dress | blue, black, white, gold, color debate
+Yanny or Laurel | audio, hear, debate, word, sound
+
+== pop-culture sib
+Fortnite | battle royale, dance, build, Epic, game
+Minecraft | blocks, creeper, build, pickaxe, Steve
+
+== pop-culture sib
+Frozen | Elsa, Let It Go, Anna, Olaf, Disney
+Tangled | Rapunzel, hair, tower, Disney, Flynn
+
+== pop-culture sib
+Glee | singing, show choir, Rachel, Fox, covers
+Pitch Perfect | a cappella, Anna Kendrick, cups, Bellas, Fat Amy
+
+== fashion sib
+Juicy tracksuit | velour, pink, butt, Paris, zip
+Ugg boots | sheepskin, winter, fuzzy, Australia, slouchy
+
+== fashion sib
+Low-rise jeans | hips, denim, thong, belly, 2003
+Bedazzled | rhinestones, sparkle, glue, gems, BeDazzler
+
+== fashion sib
+Side bangs | swoop, emo, eye, cover, fringe
+Straightened hair | flat iron, sleek, heat, Chi, flat
+
+== fashion sib
+Crocs | holes, rubber, clogs, Jibbitz, ugly
+Toms | shoes, one for one, canvas, donate, slip-on
+
+== fashion sib
+Skinny jeans | tight, denim, legs, hipster, ankles
+Leggings as pants | tight, stretchy, yoga, controversy, wear
+
+== fashion sib
+Hollister | dark store, surf, perfume, mall, Abercrombie
+Aéropostale | mall, logo, teen, shirts, cheap
+
+== fashion sib
+Emo | black, eyeliner, sad, My Chemical Romance, bangs
+Scene kid | colorful, hair, Myspace, rawr, teased
+
+== fashion sib
+Trucker hat | mesh, Von Dutch, cap, Ashton, foam
+Fedora | hat, brim, m'lady, Indiana Jones, hipster
+
+== food sib
+Bagel Bites | pizza, tiny, freezer, snack, commercial
+Lunchables | crackers, cheese, kit, lunchbox, Oscar Mayer
+
+== food sib
+Gushers | burst, snack, juice, chewy, gooey
+Fruit by the Foot | roll, long, unroll, paper, snack
+
+== food sib
+Surge soda | green, citrus, extreme, can, discontinued
+Crystal Pepsi | clear, cola, 90s, bottle, weird
+
+== food sib
+Cronut | croissant, donut, hybrid, line, New York
+Rainbow bagel | colors, Brooklyn, cream cheese, Instagram, bread
+
+== food sib
+Unicorn Frappuccino | Starbucks, pink, blue, sour, Instagram
+Avocado latte | coffee, green, hipster, skin, Instagram
+
+== slang sib
+YOLO | you only live once, Drake, reckless, motto, acronym
+FOMO | missing out, fear, party, jealous, acronym
+
+== slang sib
+On fleek | eyebrows, perfect, slang, Kayla, Vine
+Bae | babe, before anyone else, boyfriend, girlfriend, slang
+
+== slang sib
+Netflix and pizza | night in, stream, movie, delivery, couch
+Basic | white girl, Uggs, latte, plain, ordinary
+
+== slang sib
+Hashtag blessed | grateful, Instagram, caption, thankful, pound sign
+Humblebrag | boast, modest, fake, complain, show off
+
+== events sib
+Y2K | computers, 2000, crash, millennium, bug
+Mayan apocalypse | 2012, end of the world, calendar, prophecy, December
+
+== events sib
+Royal wedding | Kate, William, hats, London, prince
+Royal baby | Kate, prince, born, hospital, George
+
+== events sib
+Obama | president, hope, yes we can, Michelle, change
+Bush | president, Texas, George, Iraq, W.
+
+== school sib
+Scantron | bubbles, test, number 2 pencil, machine, green
+Graphing calculator | TI-84, math, buttons, class, games
+
+== school sib
+Gel pens | colors, sparkly, ink, write, smooth
+Lisa Frank | rainbow, leopard, folder, neon, dolphins
+
+== school sib
+Oregon Trail | dysentery, wagon, river, ford, classroom
+Cool Math Games | website, school, computer lab, play, Run
+
+== school sib
+Yearbook | photos, sign, school, pages, signatures
+Senior prank | last, school, joke, class, graduate
+
+== tech sib
+Kindle | e-reader, Amazon, books, screen, read
+Nook | Barnes, tablet, color, Noble, bookstore
+
+== tech sib
+Selfie with a duck face | lips, pout, photo, camera, pose
+Mirror pic with flash | bathroom, phone, reflection, glare, photo
+
+== tech sib
+Ringtone | phone, song, call, download, Crazy Frog
+T9 texting | keys, press, three times, numbers, flip phone
+
+== pop-culture sib
+Napoleon Dynamite | vote for Pedro, llama, tots, Idaho, nerdy
+Anchorman | Ron Burgundy, Will Ferrell, news, San Diego, classy
+
+== pop-culture sib
+Lizzie McGuire | Hilary Duff, Disney, cartoon, Rome, teen
+That's So Raven | psychic, visions, Disney, Cory, oh snap
+
+== pop-culture sib
+iCarly | web show, Miranda, Nickelodeon, Spencer, Sam
+Drake & Josh | Megan, brothers, Nickelodeon, step, hug me brother
+
+== pop-culture sib
+Avatar | blue, Pandora, James Cameron, Na'vi, 3D
+Inception | dream, spinning top, DiCaprio, layers, Nolan
+
+== pop-culture sib
+The Office | Michael Scott, Dunder Mifflin, Jim, Pam, paper
+Parks and Rec | Leslie Knope, Pawnee, Ron Swanson, waffles, government
+
+== tech sib
+Tumblr | blog, reblog, GIFs, aesthetic, fandom
+Pinterest | boards, pins, DIY, recipes, ideas
+
+== tech sib
+Vine star | six seconds, famous, loop, app, comedian
+Influencer | followers, sponsored, brand deals, content, Instagram
+
+== pop-culture sib
+Rebecca Black | Friday, song, viral, weekend, front seat
+Crazy Frog | ring ding ding, ringtone, cartoon, annoying, phone
+
+== pop-culture sib
+Grumpy Cat | frown, meme, internet, kitty, angry
+Doge | Shiba Inu, meme, such wow, coin, dog
+
+== fashion sib
+Shutter shades | Kanye, sunglasses, slats, blinds, neon
+Scarf in summer | hipster, fashion, warm, accessory, infinity
+
+== toys sib
+Bop It | twist, pull, toy, commands, shout
+Simon | colors, memory, repeat, buttons, game
+
+== food sib
+Toaster Strudel | icing, pastry, frozen, packet, Pillsbury
+Pop-Tarts | frosted, toast, Kellogg's, foil, rectangle
+
+== events sib
+Livestream | broadcast, Periscope, watch, real time, Twitch
+Flash mob | dance, sudden, crowd, surprise, mall
