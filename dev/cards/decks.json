@@ -22,7 +22,7 @@
  },
  {
   "id": "n",
-  "name": "2000s & 2010s",
+  "name": "00s & 10s",
   "file": "throwback.txt",
   "mixed": true,
   "weight": 1
@@ -36,7 +36,7 @@
  },
  {
   "id": "x",
-  "name": "Hard mode",
+  "name": "Hard Mode",
   "file": "hard.txt",
   "mixed": true,
   "suggestTime": 120,

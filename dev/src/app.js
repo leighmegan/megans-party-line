@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'6.4',build:'__BUILD__',perRound:10,skips:3,
+const CONFIG={version:'6.5',build:'__BUILD__',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -150,7 +150,7 @@ function render(){const g=G();
  // Home's deck, round length and mode edit the current game, or the new-game draft
  $$('#s-setup .seg[data-scope=setup], #s-setup .seg[data-scope=game]').forEach(x=>x.dataset.scope=drafting||!g?'setup':'game');renderSegs();
  $$('[data-backup]').forEach(el=>el.hidden=!CONFIG.backup);
- if(screen==='home'&&g){$('#h-game').textContent=g.title?g.title+' · with '+partner():'Game with '+partner();$('#h-badge').innerHTML=g.code?badgeHTML():'';
+ if(screen==='home'&&g){$('#h-game').textContent=g.title?g.title+' · with '+partner():'Game with '+partner();$('#h-badge').innerHTML=badgeFor(g.code);
   $('#h-deckname').textContent=deckName(g.deck);$('#h-time').textContent=g.time?timeLabel(g.time)+' rounds':'No timer';
   $('#h-left').textContent=g.player&&loaded?unseenCount()+' of '+pool().length+' left':'cards: picking a player…';
   const b=$('#start'),st=startState();b.disabled=!!st;b.textContent=st||'Start round';
@@ -176,10 +176,10 @@ function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;dr
 function startSetup(){drafting=true;draft={deck:S.defaults.deck,time:okTime(S.defaults.time),mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
  $('#setup-name').value=S.name;$('#setup-code').value='';$('#setup-gname').value='';closeModals();show('setup')}
 function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
- $('#to-games').hidden=!Object.keys(S.games).length;
+ $('#sg-group').hidden=!Object.keys(S.games).length;
  $('#sg-name').textContent=g?gameLabel(g):'New game';
  const lk=codeLocked(g);$('#setup-code').readOnly=lk;$('#setup-code').classList.toggle('locked',lk);
- $('#code-note').hidden=!(!g||lk);$('#code-note').textContent=lk?'The code word is locked once your phones connect. Start a new game to use a different one.':'Type the same code word on both phones.';$('#sg-badge').innerHTML=g&&g.code?badgeHTML():'';
+ $('#code-note').hidden=!(!g||lk);$('#code-note').textContent=lk?'The code word is locked once your phones connect. Start a new game to use a different one.':'Type the same code word on both phones.';$('#sg-badge').innerHTML=g?badgeFor(g.code):'';
  $('#setup-cancel').hidden=!(drafting&&G());$('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value));
  $('#setup-go').textContent=g&&matchOn(g)?'Back to the match':"Let's play";
  const on=g&&matchOn(g),sc=t.mode==='score'||on;$('#score-opts').hidden=!sc;

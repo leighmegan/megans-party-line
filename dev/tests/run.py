@@ -199,7 +199,7 @@ async def main(slow):
         # ---------- decks ----------
         await dismiss(solo); await home(solo); await solo.click('#s-setup [data-field=time] button:has-text("1:00")')
         await settings_deck(solo, "Classic"); await dismiss(solo)
-        await home(solo); await solo.click('#s-setup [data-field=deck] button:has-text("Hard mode")'); await solo.wait_for_timeout(150)
+        await home(solo); await solo.click('#s-setup [data-field=deck] button:has-text("Hard Mode")'); await solo.wait_for_timeout(150)
         if "ends this game" in await solo.text_content("#cf-p"):
             await solo.click("#cf-yes"); await solo.wait_for_timeout(150); await solo.click("#cr-done"); await solo.wait_for_timeout(150)
         check("hard mode suggests 2:00", await solo.is_visible("#m-confirm") and "2:00" in await solo.text_content("#cf-p"), await solo.text_content("#cf-p"))
@@ -334,7 +334,7 @@ async def main(slow):
         # Hard mode suggestion accepted at setup is a real choice
         c25, p1 = await phone(b, device="4444"); await setup(p1, "Pam", "choice"); await home(p1); await p1.click('#s-setup [data-field=time] button:has-text("1:30")')
         c26, p2 = await phone(b, device="6666")
-        await p2.fill("#setup-name", "Pat"); await p2.click('#s-setup [data-field=deck] button:has-text("Hard mode")'); await p2.wait_for_timeout(150)
+        await p2.fill("#setup-name", "Pat"); await p2.click('#s-setup [data-field=deck] button:has-text("Hard Mode")'); await p2.wait_for_timeout(150)
         if await p2.is_visible("#m-confirm"): await p2.click("#cf-yes")
         await p2.fill("#setup-code", "choice"); await p2.click("#setup-go"); await p2.wait_for_timeout(400)
         if await p2.is_visible("#m-rules"): await p2.click("#m-rules [data-close]")
@@ -415,7 +415,7 @@ async def main(slow):
         check("Keep score options read in order", labels == ["Team · Head-to-head", "20 cards · 5 rounds each", "−1 · −0.5 · 0", "Weighted · Equal"], str(labels))
         await ann.click('#score-opts [data-field=type] button:has-text("Head-to-head")')
         check("head-to-head says First to 20", "First to 20" in await ann.text_content('#score-opts [data-field=win]'))
-        check("weights read from the deck list", "Kids ½" in await ann.text_content("#val-note") and "Hard mode 1½" in await ann.text_content("#val-note"), await ann.text_content("#val-note"))
+        check("weights read from the deck list", "Kids ½" in await ann.text_content("#val-note") and "Hard Mode 1½" in await ann.text_content("#val-note"), await ann.text_content("#val-note"))
         await ann.click("#setup-go"); await ann.wait_for_timeout(100); check("inviter waits for partner on the game screen", await ann.is_visible("#s-home") and "waiting for Bea" in await ann.text_content("#h-mwait-t"))
         await bea.wait_for_selector("#m-invite.on", timeout=4000); check("partner gets the invite", "Head-to-head" in await bea.text_content("#iv-p"))
         await bea.click("#iv-yes"); await ann.wait_for_timeout(1200)
