@@ -188,3 +188,39 @@ textarea{width:100%;min-height:96px;border-radius:14px;border:2px solid var(--li
 #s-setup{gap:10px}#s-setup .mini{width:min(48%,200px)}#s-setup .mini .band{min-height:58px;padding:10px}#s-setup .mini .band .w{font-size:24px}#s-setup .mini .list{padding:4px 12px 8px}#s-setup .mini .list li{font-size:14px;padding:3px 0}
 #s-setup .seg[data-field=deck]{grid-template-columns:repeat(3,minmax(0,1fr))}#s-setup .seg[data-field=deck] button{font-size:14px;padding:0 2px}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}#s-setup .note{margin-top:-4px}
+/* v6.1 type scale: one set of sizes for the whole app (gameplay card words stay big on purpose) */
+:root{--t-xs:12px;--t-s:13px;--t-m:15px;--t-l:17px;--t-h2:22px;--t-h1:30px}
+body{font-size:var(--t-m)}
+button{font-size:var(--t-m);min-height:44px;border-radius:14px}
+.primary{font-size:var(--t-l);min-height:54px;border-radius:18px}
+.seg button,.seg.one button{font-size:var(--t-s);min-height:38px}
+.seg{gap:4px}
+h1,#s-setup .top h1{font-size:var(--t-h1);line-height:1.05}
+h2{font-size:var(--t-h2)}
+.sect{font-size:18px}
+.group>b,label.f{font-size:var(--t-m)}
+.note,label.f small,.sub{font-size:var(--t-s)}
+.sub{font-size:var(--t-m)}
+input[type=text],input[type=number]{font-size:16px;min-height:46px}  /* 16px keeps iPhones from zooming in */
+.switch{min-height:48px;font-size:var(--t-m)}.switch b{font-size:var(--t-xs)}
+.sw-r{display:flex;align-items:center;gap:8px;flex:none}
+.icon{min-width:44px;padding:0 12px}.gear{width:44px;font-size:20px}
+.dim{color:#cdb8e0;font-weight:600}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.row3 button{font-size:var(--t-s);padding:0 6px;line-height:1.15}
+.match b{font-size:26px}.match small,.match .mid{font-size:var(--t-xs)}
+.stats b{font-size:18px}.stats small{font-size:var(--t-xs)}.brh{font-size:16px}
+.hist li{font-size:14px}
+.pts{font-size:var(--t-m)}
+.chip span{font-size:var(--t-m)}
+.res li{font-size:var(--t-m)}
+.acts button{font-size:17px}.minor button{font-size:14px}
+.sheet h2{font-size:20px}.sheet p{font-size:var(--t-m)}
+#s-home .mini{width:min(44%,170px)}#s-home .mini .band{min-height:52px;padding:8px}#s-home .mini .band .w{font-size:22px}
+#s-home .mini .list{padding:2px 10px 6px}#s-home .mini .list li{font-size:13px;padding:2px 0}#s-home .hero{padding:0}
+#s-home .seg[data-field=deck],#s-setup .seg[data-field=deck]{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-height:780px){#s-home .mini{width:min(36%,140px)}#s-home .mini .band{min-height:42px;padding:6px}#s-home .mini .band .w{font-size:19px}#s-home .mini .list li{font-size:12px;padding:1px 0}#s-home{gap:10px}}
+@media (max-height:600px){#s-home .hero{display:none}}
+#s-setup .top h1{font-size:26px}
+.gamebox{display:flex;flex-direction:column;gap:14px}.danger{width:100%;font-size:var(--t-m)}
+.row3 button{padding:0 2px}
+#s-setup .seg[data-field=deck] button{font-size:var(--t-s)}

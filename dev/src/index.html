@@ -36,7 +36,7 @@
 <!-- HOME -->
 <section class="screen" id="s-home" aria-label="Home">
   <div class="top"><h2>Megan's Taboo</h2><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="to-settings" aria-label="Settings">⚙︎</button></div></div>
-  <button class="switch" id="to-games"><span><b>Saved game</b><span id="h-game">Game with your partner</span></span><span aria-hidden="true">▾</span></button>
+  <button class="switch" id="to-games"><span><b>Saved game</b><span id="h-game">Game with your partner</span></span><span class="sw-r"><span id="h-badge" class="badge"></span><span aria-hidden="true">▾</span></span></button>
   <p class="sync" id="h-sync" role="status" hidden></p>
   <p class="turn" id="h-turn" hidden></p>
   <p class="final" id="h-final" hidden></p>
@@ -45,19 +45,13 @@
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
       <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
   </div>
-  <div class="status">
-    <div class="chip"><b>Match badge</b><span id="h-badge" class="badge">None</span></div>
-    <div class="chip"><b>Deck</b><span id="h-deck">Classic</span></div>
-    <div class="chip"><b>You are</b><span id="h-player">Player 1</span></div>
-    <div class="chip"><b>Cards left</b><span id="h-left">…</span></div>
-  </div>
+  <div class="group"><b>Deck <span class="dim" id="h-left"></span></b><div class="seg" data-field="deck" data-scope="game"></div><p class="note" id="deck-note" hidden></p></div>
+  <div class="group"><b>Round length</b><div class="seg one" data-field="time" data-scope="game"></div></div>
   <div style="flex:1"></div>
   <button class="primary" id="start" disabled>Loading cards…</button>
   <button class="ghost" id="h-manual" hidden>Phones not connecting? Pick a player yourself</button>
   <button class="ghost" id="final-btn" data-final>Final round</button>
-  <button class="ghost" id="h-score">Keep score</button>
-  <button class="ghost" id="h-mend" hidden>End match</button>
-  <div class="row"><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
+  <div class="row3"><button class="ghost" id="h-score">Keep score</button><button class="ghost" id="h-mend" hidden>End match</button><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
 </section>
 
 <!-- PLAY -->
@@ -96,9 +90,6 @@
   <p class="sect" id="set-game-h">This game</p>
   <label class="f">Play as<input type="text" id="set-playas" maxlength="16" autocomplete="off"></label>
   <label class="f">Partner's name<input type="text" id="set-partner" maxlength="16" autocomplete="off"></label>
-  <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="game"></div>
-    <p class="note" id="deck-note"></p></div>
-  <div class="group"><b>Round length</b><div class="seg" data-field="time" data-scope="game"></div><p class="note" id="time-note" hidden></p></div>
   <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div>
     <p class="note">Set automatically. Only change it if your phones can't connect.</p></div>
   <label class="f">Code word <small>Same word on both phones.</small>

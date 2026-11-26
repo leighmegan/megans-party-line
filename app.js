@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'6.0',build:'20261125-2025',perRound:10,skips:3,
+const CONFIG={version:'6.1',build:'20261125-2149',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -145,18 +145,17 @@ function badgeFor(code){if(!code)return'';const h=hash('badge|'+code),sk=Object.
  return'<svg width="26" height="26" viewBox="0 0 24 24" aria-label="'+c+' '+sh+'"><path d="'+SHAPES[sh]+'" fill="'+COLS[c]+'"/></svg>'}
 function render(){const g=G();renderSegs();
  $$('[data-backup]').forEach(el=>el.hidden=!CONFIG.backup);
- if(screen==='home'&&g){$('#h-game').textContent='Game with '+partner();$('#h-badge').innerHTML=badgeHTML();$('#h-deck').textContent=deckName(g.deck);
-  $('#h-player').textContent=g.player?'Player '+g.player:'Picking…';$('#h-left').textContent=!g.player?'—':loaded?unseenCount()+' of '+pool().length:'…';
+ if(screen==='home'&&g){$('#h-game').textContent='Game with '+partner();$('#h-badge').innerHTML=g.code?badgeHTML():'';
+  $('#h-left').textContent=g.player&&loaded?'· '+unseenCount()+' of '+pool().length+' left':'';
+  $('#deck-note').hidden=!matchOn();$('#deck-note').textContent='Deck and round length are locked until the match ends.';
   const b=$('#start'),st=startState();b.disabled=!!st;b.textContent=st||'Start round';
   $('#h-manual').hidden=!!g.player;renderTurn();renderSync();renderMatchHome()}
  if(screen==='sum')renderTurn();
- if(screen==='set'){$('#set-game').hidden=!g;$('#set-all-h').hidden=!g;setVal('#set-name',S.name);
+ if(screen==='set'){$('#set-game').hidden=!g;$('#set-all-h').hidden=!g;$('#set-name').closest('label').hidden=!g;setVal('#set-name',S.name);
   $('#ver').textContent='Version '+CONFIG.version+' · build '+CONFIG.build+(loaded?' · '+CARDS.length+' cards':'')}
  if(screen==='set'&&g){setVal('#set-playas',g.playAs||'');$('#set-playas').placeholder=S.name;setVal('#set-partner',g.partner);setVal('#set-code',g.code);$('#set-game-h').textContent='Game with '+partner();
   const p=pool();$('#set-seen').textContent=loaded?(p.length-unseenCount())+' of your '+p.length+' '+deckName(g.deck).toLowerCase()+' cards played in this game.':'';
-  const out=DECKS.filter(d=>d.mixed===false).map(d=>d.name);
-  $('#deck-note').textContent=matchOn()?'Locked until the match ends.':'You can each pick a different deck.'+(DECKS.length>1?' '+CONFIG.mixedName+' uses every deck'+(out.length?' except '+out.join(' and '):'')+'.':'');
-  $('#time-note').hidden=!matchOn();$('#time-note').textContent='Locked until the match ends.'}
+ }
  if(screen==='setup'){$('#setup-cancel').hidden=!G();$('#setup-title').textContent=Object.keys(S.games).length?'New game':"Megan's Taboo";
   $('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value))}
  if(screen==='score')renderScoreSetup();
