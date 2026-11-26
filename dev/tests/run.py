@@ -96,16 +96,20 @@ async def home(pg):          # the game screen -> Home
     if await pg.is_visible("#sp-ok"): await pg.click("#sp-ok"); await pg.wait_for_timeout(100)
     if await pg.is_visible("#s-home"): await pg.click("#h-back"); await pg.wait_for_timeout(100)
 
-async def reopen(pg):        # reload lands on Home; go back into the game
-    await pg.reload(); await pg.wait_for_selector("#s-setup.on"); await pg.wait_for_timeout(300); await game_screen(pg)
+async def reopen(pg):        # reload lands on a blank Home; typing the code word picks the saved game back up
+    code = (await state(pg))["g"]["code"]
+    await pg.reload(); await pg.wait_for_selector("#s-setup.on"); await pg.wait_for_timeout(300)
+    await pg.fill("#setup-code", code); await pg.dispatch_event("#setup-code", "change"); await pg.wait_for_timeout(150); await game_screen(pg)
 
-async def play(pg, acts=None, n=10):
+async def play(pg, acts=None, n=10, end=True):
     await dismiss(pg); await pg.wait_for_selector("#start:not([disabled])"); await dismiss(pg); await game_screen(pg); await pg.click("#start"); await pg.wait_for_timeout(2700); words = []
     for i in range(n):
         if not await pg.is_visible("#s-play"): break
         words.append(await pg.text_content("#p-word")); a = (acts or {}).get(i, "#b-ok")
         if a == "#b-skip" and await pg.is_disabled("#b-skip"): a = "#b-ok"
         await pg.click(a); await pg.wait_for_timeout(30)
+    # timed rounds have no card limit: end the round the way a player would
+    if await pg.is_visible("#s-play") and end: await pg.click("#b-end"); await pg.click("#cf-yes")
     await pg.wait_for_timeout(150); return words
 
 async def left(pg):
@@ -130,7 +134,7 @@ async def main(slow):
         check("badges match", await me.text_content("#h-badge") == await mom.text_content("#h-badge"))
         check("synced status", "Synced with Mom" in await me.text_content("#h-sync"), await me.text_content("#h-sync"))
         rules = await me.evaluate("document.querySelector('#rules-list').textContent")
-        check("rules read from settings", "3 free skips" in rules and "up to 10 cards" in rules)
+        check("rules read from settings", "3 free skips" in rules and "until time runs out" in rules)
         side1, side2 = int(g1["player"]) - 1, int(g2["player"]) - 1
         # ---------- play ----------
         w1, w2 = [], []
@@ -143,8 +147,9 @@ async def main(slow):
         check("each phone draws its own side", all(card(w)[2] == side1 for w in w1) and all(card(w)[2] == side2 for w in w2))
         leaks = [(a, x) for a in w1 for x in w2 if card(a)[3] == card(x)[3] and any(t.lower() == x.lower() for t in card(a)[5])]
         check("no family leaks", not leaks, str(leaks))
+        seen_before = len((await state(me))["g"]["seen"])
         await dismiss(me); await game_screen(me); await me.click("#start"); await me.wait_for_timeout(2700); await me.click("#b-ok"); await me.click("#b-undo")
-        check("undo un-plays the card", len((await state(me))["g"]["seen"]) == 30)
+        check("undo un-plays the card", len((await state(me))["g"]["seen"]) == seen_before)
         await me.click("#b-end"); await me.click("#cf-yes"); await me.wait_for_timeout(150)
         check("end early retires only the card on screen", await me.evaluate("document.querySelectorAll('#sum-list li').length") == 1 and "9 cards" in await me.text_content("#sum-back"))
         await me.click("#sum-done")
@@ -286,7 +291,7 @@ async def main(slow):
         # play as: a team name for a room game, separate from your usual name
         c10, r1 = await phone(b); c11, r2 = await phone(b)
         await setup(r1, "Megan", "solo-x"); await dismiss(r1); await home(r1); await r1.click("#to-games"); await r1.click("#new-game")
-        check("play as starts with your usual name", await r1.input_value("#setup-name") == "Megan")
+        check("a new game starts with a blank name", await r1.input_value("#setup-name") == "")
         await setup(r1, "Red team", "party"); await setup(r2, "Blue team", "party"); await r1.wait_for_timeout(1500)
         check("team names show on the other phone", await r1.text_content("#h-game") == "Game with Blue team" and await r2.text_content("#h-game") == "Game with Red team")
         check("usual name unchanged", (await state(r1))["s"]["name"] == "Megan")
@@ -394,6 +399,39 @@ async def main(slow):
         await fs.click("#s-set [data-back]"); check("settings goes back to the first screen, keeping what you typed", await fs.is_visible("#s-setup") and await fs.input_value("#setup-code") == "pug42")
         await fs.click('#s-setup [data-open=rules]'); rl = await fs.evaluate("[...document.querySelectorAll('#rules-list li')].length")
         check("rules are short", rl <= 10, rl); await fs.click("#m-rules [data-close]"); allerr += fs.errs; await c30.close()
+        # ---------- v7.4: blank Home on reload, logo refresh, rounds without a card limit ----------
+        c31, rl = await phone(b)
+        await setup(rl, "Megan", "reload-1", "Classic"); await dismiss(rl)
+        await home(rl); await rl.fill("#setup-gname", "Movie night"); await rl.click('#s-setup [data-field=deck] button:has-text("Adult")')
+        if await rl.is_visible("#m-confirm.on"): await rl.click("#cf-yes")
+        await rl.click("#setup-go"); await rl.wait_for_timeout(200)
+        await rl.reload(); await rl.wait_for_selector("#s-setup.on"); await rl.wait_for_timeout(300)
+        blank = [await rl.input_value(x) for x in ("#setup-name", "#setup-code", "#setup-gname")]
+        check("reload: every field is blank", blank == ["", "", ""], str(blank))
+        check("reload: defaults are back (Classic, 1:00, Just for fun)", await rl.text_content("#s-setup [data-field=deck] button[aria-pressed=true]") == "Classic"
+              and await rl.get_attribute("#s-setup [data-field=time] button[aria-pressed=true]", "data-v") == "60"
+              and await rl.get_attribute("#s-setup [data-field=mode] button[aria-pressed=true]", "data-v") == "fun")
+        check("reload: saved game bar says New game", await rl.text_content("#sg-name") == "New game")
+        await rl.fill("#setup-code", "reload-1"); await rl.dispatch_event("#setup-code", "change"); await rl.wait_for_timeout(200)
+        check("typing a saved game's code word picks it back up", await rl.input_value("#setup-gname") == "Movie night" and await rl.input_value("#setup-name") == "Megan"
+              and await rl.text_content("#s-setup [data-field=deck] button[aria-pressed=true]") == "Adult")
+        check("…without making a duplicate game", len((await state(rl))["s"]["games"]) == 1)
+        await rl.evaluate("window.__marker=1"); await rl.click("#logo"); await rl.wait_for_selector("#s-setup.on"); await rl.wait_for_timeout(300)
+        check("tapping the logo refreshes the page", await rl.evaluate("window.__marker===undefined") and await rl.input_value("#setup-code") == "")
+        await rl.fill("#setup-code", "reload-1"); await rl.dispatch_event("#setup-code", "change"); await rl.wait_for_timeout(150); await rl.click("#setup-go"); await pick(rl, "1")
+        await rl.wait_for_selector("#start:not([disabled])"); await rl.click("#start"); await rl.wait_for_timeout(2700)
+        check("End is labeled End round", await rl.text_content("#b-end") == "End round")
+        for _ in range(11): await rl.click("#b-ok"); await rl.wait_for_timeout(25)
+        check("timed rounds keep going past 10 cards", await rl.is_visible("#s-play") and await rl.text_content("#p-info") == "Card 12", await rl.text_content("#p-info"))
+        await rl.click("#b-end"); await rl.click("#cf-yes"); await rl.click("#sum-done"); await home(rl)
+        check("cards per round hides while a timer is set", await rl.is_hidden("#cpr-group"))
+        await rl.click('#s-setup [data-field=time] button:has-text("Unlimited")')
+        opts = await rl.evaluate("[...document.querySelectorAll('#s-setup [data-field=cpr] button')].map(b=>b.textContent+(b.getAttribute('aria-pressed')==='true'?'*':''))")
+        check("Unlimited shows cards per round: 5 · 10 · 15 · 20, with 5 picked", opts == ["5*", "10", "15", "20"], str(opts))
+        await rl.click("#setup-go"); await rl.click("#start"); await rl.wait_for_timeout(2700)
+        for _ in range(5): await rl.click("#b-ok"); await rl.wait_for_timeout(25)
+        await rl.wait_for_timeout(200); check("an Unlimited round ends after its 5 cards", await rl.is_visible("#s-sum") and await rl.text_content("#t-c") == "5")
+        allerr += rl.errs; await c31.close()
         # ---------- v6: keep score ----------
         ca, ann = await phone(b, device="1111"); cb, bea = await phone(b, device="2222", scheme="dark")
         await setup(ann, "Ann", "match-one"); await setup(bea, "Bea", "match-one"); await ann.wait_for_timeout(2500)
@@ -407,7 +445,7 @@ async def main(slow):
         await ann.wait_for_timeout(1500); check("no timer never runs out", await ann.is_visible("#s-play"))
         await ann.click("#b-ok"); await ann.click("#b-end"); await ann.click("#cf-yes"); await ann.click("#sum-done"); await bea.wait_for_timeout(800); await dismiss(bea)
         await home(ann); await ann.click('#s-setup [data-field=time] button:has-text("1:00")'); await bea.wait_for_timeout(1200)
-        await play(bea, n=1); await bea.click("#b-end"); await bea.click("#cf-yes"); await bea.click("#sum-done"); await ann.wait_for_timeout(800); await dismiss(ann)   # even rounds
+        await play(bea, n=1); await bea.click("#sum-done"); await ann.wait_for_timeout(800); await dismiss(ann)   # even rounds
         await home(ann); check("Just for fun is the default", await ann.get_attribute('#s-setup [data-field=mode] button[aria-pressed=true]', "data-v") == "fun" and await ann.is_hidden("#score-opts"))
         await ann.click('#s-setup [data-field=mode] button:has-text("Keep score")'); check("Keep score opens its options in place", await ann.is_visible("#score-opts") and await ann.is_visible("#s-setup"))
         firsts = await ann.evaluate("[...document.querySelectorAll('#score-opts .seg')].map(s=>s.querySelector('button').getAttribute('aria-pressed'))")
@@ -429,23 +467,23 @@ async def main(slow):
         check("Final round is hidden during a match", await ann.is_hidden("#final-btn"))
         async def rnd(pg, other, acts=None):
             await play(pg, acts); txt = await pg.text_content("#sum-pts-t"); await pg.click("#sum-done"); await other.wait_for_timeout(900); return txt
-        t = await rnd(ann, bea); check("perfect round is 10 + 1 bonus", t == "This round: +11 points", t)
-        sp = await bea.text_content("#sp-line"); check("guesser sees the points after the round", "+11" in sp, sp); await dismiss(bea)
+        t = await rnd(ann, bea); check("10 correct is 10 points, no bonus", t == "This round: +10 points", t)
+        sp = await bea.text_content("#sp-line"); check("guesser sees the points after the round", "+10" in sp, sp); await dismiss(bea)
         await rnd(bea, ann); await dismiss(ann)
         await rnd(ann, bea); await dismiss(bea)
-        hm = await bea.text_content("#h-match"); check("first to 20 waits for the matching round", "22" in hm and await bea.is_visible("#h-match"), hm)
+        hm = await bea.text_content("#h-match"); check("first to 20 waits for the matching round", "20" in hm and await bea.is_visible("#h-match"), hm)
         await play(bea); await bea.click("#adj-up"); check("clue-giver can adjust by 1", "(adjusted)" in await bea.text_content("#sum-pts-t") and await bea.is_disabled("#adj-up"))
-        await ann.wait_for_timeout(900); check("adjustment syncs", "23" in await ann.text_content("#h-match") if await ann.is_visible("#h-match") else False, await ann.text_content("#h-match"))
+        await ann.wait_for_timeout(900); check("adjustment syncs", "21" in await ann.text_content("#h-match") if await ann.is_visible("#h-match") else False, await ann.text_content("#h-match"))
         await bea.click("#adj-down"); await bea.click("#sum-done"); await ann.wait_for_timeout(900); await dismiss(ann)
-        check("tie at 22 plays one more round each", "tiebreak" in await ann.text_content("#h-match") and "22" in await ann.text_content("#h-match"), await ann.text_content("#h-match"))
+        check("tie at 20 plays one more round each", "tiebreak" in await ann.text_content("#h-match") and "20" in await ann.text_content("#h-match"), await ann.text_content("#h-match"))
         await rnd(ann, bea, {0: "#b-buzz"}); await dismiss(bea)
-        hm = await bea.text_content("#h-match"); check("a buzz gives the guesser a steal", "30" in hm and "23" in hm, hm)
+        hm = await bea.text_content("#h-match"); check("a buzz gives the guesser a steal", "28" in hm and "21" in hm, hm)
         await play(bea); await bea.click("#sum-done"); await ann.wait_for_timeout(900); await dismiss(ann); await ann.wait_for_timeout(300)
         check("match ends with the winner on both phones", await ann.text_content("#mr-h") == "Bea wins!" and await bea.text_content("#mr-h") == "Bea wins!",
               f"{await ann.text_content('#mr-h')} / {await bea.text_content('#mr-h')}")
-        check("final score 30 to 34", "30" in await ann.text_content("#mr-tot") and "34" in await ann.text_content("#mr-tot"))
+        check("final score 28 to 31", "28" in await ann.text_content("#mr-tot") and "31" in await ann.text_content("#mr-tot"))
         await ann.click("#mr-brag"); bt = await ann.text_content("#br-body")
-        check("Bragging Rights: record, streak, perfect rounds", "0 – 1" in bt and "Perfect rounds" in bt and "Lost 30–34" in bt, bt[:200])
+        check("Bragging Rights: record, streak, recent matches", "0 – 1" in bt and "Lost 28–31" in bt, bt[:200])
         await ann.click("#s-brag [data-back]"); await bea.click("#mr-done")
         check("each phone stores the match once", len((await state(ann))["s"]["hist"]) == 1 and len((await state(bea))["s"]["hist"]) == 1)
         # history heals: one phone loses its record
@@ -482,7 +520,7 @@ async def main(slow):
         await ann.click("#to-settings"); await ann.fill("#set-playas", "Annie"); await ann.press("#set-playas", "Enter"); await ann.click("#s-set [data-back]")
         await home(ann); await ann.click("#to-brag"); check("renaming yourself keeps the game's record", "Head-to-head" in await ann.text_content("#br-body") and "Annie & Bea" in await ann.text_content("#br-who") and await ann.is_hidden("#br-merge"))
         await ann.evaluate("(()=>{const s=JSON.parse(localStorage.getItem('mt:v3'));s.hist.push({id:'old1',k:'old-game',t:'h2h',w:'target',at:1,me:'Ann',them:'Bea',r:'w',mp:21,tp:9,mr:2,tr:2,mpf:0,tpf:0,mx:0,tx:0,mc:0,tc:0,d:[]});localStorage.setItem('mt:v3',JSON.stringify(s))})()")
-        await ann.reload(); await ann.wait_for_selector("#s-setup.on"); await ann.click("#to-brag")
+        await reopen(ann); await home(ann); await ann.click("#to-brag")
         check("an old record from another game can be merged", await ann.is_visible("#br-merge"))
         await ann.click("#br-merge"); await ann.click("#mg-list [data-merge]"); check("merge brings the old record in", "Won 21–9" in await ann.text_content("#br-body"))
         await ann.click("[data-unmerge]"); check("merge can be undone", "Won 21–9" not in await ann.text_content("#br-body")); await ann.click("#s-brag [data-back]")

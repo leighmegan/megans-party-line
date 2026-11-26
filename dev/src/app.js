@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.3',build:'__BUILD__',perRound:10,skips:3,
+const CONFIG={version:'7.4',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -29,7 +29,7 @@ const KEY='mt:v3';
 //      games:{id:{id, partner, partnerT, partnerDevice, playAs, player, code, deck, time, timeT, seen:[card ids], cycle, rnd, created, last, lastMsg,
 //                 session:{sid, prev, rounds:[{who:'me'|'them', rid, c, s, x, n, dur, deck, words|guessed}], final:{target}}}}}
 const newSession=sid=>({sid:sid||uid(),prev:null,rounds:[],final:null,startedAt:Date.now()});
-const newGame=o=>Object.assign({id:uid(),partner:'',playAs:null,session:newSession(),player:null,code:'',deck:'c',time:CONFIG.defaultTime,seen:[],cycle:0,rnd:Math.random().toString(36).slice(2,10),created:Date.now(),last:0},o);
+const newGame=o=>Object.assign({id:uid(),partner:'',playAs:null,session:newSession(),player:null,code:'',deck:'c',time:CONFIG.defaultTime,cpr:CONFIG.defaultCards,seen:[],cycle:0,rnd:Math.random().toString(36).slice(2,10),created:Date.now(),last:0},o);
 function migrate(){// version 2 kept one setup in mt:prefs with played cards per player number
  const p=store.get('mt:prefs',null),s={name:'',sound:'on',current:null,games:{},defaults:{deck:'c',time:CONFIG.defaultTime}};
  if(p&&p.player){const g=newGame({partner:p.partner||'',player:String(p.player),code:p.code||'',deck:{classic:'c',adult:'a',mixed:'all'}[p.deck]||'c',time:p.time||CONFIG.defaultTime,
@@ -67,10 +67,11 @@ function pool(g=G()){if(!g||!g.player)return[];const side=Number(g.player)-1;
  const mixed=new Set(DECKS.filter(d=>d.mixed!==false).map(d=>d.id)),one=new Set();
  return CARDS.filter(c=>{if(c[2]!==side||!mixed.has(c[1]))return false;const w=c[6]??c[0];if(one.has(w))return false;one.add(w);return true})}
 const unseenCount=()=>pool().filter(c=>!played(c)).length;
-function deal(){const g=G();let p=pool(),fresh=false;
- if(!p.some(c=>!played(c))){p.forEach(c=>g.deck==='all'?copies(c).forEach(id=>seen.delete(id)):markSeen(c,false));g.cycle++;saveSeen();fresh=true}
+// keep=true: mid-round top-up, which never reshuffles (the round just ends when the deck runs out)
+function deal(n,keep){const g=G();let p=pool(),fresh=false;
+ if(!keep&&!p.some(c=>!played(c))){p.forEach(c=>g.deck==='all'?copies(c).forEach(id=>seen.delete(id)):markSeen(c,false));g.cycle++;saveSeen();fresh=true}
  const seed=(g.code?'code:'+g.code:'rnd:'+g.rnd)+'|'+g.cycle;
- return{cards:shuffle(p.slice().sort((a,b)=>a[0]-b[0]),hash(seed)).filter(c=>!played(c)).slice(0,CONFIG.perRound),fresh}}
+ return{cards:shuffle(p.slice().sort((a,b)=>a[0]-b[0]),hash(seed)).filter(c=>!played(c)).slice(0,n),fresh}}
 
 // ============ match badge ============
 const SHAPES={star:'M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7L12 17.3 5.8 20.9l1.6-7L2 9.2l7.1-.6z',heart:'M12 21s-7.5-4.6-9.5-9.2C1 8.2 3.2 4.5 6.8 4.5c2 0 3.4 1.1 5.2 3 1.8-1.9 3.2-3 5.2-3 3.6 0 5.8 3.7 4.3 7.3C19.5 16.4 12 21 12 21z',
@@ -106,7 +107,7 @@ function confirmBox(msg,yes,label='Yes'){$('#cf-p').textContent=msg;$('#cf-yes')
 $('#cf-no').onclick=closeModals;
 
 // segmented controls are built from data: scope says where the value lives
-const FIELDS={player:()=>[['1','Player 1'],['2','Player 2']],deck:deckOptions,time:()=>CONFIG.times.map(t=>[String(t),timeLabel(t)]),
+const FIELDS={player:()=>[['1','Player 1'],['2','Player 2']],deck:deckOptions,time:()=>CONFIG.times.map(t=>[String(t),timeLabel(t)]),cpr:()=>CONFIG.cardOpts.map(n=>[String(n),String(n)]),
  type:()=>[['team','Team'],['h2h','Head-to-head']],
  win:()=>mdraft&&mdraft.type==='team'?[['target',SCORE.target+' cards'],['rounds',SCORE.roundsEach+' rounds each']]:[['target','First to '+SCORE.target],['rounds',SCORE.roundsEach+' rounds each']],
  pen:()=>[['-1','−1'],['-0.5','−0.5'],['0','0']],mode:()=>[['fun','Just for fun'],['score','Keep score']],val:()=>[['weighted','Weighted'],['equal','Equal']],sound:()=>[['on','On'],['off','Off']]};
@@ -124,9 +125,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if
   confirmBox('Switching decks ends this game and shows your game summary.',()=>{endGame('deck',null);t.deck=b.dataset.v;S.defaults.deck=t.deck;save();render();afterCredits=()=>suggestTime(t)},'Switch and end');return}
  if(f==='player'&&seg.dataset.scope==='game'&&t.player&&t.player!==b.dataset.v&&(t.seen.length||sess(t).rounds.length)){
   confirmBox('Switch to Player '+b.dataset.v+'? You\'ll get the other half of the cards, and '+partner()+' may have already given clues for some of them. Only do this if your phones picked the same player.',()=>{t.player=b.dataset.v;save();announce();render()},'Switch');return}
- t[f]=f==='time'?Number(b.dataset.v):b.dataset.v;if(f==='time'&&t===G())t.timeT=Date.now();
+ t[f]=f==='time'||f==='cpr'?Number(b.dataset.v):b.dataset.v;if((f==='time'||f==='cpr')&&t===G())t.timeT=Date.now();
  if(f==='time'&&!t.time&&t.mode==='score')t.mode='fun';
- if(seg.dataset.scope==='game'){if(f!=='player')S.defaults[f]=t[f];if(f==='time'||f==='player')announce()}save();render();
+ if(seg.dataset.scope==='game'){if(f==='time'||f==='cpr'||f==='player')announce()}save();render();
  if(f==='deck')suggestTime(t)});
 // a deck can carry a suggested round length (cards.json decks[].suggestTime)
 function suggestTime(t){const d=DECKS.find(x=>x.id===t.deck);if(!d||!d.suggestTime||!t.time||t.time>=d.suggestTime)return;
@@ -139,7 +140,7 @@ const RULES={basics:[
  'Tap Correct when they get it. Close enough counts, like "dogs" for "dog."',
  'Slip up and say a forbidden word? Tap Buzz. Either of you can call it, so be honest.',
  'Stuck? You get '+plural(CONFIG.skips,'free skip')+' a round.',
- 'A round is up to '+CONFIG.perRound+' cards, or until time runs out.',
+ 'A round lasts until time runs out. With no timer, it\'s a set number of cards.',
  'Ready to wrap up? Tap Final round so you both get the same number of turns.',
  'Want bragging rights? Pick Keep score on the home screen.'],
  fine:[
@@ -186,8 +187,8 @@ function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;dr
  if(!matchOn(g)&&!(g.match&&g.match.status==='invite')&&!g.wantMatch)g.mode='fun';
  mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults);/* Keep score options open on the defaults each time */if(!g.mode)g.mode='fun';show('setup')}
 // a new game always starts on the defaults (Classic, 1:00, Just for fun), not on whatever another game used last
-function startSetup(){drafting=true;draft={deck:CONFIG.defaultDeck,time:CONFIG.defaultTime,mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
- $('#setup-name').value=S.name;$('#setup-code').value='';$('#setup-gname').value='';closeModals();show('setup')}
+function startSetup(){drafting=true;draft={deck:CONFIG.defaultDeck,time:CONFIG.defaultTime,cpr:CONFIG.defaultCards,mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
+ $('#setup-name').value='';$('#setup-code').value='';$('#setup-gname').value='';closeModals();show('setup')}
 function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
  $('#sg-group').hidden=!Object.keys(S.games).length;
  $('#sg-name').textContent=g?gameLabel(g):'New game';
@@ -195,6 +196,7 @@ function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
  $('#code-note').hidden=!(!g||lk);$('#code-note').textContent=lk?'The code word is locked once your phones connect. Start a new game to use a different one.':'Type the same code word on both phones.';$('#sg-badge').innerHTML=g?badgeFor(g.code):'';
  $('#setup-cancel').hidden=!(drafting&&G());$('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value));
  $('#setup-go').textContent=g&&matchOn(g)?'Back to the match':"Let's play";
+ $('#cpr-group').hidden=!!t.time;
  const on=g&&matchOn(g),sc=t.mode==='score'||on;$('#score-opts').hidden=!sc;
  $('#mode-note').hidden=!(on||!t.time);$('#mode-note').textContent=on?'Match in progress. End it from the game screen.':'Keep score needs a timer. Pick 1:00, 1:30 or 2:00.';
  if(sc)renderScoreNotes()}
@@ -206,7 +208,8 @@ $('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCo
  // a team name in your very first game shouldn't become your usual name
  if(!S.name&&!/\bteam\b/i.test(name))S.name=name;
  let g=homeGame();
- if(!g){g=newGame({deck:draft.deck,time:draft.time,code,last:Date.now(),timeT:draft.timeChosen?Date.now():0,playAs:name===S.name?null:name});
+ if(!g&&savedFor(code)){g=savedFor(code);useGame(g.id);drafting=false}   // same code word as a saved game: reopen it
+ if(!g){g=newGame({deck:draft.deck,time:draft.time,cpr:draft.cpr,code,last:Date.now(),timeT:draft.timeChosen?Date.now():0,playAs:name===S.name?null:name});
   g.mode=draft.mode;if(title){g.title=title;g.titleT=Date.now()}S.games[g.id]=g;S.defaults={deck:g.deck,time:g.time};useGame(g.id)}
  else{g.playAs=name===S.name?null:name;if((g.title||'')!==title){g.title=title||null;g.titleT=Date.now()}
   if(code!==g.code&&!codeLocked(g)){g.code=code;save();syncStart()}announce()}
@@ -215,6 +218,10 @@ $('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCo
 $('#setup-cancel').onclick=loadHome;
 $('#h-back').onclick=loadHome;
 $$('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(game)return;loadHome()}));
+$('#logo').addEventListener('click',()=>{if(game)return;location.reload()});
+function savedFor(code){return code?Object.values(S.games).find(g=>normCode(g.code||'')===code):null}
+$('#setup-code').addEventListener('change',()=>{if(!drafting)return;const g=savedFor(normCode($('#setup-code').value));if(!g)return;
+ useGame(g.id);loadHome();toast('Picked up your saved game: '+gameLabel(g),3500)});
 $('#setup-code').addEventListener('input',()=>{$('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value))});
 let backTo='home';
 $('#setup-set').onclick=()=>{backTo='setup';show('set')};
@@ -267,11 +274,11 @@ $('#setup-bk-go').onclick=()=>restoreFrom($('#setup-bk-text').value);
 
 // ============ a round ============
 let game=null,raf=0;
-function startRound(){if(startState())return;audio();const d=deal();if(!d.cards.length){toast('No cards in this deck');return}
+function startRound(){if(startState())return;audio();const cap=G().time?null:(G().cpr||CONFIG.defaultCards),d=deal(cap||CONFIG.batch);if(!d.cards.length){toast('No cards in this deck');return}
  if(d.fresh)toast('You\'ve played every card in this deck. Shuffling them all back in.',3800);
  G().last=Date.now();save();
  const rid=uid();
- game={rid,cards:d.cards,i:0,res:Array(d.cards.length).fill('none'),secs:[],shownAt:0,hist:[],skips:CONFIG.skips,unl:!G().time,left:G().time*1000,dur:G().time*1000,used:0,end:0,running:false,counting:true,lastTick:null,warned:false,pausedByDialog:false,deck:G().deck,
+ game={rid,cap,cards:d.cards,i:0,res:Array(d.cards.length).fill('none'),secs:[],shownAt:0,hist:[],skips:CONFIG.skips,unl:!G().time,left:G().time*1000,dur:G().time*1000,used:0,end:0,running:false,counting:true,lastTick:null,warned:false,pausedByDialog:false,deck:G().deck,
   mid:matchOn()?G().match.id:null};
  hideSplash();show('play');renderCard();renderHud();wake(true);
  const cd=CONFIG.countdown*800;send('start',{rid,left:game.left+cd,dur:game.dur,unl:game.unl});S.liveRound={game:S.current,rid};save();
@@ -292,21 +299,25 @@ function fit(el,max,min){let s=max;el.style.fontSize=s+'px';const c=el.parentEle
 function renderCard(){const c=game.cards[game.i];if(!c)return;const w=$('#p-word');w.textContent=c[4];$('#p-list').innerHTML=c[5].map(t=>'<li>'+esc(t)+'</li>').join('');
  requestAnimationFrame(()=>{fit(w,44,20);$$('#p-list li').forEach(li=>{let s=26;li.style.fontSize=s+'px';while(s>14&&li.scrollWidth>li.clientWidth){s-=1;li.style.fontSize=s+'px'}})})}
 function renderHud(){const n=game.cards.length;
- $('#meter').innerHTML=game.res.map((r,i)=>'<i class="'+({correct:'c',buzz:'x',skip:'s'}[r]||(i===game.i?'now':''))+'"></i>').join('');
- $('#p-info').textContent='Card '+Math.min(game.i+1,n)+' of '+n;
+ $('#meter').innerHTML=(game.cap?game.res:game.res.slice(0,game.i+1)).map((r,i)=>'<i class="'+({correct:'c',buzz:'x',skip:'s'}[r]||(i===game.i?'now':''))+'"></i>').join('');
+ $('#p-info').textContent=game.cap?'Card '+Math.min(game.i+1,n)+' of '+n:'Card '+(game.i+1);
  $('#p-score').textContent=game.res.filter(r=>r==='correct').length;$('#skipn').textContent=game.skips;
  $('#b-skip').disabled=game.skips<=0;$('#b-undo').disabled=!game.hist.length;$('#timer').textContent=game.unl?'No timer':fmt(game.left/1000);$('#timer').classList.toggle('none',game.unl)}
 function act(kind){if(!game||!game.running)return;const now=performance.now();game.hist.push({i:game.i,skips:game.skips,shownAt:game.shownAt});
  game.secs[game.i]=Math.round((now-game.shownAt)/100)/10;game.shownAt=now;game.res[game.i]=kind;markSeen(game.cards[game.i],true);saveSeen();
  if(kind==='correct')sfx.ok();else if(kind==='buzz'){sfx.buzz();vibrate([80,60,80])}else{game.skips--;sfx.skip()}
- game.i++;if(game.i>=game.cards.length){renderHud();finish('all');return}renderCard();renderHud()}
+ game.i++;if(game.i>=game.cards.length){
+  if(game.cap){renderHud();finish('all');return}
+  const more=deal(CONFIG.batch,true).cards.filter(c=>!game.cards.includes(c));if(!more.length){renderHud();finish('all');return}
+  game.cards.push(...more);game.res.push(...more.map(()=>'none'))}
+ renderCard();renderHud()}
 function undo(){if(!game||!game.hist.length)return;const h=game.hist.pop();game.i=h.i;game.skips=h.skips;game.res[h.i]='none';game.shownAt=h.shownAt;
  markSeen(game.cards[h.i],false);saveSeen();renderCard();renderHud()}
 function finish(why){if(game.running)game.used+=performance.now()-game.runFrom;game.running=false;cancelAnimationFrame(raf);wake(false);$('#paused').classList.remove('on');sfx.end();vibrate(300);
  // the card on screen when time runs out or the round ends gets revealed, so it's retired too
  if(why!=='all'&&game.i<game.cards.length){game.res[game.i]=why==='time'?'time':'ended';markSeen(game.cards[game.i],true);saveSeen()}
  const n=k=>game.res.filter(r=>r===k).length,c=n('correct'),x=n('buzz'),sk=n('skip'),back=n('none');
- $('#sum-title').textContent=myName()+"'s round";$('#sum-why').textContent=why==='all'?'All '+game.cards.length+' done!':why==='time'?"Time's up":'Ended early';
+ $('#sum-title').textContent=myName()+"'s round";$('#sum-why').textContent=why==='all'?(game.cap?'All '+game.cards.length+' done!':'That was the last card in the deck!'):why==='time'?"Time's up":'Ended early';
  $('#t-c').textContent=c;$('#t-s').textContent=sk;$('#t-x').textContent=x;
  const used=Math.round(game.unl?game.used:game.dur-Math.max(0,game.left)),words=game.cards.map((card,i)=>[card[4],game.res[i],game.secs[i]||null]).filter(w=>w[1]!=='none');
  const mm=game.mid&&matchOn()&&G().match.id===game.mid?G().match:null,sc=mm?roundScore(game.cards,game.res,mm):{};
@@ -418,7 +429,7 @@ function myState(){const g=G(),se=sess(g),mine=se.rounds.filter(r=>r.who==='me')
   last:last?Object.assign({rid:last.rid,c:last.c,s:last.s,x:last.x,n:last.n,dur:last.dur,deck:last.deck,guessed:last.words.filter(w=>w[1]==='correct').map(w=>[w[0],w[2]])},
    last.m?{mid:last.m,pts:last.pts,stl:last.st,net:last.net,adj:last.adj||0}:{}):null,...matchState(g)}}
 function send(type,data={}){const g=G();if(!CONFIG.sync||!syncTopic||!g)return;
- const body=JSON.stringify(Object.assign({v:3,ver:CONFIG.build,type,d:S.device,n:myName(g),p:g.player||null,tm:g.time,tt:g.timeT||0,gn:g.title||'',gt:g.titleT||0,at:Date.now(),st:myState()},data));
+ const body=JSON.stringify(Object.assign({v:3,ver:CONFIG.build,type,d:S.device,n:myName(g),p:g.player||null,tm:g.time,cp:g.cpr||CONFIG.defaultCards,tt:g.timeT||0,gn:g.title||'',gt:g.titleT||0,at:Date.now(),st:myState()},data));
  if(Date.now()<backoffUntil&&type==='hi'){pending=body;return}post(body)}
 function post(body,tries=0){fetch(SYNC_URL+syncTopic,{method:'POST',body}).then(r=>{
   if(r.status===429){backoffUntil=Date.now()+30000;if(tries<2)setTimeout(()=>post(body,tries+1),30000*(tries+1))}
@@ -458,7 +469,7 @@ function receive(m){const g=G();if(!g||!m||m.v!==3||m.d===S.device||typeof m.at!
  const nm=clean(m.n);if(nm&&nm!==g.partner&&m.at>(g.partnerT||0)){g.partner=nm;g.partnerT=m.at;changed=true}
  if((m.gt||0)>(g.titleT||0)){g.title=m.gn||null;g.titleT=m.gt;changed=true;if(!replaying&&m.gn)toast(cap(nm||partner())+' named this game "'+m.gn+'"');
   if(screen==='setup'&&!drafting&&document.activeElement!==$('#setup-gname'))$('#setup-gname').value=g.title||''}
- if(CONFIG.times.includes(m.tm)&&(m.tt||0)>(g.timeT||0)){const was=g.time;g.time=m.tm;g.timeT=m.tt;changed=true;
+ if(CONFIG.times.includes(m.tm)&&(m.tt||0)>(g.timeT||0)){const was=g.time;g.time=m.tm;g.timeT=m.tt;if(CONFIG.cardOpts.includes(m.cp))g.cpr=m.cp;changed=true;
   if(was!==m.tm&&!replaying)toast(cap(nm||partner())+' set rounds to '+timeLabel(m.tm)+(game?'. It starts next round.':''))}
  // game state carried by every message: line up on one game id, then heal anything we missed
  const st=m.st||{},se=sess(g);
@@ -533,7 +544,6 @@ const CREDITS=[
  (k)=>k.guessed?['Cards guessed',String(k.guessed)]:null,
  (k)=>k.fast?['Fastest guess',k.fast[0]+' in '+k.fast[1]+' seconds']:null,
  (k)=>k.tough?['Toughest card',k.tough+' (skipped)']:null,
- (k)=>k.perfect?['Perfect rounds',k.perfect]:null,
  (k)=>k.buzz?['Buzzes',k.me+' '+k.buzzMine+' · '+k.them+' '+k.buzzTheirs]:null,
  (k)=>k.decks?['Decks',k.decks]:null,
  (k)=>k.match?['Match',k.match]:null,
@@ -575,7 +585,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 
 // ============ keep score: matches, points, Bragging Rights ============
 // Numbers live here; deck weights live in cards/decks.json ("weight").
-const SCORE={target:20,roundsEach:5,perfectBonus:1,buzz:-1,maxAdjust:1,historyKeep:300,
+const SCORE={target:20,roundsEach:5,buzz:-1,maxAdjust:1,historyKeep:300,
  defaults:{type:'team',win:'target',pen:'-1',val:'weighted'}};
 let mdraft=null,inviteIn=null,lastIds=0;
 const matchOn=(g=G())=>!!(g&&g.match&&g.match.status==='on');
@@ -585,11 +595,10 @@ const weight=id=>{const d=DECKS.find(x=>x.id===id);return d&&d.weight!=null?d.we
 const half=w=>({0.5:'½',1.5:'1½'}[w]||String(w));
 const cardValue=(c,m)=>m.val==='equal'?1:weight(c[1]);
 // one round's points, worked out by the clue-giver's phone. Head-to-head: correct cards by value, −1 a buzz, the skip setting,
-// +1 for all 10; each buzz gives the guesser that card's value. Team: net cards (a buzz costs one card, skips use the setting).
+// each buzz gives the guesser that card's value. Team: net cards (a buzz costs one card, skips use the setting).
 function roundScore(cards,res,m){let pts=0,steal=0,net=0;const pen=Number(m.pen);
  cards.forEach((c,i)=>{const r=res[i],v=cardValue(c,m);
   if(r==='correct'){pts+=v;net+=v}else if(r==='buzz'){pts+=SCORE.buzz;steal+=v;net-=1}else if(r==='skip'){pts+=pen;net+=pen}});
- if(res.filter(r=>r==='correct').length===CONFIG.perRound)pts+=SCORE.perfectBonus;
  return{pts:rnd2(pts),stl:rnd2(steal),net:rnd2(net)}}
 function tally(g=G()){const m=g.match,drop=m.drop||[],rs=sess(g).rounds.filter(r=>r.m===m.id&&!drop.includes(r.rid));
  const mine=rs.filter(r=>r.who==='me'),theirs=rs.filter(r=>r.who==='them'),sum=(a,f)=>a.reduce((x,r)=>x+f(r),0),P=r=>(r.pts||0)+(r.adj||0);
@@ -610,9 +619,9 @@ function matchCheck(g=G()){const m=g&&g.match;if(!m||m.status!=='on')return;cons
 const pairKey=(g=G())=>'g'+hash(normCode(g.code||'')+'|'+[S.device,g.partnerDevice||'?'].sort().join('|')).toString(36);
 const legacyKey=(g=G())=>[S.device+':'+myName(g).toLowerCase(),(g.partnerDevice||'?')+':'+String(g.partner||'').toLowerCase()].sort().join('|');
 function finalizeMatch(g){const m=g.match,t=tally(g);m.status='done';
- const perfect=a=>a.filter(r=>r.c===CONFIG.perRound).length,sum=(a,f)=>a.reduce((x,r)=>x+(r[f]||0),0);
+const sum=(a,f)=>a.reduce((x,r)=>x+(r[f]||0),0);
  const e={id:m.id,k:pairKey(g),t:m.type,w:m.win,at:Date.now(),me:myName(g),them:cap(partner()),r:m.type==='team'?'t':t.my>t.their?'w':t.my<t.their?'l':'t',
-  mp:t.my,tp:t.their,mr:t.a,tr:t.b,mpf:perfect(t.mine),tpf:perfect(t.theirs),mx:sum(t.mine,'x'),tx:sum(t.theirs,'x'),mc:sum(t.mine,'c'),tc:sum(t.theirs,'c'),
+  mp:t.my,tp:t.their,mr:t.a,tr:t.b,mx:sum(t.mine,'x'),tx:sum(t.theirs,'x'),mc:sum(t.mine,'c'),tc:sum(t.theirs,'c'),
   d:[...new Set(t.mine.concat(t.theirs).map(r=>r.deck).filter(Boolean))],nc:t.net,sp:t.net>0?rnd2(t.secs/t.net):null,early:!!m.early};
  m.result=e;addHist(e);save()}
 function addHist(e){if(S.hist.some(x=>x.id===e.id))return false;S.hist.push(e);S.hist.sort((a,b)=>a.at-b.at);if(S.hist.length>SCORE.historyKeep)S.hist.shift();return true}
@@ -668,7 +677,7 @@ function showResult(g){const e=g.match.result;if(!e){g.match=null;save();return}
  else{$('#mr-h').textContent=e.r==='t'?"It's a tie!":(e.r==='w'?e.me:e.them)+' wins!';
   $('#mr-tot').innerHTML='<div'+(e.r==='w'?' class="big"':'')+'><b>'+num(e.mp)+'</b><small>'+esc(e.me)+'</small></div><div'+(e.r==='l'?' class="big"':'')+'><b>'+num(e.tp)+'</b><small>'+esc(e.them)+'</small></div>'}
  const li=(a,b)=>'<li><span>'+esc(a)+'</span><span>'+esc(b)+'</span></li>';
- $('#mr-list').innerHTML=li('Rounds',e.me+' '+e.mr+' · '+e.them+' '+e.tr)+li('Perfect rounds',e.me+' '+e.mpf+' · '+e.them+' '+e.tpf)+li('Buzzes',e.me+' '+e.mx+' · '+e.them+' '+e.tx);
+ $('#mr-list').innerHTML=li('Rounds',e.me+' '+e.mr+' · '+e.them+' '+e.tr)+li('Buzzes',e.me+' '+e.mx+' · '+e.them+' '+e.tx);
  show('mres')}
 $('#mr-done').onclick=()=>{const g=G();if(g){g.match=null;g.mode='fun';save()}show('home')};
 $('#mr-brag').onclick=()=>{const g=G();if(g){g.match=null;g.mode='fun';save()}backTo='home';show('brag')};
@@ -698,7 +707,7 @@ function renderBrag(){const g=G(),body=$('#br-body');if(!g){body.innerHTML='';re
   out+='<p class="brh">Head-to-head</p><div class="stats">'+box(me+' – '+them+(t?' – ties':''),w+' – '+l+(t?' – '+t:''),true)+
    box('Win streak now',String(st.now))+box('Longest win streak',String(st.best))+
    box('Points a round',me+' '+avg(sum(h,'mp'),sum(h,'mr'))+' · '+them+' '+avg(sum(h,'tp'),sum(h,'tr')),true)+
-   box('Perfect rounds',me+' '+sum(es,'mpf')+' · '+them+' '+sum(es,'tpf'),true)+box('Buzzes',me+' '+sum(es,'mx')+' · '+them+' '+sum(es,'tx'),true)+
+   box('Buzzes',me+' '+sum(es,'mx')+' · '+them+' '+sum(es,'tx'),true)+
    (fav?box('Favorite deck',deckName(fav[0]),true):'')+'</div>'}
  if(tm.length){const best=Math.min(...tm.map(e=>e.sp)),avg=sum(tm,'sp')/tm.length;
   out+='<p class="brh">Team</p><div class="stats">'+box('Best speed',num(best)+' s a card')+box('Average speed',num(rnd2(avg))+' s a card')+box('Team matches',String(tm.length),true)+'</div>'}
@@ -744,7 +753,7 @@ function sendIds(g,now){if(!now&&Date.now()-lastIds<20000)return;lastIds=Date.no
 // ============ start ============
 renderRules();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(screen==='mk')drawMaker()});
-loadHome();
+startSetup();   // every visit starts on a blank Home with the defaults; pick a saved game or type its code word to continue
 syncStart();
 // the app closed mid-round last time: tell the partner's phone so its splash clears (the round doesn't count)
 if(S.liveRound){const lr=S.liveRound;S.liveRound=null;save();if(lr.game===S.current)setTimeout(()=>send('abort',{rid:lr.rid}),1500)}
