@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.5',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'7.6',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -99,9 +99,12 @@ let screen='',draft=null,drafting=false;   // drafting: Home is filling in a bra
 // many messages can arrive at once: redraw once per frame
 let renderQueued=false;const queueRender=()=>{if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;if(screen==='play')renderSync();else render()})};
 const setVal=(sel,v)=>{const el=$(sel);if(el&&document.activeElement!==el)el.value=v};
-function show(id){screen=id;$$('.screen').forEach(s=>s.classList.toggle('on',s.id==='s-'+id));window.scrollTo(0,0);render()}
+function show(id){screen=id;if(id!=='setup')arm();$$('.screen').forEach(s=>s.classList.toggle('on',s.id==='s-'+id));window.scrollTo(0,0);render()}
 function toast(msg,ms=2600){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),ms)}
-const openModal=id=>$('#m-'+id).classList.add('on');
+const openModal=id=>{$('#m-'+id).classList.add('on');arm()};
+// a short-lived Undo after something you can't otherwise take back
+function offerUndo(msg,undoFn,ms=8000){const u=$('#undo');$('#undo-t').textContent=msg;u.classList.add('on');clearTimeout(u._h);
+ $('#undo-b').onclick=()=>{u.classList.remove('on');clearTimeout(u._h);undoFn()};u._h=setTimeout(()=>u.classList.remove('on'),ms)}
 function closeModals(){$$('.modal').forEach(m=>m.classList.remove('on'));if(game&&game.pausedByDialog){game.pausedByDialog=false;resume()}}
 function confirmBox(msg,yes,label='Yes'){$('#cf-p').textContent=msg;$('#cf-yes').textContent=label;$('#cf-yes').onclick=()=>{$('#m-confirm').classList.remove('on');if(game)game.pausedByDialog=false;yes()};openModal('confirm')}
 $('#cf-no').onclick=closeModals;
@@ -113,7 +116,7 @@ const FIELDS={player:()=>[['1','Player 1'],['2','Player 2']],deck:deckOptions,ti
  pen:()=>[['-1','−1'],['-0.5','−0.5'],['0','0']],mode:()=>[['fun','Just for fun'],['score','Keep score']],val:()=>[['weighted','Weighted'],['equal','Equal']],sound:()=>[['on','On'],['off','Off']]};
 const target=scope=>scope==='setup'?draft:scope==='game'?G():scope==='match'?mdraft:S;
 // some choices are locked: deck and round length during a match
-const locked=(f,scope)=>(scope==='game'&&(f==='deck'||f==='time'||f==='mode')&&matchOn())||(scope==='match'&&!!G()&&!drafting&&matchOn());
+const locked=(f,scope)=>(scope==='setup'&&!drafting&&HOME_KEYS.includes(f)&&matchOn())||(scope==='match'&&!!G()&&!drafting&&matchOn());
 // a single option that can't be picked right now: Keep score needs a round timer
 const blocked=(f,v,t)=>f==='mode'&&v==='score'&&!t.time;
 function renderSegs(){$$('.seg').forEach(seg=>{const t=target(seg.dataset.scope);if(!t)return;const f=seg.dataset.field,opts=FIELDS[f]();
@@ -157,9 +160,9 @@ function renderRules(){const li=a=>a.map(t=>'<li>'+esc(t)+'</li>').join('');$('#
 
 function badgeFor(code){if(!code)return'';const h=hash('badge|'+code),sk=Object.keys(SHAPES),ck=Object.keys(COLS),sh=sk[h%sk.length],c=ck[(h>>>8)%ck.length];
  return'<svg width="26" height="26" viewBox="0 0 24 24" aria-label="'+c+' '+sh+'"><path d="'+SHAPES[sh]+'" fill="'+COLS[c]+'"/></svg>'}
-function render(){const g=G();
+function render(){const g=G();if(!drafting&&g&&draft&&draft.base)followGame(g);
  // Home's deck, round length and mode edit the current game, or the new-game draft
- $$('#s-setup .seg[data-scope=setup], #s-setup .seg[data-scope=game]').forEach(x=>x.dataset.scope=drafting||!g?'setup':'game');renderSegs();
+ renderSegs();
  $$('[data-backup]').forEach(el=>el.hidden=!CONFIG.backup);
  if(screen==='home'&&g){$('#h-game').textContent=g.title?g.title+' · with '+partner():'Game with '+partner();$('#h-badge').innerHTML=badgeFor(g.code);
   $('#h-deckname').textContent=deckName(g.deck);$('#h-time').textContent=g.time?timeLabel(g.time)+' rounds':'No timer';
@@ -182,14 +185,23 @@ const gameLabel=(g=G())=>g?(g.title||'Game with '+(g.partner||'your partner')):'
 const codeLocked=g=>!!(g&&g.partnerDevice);
 const otherGames=()=>Object.values(S.games).sort((a,b)=>(b.last||b.created)-(a.last||a.created));
 // fill Home from the current game, or start a blank new one when there are no games
-function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;draft=null;const g=G();
+// Home works like a form: it edits a copy (draft) of the game's choices, and Let's play saves them. Leaving or Discard throws the copy away.
+const HOME_KEYS=['deck','time','cpr','mode'];
+const homeVals=g=>({deck:g.deck,time:g.time,cpr:g.cpr||CONFIG.defaultCards,mode:g.mode||'fun'});
+function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;const g=G();
  $('#setup-name').value=myName(g);$('#setup-code').value=g.code||'';$('#setup-gname').value=g.title||'';// Just for fun is the default each time; Keep score stays only while a match is on or an invite is out
  if(!matchOn(g)&&!(g.match&&g.match.status==='invite')&&!g.wantMatch)g.mode='fun';
- mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults);/* Keep score options open on the defaults each time */if(!g.mode)g.mode='fun';show('setup')}
+ mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults);/* Keep score options open on the defaults each time */if(!g.mode)g.mode='fun';
+ draft=Object.assign(homeVals(g),{base:homeVals(g)});show('setup')}
+// a choice the person hasn't touched follows the saved game (say, the partner changed the round length)
+function followGame(g){if(!draft||!draft.base)return;const v=homeVals(g);HOME_KEYS.forEach(k=>{if(draft[k]===draft.base[k])draft[k]=v[k];draft.base[k]=v[k]})}
+function homeDirty(){const g=homeGame();if(!g||!draft)return false;
+ return HOME_KEYS.some(k=>draft[k]!==homeVals(g)[k])||clean($('#setup-name').value)!==myName(g)||clean($('#setup-gname').value)!==(g.title||'')||(!codeLocked(g)&&normCode($('#setup-code').value)!==g.code)}
 // a new game always starts on the defaults (Classic, 1:00, Just for fun), not on whatever another game used last
 function startSetup(){drafting=true;draft={deck:CONFIG.defaultDeck,time:CONFIG.defaultTime,cpr:CONFIG.defaultCards,mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
  $('#setup-name').value='';$('#setup-code').value='';$('#setup-gname').value='';closeModals();show('setup')}
-function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
+function renderHome(){const g=homeGame();if(g)followGame(g);const t=draft;if(!t)return;
+ $('#home-dirty').hidden=!homeDirty();
  $('#sg-group').hidden=!Object.keys(S.games).length;
  $('#sg-name').textContent=g?gameLabel(g):'New game';
  const lk=codeLocked(g);$('#setup-code').readOnly=lk;$('#setup-code').classList.toggle('locked',lk);
@@ -211,14 +223,32 @@ $('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCo
  if(!g&&savedFor(code)){g=savedFor(code);useGame(g.id);drafting=false}   // same code word as a saved game: reopen it
  if(!g){g=newGame({deck:draft.deck,time:draft.time,cpr:draft.cpr,code,last:Date.now(),timeT:draft.timeChosen?Date.now():0,playAs:name===S.name?null:name});
   g.mode=draft.mode;if(title){g.title=title;g.titleT=Date.now()}S.games[g.id]=g;S.defaults={deck:g.deck,time:g.time};useGame(g.id)}
- else{g.playAs=name===S.name?null:name;if((g.title||'')!==title){g.title=title||null;g.titleT=Date.now()}
-  if(code!==g.code&&!codeLocked(g)){g.code=code;save();syncStart()}announce()}
- drafting=false;g.scoreCfg=Object.assign({},mdraft);g.wantMatch=g.mode==='score'&&!matchOn(g)&&!(g.match&&g.match.status==='invite');save();show('home');tryInvite(g);
+ else{const d=draft&&draft.base?draft:homeVals(g),switching=d.deck!==g.deck&&sess(g).rounds.length;
+  const saveRest=()=>{g.playAs=name===S.name?null:name;if((g.title||'')!==title){g.title=title||null;g.titleT=Date.now()}
+   if(d.time!==g.time||d.cpr!==(g.cpr||CONFIG.defaultCards)){g.time=d.time;g.cpr=d.cpr;g.timeT=Date.now()}g.mode=d.mode;
+   if(code!==g.code&&!codeLocked(g)){g.code=code;save();syncStart()}announce()};
+  if(switching){confirmBox('Switching decks ends this game and shows your game summary.',()=>{saveRest();endGame('deck',null);g.deck=d.deck;
+    g.scoreCfg=Object.assign({},mdraft);g.wantMatch=g.mode==='score';draft=Object.assign(homeVals(g),{base:homeVals(g)});save();afterCredits=()=>tryInvite(g)},'Switch and end');return}
+  g.deck=d.deck;saveRest()}
+ drafting=false;g.scoreCfg=Object.assign({},mdraft);g.wantMatch=g.mode==='score'&&!matchOn(g)&&!(g.match&&g.match.status==='invite');
+ draft=Object.assign(homeVals(g),{base:homeVals(g)});save();show('home');tryInvite(g);
  if(!S.rulesSeen){S.rulesSeen=true;save();setTimeout(()=>openModal('rules'),250)}};
 $('#setup-cancel').onclick=loadHome;
+$('#home-discard').onclick=()=>{loadHome();toast('Changes discarded')};
+['#setup-name','#setup-code','#setup-gname'].forEach(id=>$(id).addEventListener('input',()=>{if(!drafting)$('#home-dirty').hidden=!homeDirty()}));
 $('#h-back').onclick=loadHome;
 $$('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(game)return;loadHome()}));
 $('#logo').addEventListener('click',()=>{if(game)return;location.reload()});
+// ---- Back: one spare history entry catches the back swipe so it steps back inside the app
+let armed=false;
+function arm(){if(armed)return;try{history.pushState({pl:1},'');armed=true}catch(e){}}
+function appBack(){const m=$('.modal.on');
+ if(m){if(m.id==='m-invite')return true;   // an invite needs a real answer
+  if(m.id==='m-confirm'){m.classList.remove('on');closeModals();return true}closeModals();return true}
+ if(screen==='play'){if(game&&(game.running||game.counting||game.pausedAt))$('#b-end').click();return true}
+ const step={sum:'#sum-done',home:'#h-back',set:'#s-set [data-back]',brag:'#s-brag [data-back]',mk:'#s-mk [data-back]',credits:'#cr-done',mres:'#mr-done'}[screen];
+ if(step){$(step).click();return true}return false}
+window.addEventListener('popstate',()=>{armed=false;if(appBack()){if(screen!=='setup'||$('.modal.on'))arm()}else history.back()});
 function savedFor(code){return code?Object.values(S.games).find(g=>normCode(g.code||'')===code):null}
 $('#setup-code').addEventListener('change',()=>{if(!drafting)return;const g=savedFor(normCode($('#setup-code').value));if(!g)return;
  useGame(g.id);loadHome();toast('Picked up your saved game: '+gameLabel(g),3500)});
@@ -243,13 +273,16 @@ $('#games-list').addEventListener('click',e=>{const p=e.target.closest('[data-ga
 $('#gs-play').onclick=()=>{const id=gsum;if(!S.games[id])return;if(id!==S.current||drafting){useGame(id);toast('Switched to game with '+partner())}loadHome()};
 $('#gs-del').onclick=()=>{const g=S.games[gsum];if(!g)return;$('#m-gsum').classList.remove('on');
  confirmBox('Delete "'+gameLabel(g)+'"? Its played cards are lost. Bragging Rights stay.',()=>{const cur=g.id===S.current;delete S.games[g.id];save();
-  if(cur){const nx=otherGames()[0];useGame(nx?nx.id:null)}if(G())loadHome();else startSetup();toast('Game deleted')},'Delete')};
+  if(cur){const nx=otherGames()[0];useGame(nx?nx.id:null)}if(G())loadHome();else startSetup();undoDelete(g,cur)},'Delete')};
+// put a deleted game back exactly as it was (and make it current again if it was)
+function undoDelete(g,cur){offerUndo('Deleted "'+gameLabel(g)+'"',()=>{S.games[g.id]=g;if(cur)useGame(g.id);save();if(screen==='setup'||screen==='set')loadHome();toast('Game restored')})}
 $('#new-game').onclick=startSetup;
-$('#del-game').onclick=()=>confirmBox('Delete "'+gameLabel()+'"? Its played cards are lost. Bragging Rights stay.',()=>{delete S.games[S.current];const nx=otherGames()[0];useGame(nx?nx.id:null);if(G())loadHome();else startSetup()},'Delete');
+$('#del-game').onclick=()=>confirmBox('Delete "'+gameLabel()+'"? Its played cards are lost. Bragging Rights stay.',()=>{const g=G();delete S.games[S.current];const nx=otherGames()[0];useGame(nx?nx.id:null);if(G())loadHome();else startSetup();undoDelete(g,true)},'Delete');
 $('#set-partner').addEventListener('change',e=>{const v=clean(e.target.value);if(v){G().partner=v;save()}render()});
 $('#set-name').addEventListener('change',e=>{S.name=clean(e.target.value);save();announce()});
 $('#set-playas').addEventListener('change',e=>{const v=clean(e.target.value);G().playAs=v&&v!==S.name?v:null;save();announce();render()});
-$('#reset-seen').onclick=()=>confirmBox('Put all of your played cards in this game back in your deck? You may see cards you\'ve already played.',()=>{seen.clear();G().cycle++;saveSeen();render();toast('Played cards reset')},'Reset');
+$('#reset-seen').onclick=()=>{const g=G(),was=[...seen],cyc=g.cycle;seen.clear();g.cycle++;saveSeen();render();
+ offerUndo('Played cards reset',()=>{if(G()!==g)return;seen.clear();was.forEach(x=>seen.add(x));g.cycle=cyc;saveSeen();render();toast('Played cards are back')})};
 
 // ============ backup: all games as one short code (played cards packed as bits) ============
 const toB64=u8=>{let s='';u8.forEach(b=>s+=String.fromCharCode(b));return btoa(s)};
@@ -332,7 +365,7 @@ function finish(why){if(game.running)game.used+=performance.now()-game.runFrom;g
 $('#start').onclick=startRound;
 $('#b-ok').onclick=()=>act('correct');$('#b-buzz').onclick=()=>act('buzz');$('#b-skip').onclick=()=>{if(game&&game.skips>0)act('skip')};
 $('#b-undo').onclick=undo;$('#b-pause').onclick=()=>pause(false);$('#resume').onclick=resume;
-$('#b-end').onclick=()=>{pause(true);confirmBox('End this round now? The card on screen counts as played. Cards you haven\'t reached go back into your deck.',()=>finish('end'),'End round')};
+$('#b-end').onclick=()=>{pause(true);confirmBox('End this round now? The card on screen counts as played.',()=>finish('end'),'End round')};
 $('#sum-done').onclick=()=>{const after=game&&game.endAfter;game=null;if(after)endGame(after.reason,after.n||partner(),after.next);else if(!checkFinal())show('home')};
 
 // ============ navigation ============

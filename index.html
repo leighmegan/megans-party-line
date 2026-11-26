@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0D1226">
 <title>Megan's Party Line</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Party Line">
-<link rel="stylesheet" href="styles.css?v=20261126-1333">
+<link rel="stylesheet" href="styles.css?v=20261126-1412">
 </head>
 <body>
 <div class="app">
@@ -36,6 +36,7 @@
   </div>
   <div class="row"><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
   <div style="flex:1"></div>
+  <p class="note dirty" id="home-dirty" hidden>Changes save when you tap Let's play. <button class="link" id="home-discard">Discard changes</button></p>
   <button class="primary" id="setup-go">Let's play</button>
   <button class="ghost" id="setup-cancel" hidden>Cancel new game</button>
   <div data-backup><button class="ghost" id="setup-bk">Restore from a backup code</button>
@@ -163,6 +164,7 @@
 <div class="count" id="count"><div id="count-n">3</div></div>
 <div class="paused" id="paused"><h1>Paused</h1><p class="sub" id="paused-t"></p><button class="primary" id="resume" style="min-width:220px">Resume</button></div>
 <div class="toast" id="toast" role="status"></div>
+<div class="undo" id="undo" role="status"><span id="undo-t"></span><button id="undo-b">Undo</button></div>
 <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="sp-name">
   <div class="sp-card"><div class="band"><div class="w" id="sp-name">Mom</div></div>
     <div class="sp-body"><p class="sp-line" id="sp-line">is giving clues</p><div class="sp-timer" id="sp-timer">1:00</div>
@@ -208,6 +210,6 @@
   <div class="row"><button class="ghost" data-close>Close</button></div>
 </div></div>
 
-<script src="app.js?v=20261126-1333"></script>
+<script src="app.js?v=20261126-1412"></script>
 </body>
 </html>

@@ -82,7 +82,9 @@ async def answer(pg, suggestion="#cf-no"):
 
 async def settings_deck(pg, name, suggestion="#cf-no"):
     await dismiss(pg); await home(pg); await pg.click(f'#s-setup [data-field=deck] button:has-text("{name}")')
-    await answer(pg, suggestion)
+    await answer(pg, suggestion)          # a deck can suggest a round length right away
+    if await pg.is_visible("#s-setup"): await pg.click("#setup-go")   # Home saves on Let's play
+    await answer(pg, suggestion)          # ...which may ask whether to end the game in progress
 
 async def dismiss(pg):
     if await pg.is_visible("#sp-ok"): await pg.click("#sp-ok"); await pg.wait_for_timeout(100)
@@ -151,13 +153,13 @@ async def main(slow):
         await dismiss(me); await game_screen(me); await me.click("#start"); await me.wait_for_timeout(2700); await me.click("#b-ok"); await me.click("#b-undo")
         check("undo un-plays the card", len((await state(me))["g"]["seen"]) == seen_before)
         await me.click("#b-end"); await me.click("#cf-yes"); await me.wait_for_timeout(150)
-        check("end early retires only the card on screen", await me.evaluate("document.querySelectorAll('#sum-list li').length") == 1 and "9 cards" in await me.text_content("#sum-back"))
+        check("end early retires only the card on screen", await me.evaluate("document.querySelectorAll('#sum-list li').length") == 1 and await me.text_content("#sum-back") == "")   # timed rounds don't hold back a stack of cards
         await me.click("#sum-done")
         # ---------- sync: round length, decks, clash, late joiner, other code ----------
-        await dismiss(me); await home(me); await me.click('#s-setup [data-field=time] button:has-text("2:00")')
+        await dismiss(me); await home(me); await me.click('#s-setup [data-field=time] button:has-text("2:00")'); await game_screen(me)
         await mom.wait_for_timeout(1200); await dismiss(mom)
         check("round length syncs", await mom.get_attribute('#s-setup [data-field=time] button[aria-pressed=true]', "data-v") == "120")
-        await home(mom); await mom.click('#s-setup [data-field=deck] button:has-text("Adult")')
+        await home(mom); await mom.click('#s-setup [data-field=deck] button:has-text("Adult")'); await game_screen(mom)
         if await mom.is_visible("#m-confirm"): await mom.click("#cf-yes")
         await me.wait_for_timeout(1200)
         for ph in (me, mom):
@@ -202,13 +204,13 @@ async def main(slow):
         check("Mixed counts that word as played", int((await left(solo)).split(" of ")[0]) == expect, f"{await left(solo)} vs {expect}")
         await settings_deck(solo, "Classic")
         # ---------- decks ----------
-        await dismiss(solo); await home(solo); await solo.click('#s-setup [data-field=time] button:has-text("1:00")')
+        await dismiss(solo); await home(solo); await solo.click('#s-setup [data-field=time] button:has-text("1:00")'); await game_screen(solo)
         await settings_deck(solo, "Classic"); await dismiss(solo)
         await home(solo); await solo.click('#s-setup [data-field=deck] button:has-text("Hard Mode")'); await solo.wait_for_timeout(150)
-        if "ends this game" in await solo.text_content("#cf-p"):
-            await solo.click("#cf-yes"); await solo.wait_for_timeout(150); await solo.click("#cr-done"); await solo.wait_for_timeout(150)
         check("hard mode suggests 2:00", await solo.is_visible("#m-confirm") and "2:00" in await solo.text_content("#cf-p"), await solo.text_content("#cf-p"))
-        await solo.click("#cf-yes"); await solo.wait_for_timeout(100)
+        await solo.click("#cf-yes"); await solo.wait_for_timeout(100); await solo.click("#setup-go"); await solo.wait_for_timeout(150)
+        if await solo.is_visible("#m-confirm") and "ends this game" in await solo.text_content("#cf-p"):
+            await solo.click("#cf-yes"); await solo.wait_for_timeout(150); await solo.click("#cr-done"); await solo.wait_for_timeout(150)
         await dismiss(solo)
         check("accepting sets 2:00", await solo.get_attribute('#s-setup [data-field=time] button[aria-pressed=true]', "data-v") == "120")
         for d in DECKS:
@@ -271,7 +273,7 @@ async def main(slow):
         await play(z); await z.click("#sum-done"); await a.wait_for_timeout(900)
         await dismiss(a); await game_screen(a); await a.click("#start"); await a.wait_for_timeout(2800); await a.click("#b-ok")
         await dismiss(z); await z.evaluate("document.getElementById('splash').classList.remove('on')")
-        await home(z); await z.click('#s-setup [data-field=deck] button:has-text("Kids")'); await z.wait_for_timeout(150)
+        await home(z); await z.click('#s-setup [data-field=deck] button:has-text("Kids")'); await z.click("#setup-go"); await z.wait_for_timeout(150)
         if await z.is_visible("#m-confirm"): await z.click("#cf-yes")
         await z.wait_for_timeout(300)
         if await z.is_visible("#s-credits"): await z.click("#cr-done")
@@ -285,7 +287,9 @@ async def main(slow):
         await z.wait_for_timeout(900)
         await dismiss(z)
         await dismiss(z); await home(z); await z.click('#s-setup [data-field=deck] button:has-text("Holidays")')
-        check("switching decks asks first", "ends this game" in await z.text_content("#cf-p")); await z.click("#cf-yes"); await a.wait_for_timeout(1500)
+        check("picking another deck on Home changes nothing yet", (await state(z))["g"]["deck"] == "c" and await z.is_visible("#home-dirty"))
+        await z.click("#setup-go")
+        check("switching decks asks first, at Let's play", "ends this game" in await z.text_content("#cf-p")); await z.click("#cf-yes"); await a.wait_for_timeout(1500)
         check("deck switch shows credits on both, with who switched", await z.is_visible("#s-credits") and await a.is_visible("#s-credits") and "Mom switched decks" in await a.text_content("#cr-why"), await a.text_content("#cr-why"))
         allerr += a.errs + z.errs; await c8.close(); await c9.close()
         # play as: a team name for a room game, separate from your usual name
@@ -337,7 +341,7 @@ async def main(slow):
         check("final round counts a quiet partner's rounds (2 vs 1 -> 3)", "you have 2 rounds left" in await x.text_content("#h-final"), await x.text_content("#h-final"))
         allerr += x.errs; await c20.close()
         # Hard mode suggestion accepted at setup is a real choice
-        c25, p1 = await phone(b, device="4444"); await setup(p1, "Pam", "choice"); await home(p1); await p1.click('#s-setup [data-field=time] button:has-text("1:30")')
+        c25, p1 = await phone(b, device="4444"); await setup(p1, "Pam", "choice"); await home(p1); await p1.click('#s-setup [data-field=time] button:has-text("1:30")'); await game_screen(p1)
         c26, p2 = await phone(b, device="6666")
         await p2.fill("#setup-name", "Pat"); await p2.click('#s-setup [data-field=deck] button:has-text("Hard Mode")'); await p2.wait_for_timeout(150)
         if await p2.is_visible("#m-confirm"): await p2.click("#cf-yes")
@@ -432,6 +436,41 @@ async def main(slow):
         for _ in range(5): await rl.click("#b-ok"); await rl.wait_for_timeout(25)
         await rl.wait_for_timeout(200); check("an Unlimited round ends after its 5 cards", await rl.is_visible("#s-sum") and await rl.text_content("#t-c") == "5")
         allerr += rl.errs; await c31.close()
+        # ---------- v7.5: back, discard, undo ----------
+        c32, nv = await phone(b)
+        on = lambda sc: nv.evaluate(f"document.querySelector('.screen.on').id") 
+        async def back(): await nv.go_back(); await nv.wait_for_timeout(250)
+        await setup(nv, "Megan", "nav-1"); await pick(nv, "1"); await dismiss(nv)
+        await back(); check("back from the game screen goes Home", await nv.is_visible("#s-setup"))
+        await game_screen(nv); await nv.click("#to-settings"); await back(); check("back from Settings returns to the game screen", await nv.is_visible("#s-home"))
+        await nv.click("#h-back"); await nv.click("#to-brag"); await back(); check("back from Bragging Rights goes Home", await nv.is_visible("#s-setup"))
+        await nv.click("#to-maker"); await back(); check("back from the card maker goes Home", await nv.is_visible("#s-setup"))
+        await nv.click("#s-setup [data-open=rules]"); await back(); check("back closes a pop-up first", await nv.is_hidden("#m-rules") and await nv.is_visible("#s-setup"))
+        await game_screen(nv); await nv.click("#start"); await nv.wait_for_timeout(2700); await nv.click("#b-ok")
+        await back(); check("back during a round asks to end it (and pauses)", await nv.is_visible("#m-confirm") and "End this round" in await nv.text_content("#cf-p") and await nv.is_visible("#s-play"))
+        await back(); await nv.wait_for_timeout(200); check("back again says no and keeps playing", await nv.is_hidden("#m-confirm") and await nv.is_visible("#s-play"))
+        await nv.click("#b-ok"); await nv.click("#b-end"); await nv.click("#cf-yes"); await nv.wait_for_timeout(200)
+        await back(); check("back from the round summary goes to the game screen", await nv.is_visible("#s-home"))
+        # Home holds changes until Let's play
+        await nv.click("#h-back"); check("no unsaved-changes note when nothing changed", await nv.is_hidden("#home-dirty"))
+        await nv.click('#s-setup [data-field=deck] button:has-text("Adult")'); await nv.click('#s-setup [data-field=time] button:has-text("2:00")'); await nv.fill("#setup-gname", "Typo night")
+        st = (await state(nv))["g"]
+        check("changes on Home aren't saved yet", st["deck"] == "c" and st["time"] == 60 and not st.get("title") and await nv.is_visible("#home-dirty"))
+        await nv.click("#to-brag"); await back(); check("leaving Home and coming back keeps the unsaved changes", await nv.input_value("#setup-gname") == "Typo night")
+        await nv.click("#home-discard"); await nv.wait_for_timeout(150)
+        check("Discard changes puts Home back the way it was", await nv.text_content("#s-setup [data-field=deck] button[aria-pressed=true]") == "Classic"
+              and await nv.get_attribute("#s-setup [data-field=time] button[aria-pressed=true]", "data-v") == "60" and await nv.input_value("#setup-gname") == "" and await nv.is_hidden("#home-dirty"))
+        await nv.click('#s-setup [data-field=time] button:has-text("1:30")'); await nv.click("#setup-go"); await nv.wait_for_timeout(150)
+        check("Let's play saves the change", (await state(nv))["g"]["time"] == 90)
+        # undo
+        n_seen = len((await state(nv))["g"]["seen"]); await nv.click("#to-settings"); await nv.click("#reset-seen"); await nv.wait_for_timeout(100)
+        check("reset played cards happens right away, with an Undo", len((await state(nv))["g"]["seen"]) == 0 and await nv.is_visible("#undo"))
+        await nv.click("#undo-b"); await nv.wait_for_timeout(100); check("Undo brings the played cards back", len((await state(nv))["g"]["seen"]) == n_seen and n_seen > 0, n_seen)
+        await nv.click("#del-game"); await nv.click("#cf-yes"); await nv.wait_for_timeout(150)
+        check("delete still asks, then offers Undo", len((await state(nv))["s"]["games"]) == 0 and await nv.is_visible("#undo") and await nv.is_visible("#s-setup"))
+        await nv.click("#undo-b"); await nv.wait_for_timeout(150)
+        check("Undo brings the deleted game back", len((await state(nv))["s"]["games"]) == 1 and await nv.input_value("#setup-code") == "nav-1" and (await state(nv))["g"]["time"] == 90)
+        allerr += nv.errs; await c32.close()
         # ---------- v6: keep score ----------
         ca, ann = await phone(b, device="1111"); cb, bea = await phone(b, device="2222", scheme="dark")
         await setup(ann, "Ann", "match-one"); await setup(bea, "Bea", "match-one"); await ann.wait_for_timeout(2500)
@@ -444,7 +483,7 @@ async def main(slow):
         await bea.wait_for_timeout(600); check("guesser's splash shows No timer", await bea.text_content("#sp-timer") == "No timer")
         await ann.wait_for_timeout(1500); check("no timer never runs out", await ann.is_visible("#s-play"))
         await ann.click("#b-ok"); await ann.click("#b-end"); await ann.click("#cf-yes"); await ann.click("#sum-done"); await bea.wait_for_timeout(800); await dismiss(bea)
-        await home(ann); await ann.click('#s-setup [data-field=time] button:has-text("1:00")'); await bea.wait_for_timeout(1200)
+        await home(ann); await ann.click('#s-setup [data-field=time] button:has-text("1:00")'); await game_screen(ann); await bea.wait_for_timeout(1200)
         await play(bea, n=1); await bea.click("#sum-done"); await ann.wait_for_timeout(800); await dismiss(ann)   # even rounds
         await home(ann); check("Just for fun is the default", await ann.get_attribute('#s-setup [data-field=mode] button[aria-pressed=true]', "data-v") == "fun" and await ann.is_hidden("#score-opts"))
         await ann.click('#s-setup [data-field=mode] button:has-text("Keep score")'); check("Keep score opens its options in place", await ann.is_visible("#score-opts") and await ann.is_visible("#s-setup"))

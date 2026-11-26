@@ -277,3 +277,7 @@ h2.grow{font-size:17px}@media (max-width:360px){h2.grow{font-size:15px}}
 .minor button{white-space:nowrap;padding:0 2px;font-size:14px}
 .seg button{white-space:nowrap}
 @media (max-width:345px){.minor button{font-size:12.5px}#s-setup .seg[data-field=deck]{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.dirty{text-align:center;margin:0}
+.undo{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translate(-50%,140%);z-index:57;display:flex;align-items:center;gap:14px;
+ background:var(--card);color:var(--cink);border-radius:16px;padding:6px 6px 6px 16px;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .2s;max-width:calc(100% - 32px);font-weight:700}
+.undo.on{transform:translate(-50%,0)}.undo button{background:var(--sel);color:var(--selink);min-height:40px;padding:0 16px;font-weight:800}
