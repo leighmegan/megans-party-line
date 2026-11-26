@@ -358,6 +358,9 @@ async def main(slow):
         await home(solo); await solo.fill("#setup-gname", "Second"); await solo.click("#setup-go"); await home(solo)
         await solo.click("#to-games"); await solo.click("#new-game")
         check("a new game starts with empty game name and code word", await solo.input_value("#setup-code") == "" and await solo.input_value("#setup-gname") == "")
+        check("a new game starts on Classic, 1:00, Just for fun", await solo.text_content("#s-setup [data-field=deck] button[aria-pressed=true]") == "Classic"
+              and await solo.get_attribute("#s-setup [data-field=time] button[aria-pressed=true]", "data-v") == "60"
+              and await solo.get_attribute("#s-setup [data-field=mode] button[aria-pressed=true]", "data-v") == "fun")
         await solo.fill("#setup-code", "typed-not-saved"); await solo.fill("#setup-gname", "typed"); await solo.click("#to-games"); await solo.click('#games-list .pick:has-text("Second")'); await solo.click("#gs-play")
         check("opening a saved game shows its own name and code word", await solo.input_value("#setup-code") == code_now and await solo.input_value("#setup-gname") == "Second", await solo.input_value("#setup-code"))
         await dismiss(solo); await home(solo); await solo.click("#to-games"); await solo.click('#games-list .pick >> nth=1')
@@ -390,7 +393,7 @@ async def main(slow):
         await fs.click("#setup-set"); check("gear on the first screen opens just sound", await fs.is_visible("#s-set") and await fs.is_hidden("#set-game") and await fs.is_hidden("#set-name") and await fs.is_visible("#s-set [data-field=sound]"))
         await fs.click("#s-set [data-back]"); check("settings goes back to the first screen, keeping what you typed", await fs.is_visible("#s-setup") and await fs.input_value("#setup-code") == "pug42")
         await fs.click('#s-setup [data-open=rules]'); rl = await fs.evaluate("[...document.querySelectorAll('#rules-list li')].length")
-        check("rules are short", rl <= 9, rl); await fs.click("#m-rules [data-close]"); allerr += fs.errs; await c30.close()
+        check("rules are short", rl <= 10, rl); await fs.click("#m-rules [data-close]"); allerr += fs.errs; await c30.close()
         # ---------- v6: keep score ----------
         ca, ann = await phone(b, device="1111"); cb, bea = await phone(b, device="2222", scheme="dark")
         await setup(ann, "Ann", "match-one"); await setup(bea, "Bea", "match-one"); await ann.wait_for_timeout(2500)
@@ -470,6 +473,10 @@ async def main(slow):
         await ann.click("#me-drop"); await ann.wait_for_timeout(300); await bea.wait_for_timeout(900)
         check("don't count the last round: 0–0 tie on both phones", await ann.text_content("#mr-h") == "It's a tie!" and await bea.text_content("#mr-h") == "It's a tie!")
         await ann.click("#mr-done"); await bea.click("#mr-done")
+        await home(ann); await ann.click('#s-setup [data-field=mode] button:has-text("Keep score")')
+        firsts2 = await ann.evaluate("[...document.querySelectorAll('#score-opts .seg')].map(s=>s.querySelector('button').getAttribute('aria-pressed'))")
+        check("Keep score options reopen on the defaults after a match", firsts2 == ["true"] * 4, str(firsts2))
+        await ann.click('#s-setup [data-field=mode] button:has-text("Just for fun")'); await game_screen(ann)
         await home(bea); check("after a match, Home is back on Just for fun", await bea.get_attribute('#s-setup [data-field=mode] button[aria-pressed=true]', "data-v") == "fun"); await game_screen(bea)
         # merge with an old record after a name change
         await ann.click("#to-settings"); await ann.fill("#set-playas", "Annie"); await ann.press("#set-playas", "Enter"); await ann.click("#s-set [data-back]")

@@ -1,7 +1,7 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.1',build:'20261126-0155',perRound:10,skips:3,
- times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
+const CONFIG={version:'7.2',build:'20261126-0205',perRound:10,skips:3,
+ times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
 // ============ helpers ============
@@ -136,6 +136,7 @@ function renderRules(){$('#rules-list').innerHTML=[
  'One of you gives clues and the other guesses. Swap after every round.',
  'Get your partner to say the big word on top. You can\'t say it, or any of the words under it.',
  'No cheating with close cousins: if "marriage" is off-limits, so is "marry." No rhymes, no "sounds like," no spelling it out.',
+ 'No shortcuts either: abbreviations and initials count as the word. If "medical" or "doctor" is off-limits, so is "MD."',
  'Tap Correct when they get it. Close enough counts, like "dogs" for "dog."',
  'Slip up and say a forbidden word? Be honest and tap Buzz.',
  'Stuck? You get '+plural(CONFIG.skips,'free skip')+' a round.',
@@ -174,8 +175,9 @@ const otherGames=()=>Object.values(S.games).sort((a,b)=>(b.last||b.created)-(a.l
 function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;draft=null;const g=G();
  $('#setup-name').value=myName(g);$('#setup-code').value=g.code||'';$('#setup-gname').value=g.title||'';// Just for fun is the default each time; Keep score stays only while a match is on or an invite is out
  if(!matchOn(g)&&!(g.match&&g.match.status==='invite')&&!g.wantMatch)g.mode='fun';
- mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults,g.scoreCfg);if(!g.mode)g.mode='fun';show('setup')}
-function startSetup(){drafting=true;draft={deck:S.defaults.deck,time:okTime(S.defaults.time),mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
+ mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults);/* Keep score options open on the defaults each time */if(!g.mode)g.mode='fun';show('setup')}
+// a new game always starts on the defaults (Classic, 1:00, Just for fun), not on whatever another game used last
+function startSetup(){drafting=true;draft={deck:CONFIG.defaultDeck,time:CONFIG.defaultTime,mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
  $('#setup-name').value=S.name;$('#setup-code').value='';$('#setup-gname').value='';closeModals();show('setup')}
 function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
  $('#sg-group').hidden=!Object.keys(S.games).length;
