@@ -17,7 +17,7 @@ self.addEventListener('fetch',e=>{{const u=new URL(e.request.url);if(e.request.m
  e.respondWith(fetch(e.request).then(r=>{{const cp=r.clone();caches.open(C).then(c=>c.put(e.request,cp));return r}}).catch(()=>caches.match(e.request,{{ignoreSearch:true}}).then(r=>r||caches.match('./index.html'))))}});
 """
 manifest = json.dumps({"name": "Megan's Taboo", "short_name": "Taboo", "start_url": "./", "scope": "./", "display": "standalone",
-    "background_color": "#2b0d3f", "theme_color": "#2b0d3f",
+    "background_color": "#0D1226", "theme_color": "#0D1226",
     "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}, {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}, indent=1)
 site = "dist/site"; os.makedirs(site, exist_ok=True)
 for name, text in {"index.html": stamped("index.html").replace("<!--PWA-->", pwa), "styles.css": stamped("styles.css"),

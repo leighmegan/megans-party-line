@@ -5,12 +5,12 @@ PICTURE: the card itself, large, centered; everything else is a thumb-reach cont
 COLOUR and TYPE: deep plum field, magenta band, sun-yellow action; Archivo Black + Archivo
 LAYOUT: one column, top status, card fills middle, big buttons at the bottom
 */
-:root{color-scheme:light dark;
---bg:light-dark(#2b0d3f,#14071f);--bg2:light-dark(#3d1659,#22102f);
---card:light-dark(#ffffff,#26143a);--cink:light-dark(#1d1027,#f3eafa);--muted:light-dark(#6b5a78,#b9a6c9);
---line:light-dark(#e7dcef,#3b2652);--band:#d6246e;--ink:#fbf6ff;--sun:#ffc93c;--sunink:#2b0d3f;
---ok:#14946c;--no:#e0393e;--skip:#6d6a92;--r:22px;
---soft:#cdb8e0;--bandink:#fff;--warnink:#ff8a8d;--goodink:#3ddc97;--scrim:rgba(10,3,16,.72);--scrim2:rgba(20,7,31,.94);
+:root{color-scheme:dark;
+--bg:#0D1226;--bg2:#2A3663;--card:#F4EFE6;--cink:#1B1A17;--muted:#7B756B;--line:#E6DECF;
+--band:#D6246E;--bandink:#F4EFE6;--ink:#F4EFE6;--soft:#B9C1DD;
+--sun:#2EC4B6;--sunink:#0D1226;--sel:#2EC4B6;--selink:#0D1226;
+--ok:#179C7E;--no:#E2465A;--skip:#56639A;--r:22px;
+--goodink:#7FE3C4;--warnink:#FF8FA3;--scrim:rgba(0,0,0,.6);--scrim2:rgba(13,18,38,.95);
 --fd:'Archivo Black',Archivo,sans-serif;--fb:Archivo,system-ui,sans-serif;--hw:400}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
@@ -241,3 +241,9 @@ h2.grow{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:elli
 h2.grow{font-size:19px}
 input.locked{background:var(--bg2);color:var(--soft)}
 #to-games{font-weight:800}
+
+/* v6.6 palette: navy, magenta card stripe, lighter-navy boxes with light text, teal for what's selected */
+input[type=text],input[type=number]{background:var(--bg2);color:var(--ink)}input::placeholder{color:var(--soft);opacity:.8}
+.seg button[aria-pressed=true]{background:var(--sel);color:var(--selink)}.opts{background:rgba(255,255,255,.05)}.opts .seg{background:var(--bg2)}
+input.locked{background:var(--bg);color:var(--soft);border-color:var(--bg2)}
+.minor button:active:not(:disabled){background:var(--sel);color:var(--selink)}
