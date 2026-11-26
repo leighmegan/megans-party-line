@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'6.7',build:'20261126-0124',perRound:10,skips:3,
+const CONFIG={version:'7.0',build:'20261126-0148',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -343,13 +343,13 @@ function drawMaker(){const cv=$('#mk'),ctx=cv.getContext('2d'),W=cv.width,H=cv.h
   const s=fitCanvas(ctx,txt,w-120,84,40,"800 Spx Archivo, sans-serif");ctx.font="800 "+s+"px Archivo, sans-serif";ctx.fillText(txt,W/2,cy);
   if(i<4){ctx.fillStyle='#E6DECF';ctx.fillRect(x+90,top+step*(i+1)-2,w-180,4)}}
  if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-130)}
- ctx.fillStyle='#A9A293';ctx.font="600 34px Archivo, sans-serif";ctx.fillText("Megan's Taboo",W/2,y+h-58);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
+ ctx.fillStyle='#A9A293';ctx.font="600 34px Archivo, sans-serif";ctx.fillText("Megan's Party Line",W/2,y+h-58);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
 let downloads=null;
 try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(d=>{downloads=d||null}).catch(()=>{})}catch(e){}
-$('#mk-save').onclick=async()=>{const name='megans-taboo-'+($('#mk-w').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'card')+'.png';
+$('#mk-save').onclick=async()=>{const name='bite-your-tongue-'+($('#mk-w').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'card')+'.png';
  const blob=await new Promise(r=>$('#mk').toBlob(r,'image/png'));if(!blob){toast('Could not make the image. Take a screenshot instead.');return}
  if(downloads){try{await downloads.save({filename:name,data:blob});toast('Saved')}catch(e){toast(e&&e.code==='declined'?'Not saved':'Saving isn\'t available here. Take a screenshot instead.')}return}
- try{const f=new File([blob],name,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Megan's Taboo card"});return}}catch(e){if(e&&e.name==='AbortError')return}
+ try{const f=new File([blob],name,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:"Bite Your Tongue card"});return}}catch(e){if(e&&e.name==='AbortError')return}
  try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast('Saved to downloads')}
  catch(e){toast('Saving isn\'t available here. Take a screenshot instead.')}};
 

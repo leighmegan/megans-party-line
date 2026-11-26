@@ -5,6 +5,12 @@ PICTURE: the card itself, large, centered; everything else is a thumb-reach cont
 COLOUR and TYPE: deep plum field, magenta band, sun-yellow action; Archivo Black + Archivo
 LAYOUT: one column, top status, card fills middle, big buttons at the bottom
 */
+@font-face{font-family:'Archivo Black';src:url(fonts/archivo-black-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-800-normal.woff2) format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'Rubik Logo';src:url(fonts/rubik-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
 :root{color-scheme:dark;
 --bg:#0D1226;--bg2:#2A3663;--card:#F4EFE6;--cink:#1B1A17;--muted:#7B756B;--line:#E6DECF;
 --band:#D6246E;--bandink:#F4EFE6;--ink:#F4EFE6;--soft:#B9C1DD;
@@ -247,3 +253,19 @@ input[type=text],input[type=number]{background:var(--bg2);color:var(--ink)}input
 .seg button[aria-pressed=true]{background:var(--sel);color:var(--selink)}.opts{background:rgba(255,255,255,.05)}.opts .seg{background:var(--bg2)}
 input.locked{background:var(--bg);color:var(--soft);border-color:var(--bg2)}
 .minor button:active:not(:disabled){background:var(--sel);color:var(--selink)}
+
+/* v7 logo: neon tubes. Pink outline letters, a blue speech bubble with a phone, tilted like a sticker */
+:root{--neon-pink:#FF3FA4;--neon-blue:#3D8BFF}
+.logo{position:relative;display:block;width:230px;height:84px;transform:rotate(-4deg);transform-origin:left center;margin:4px 0 -6px}
+.logo .t{position:absolute;white-space:nowrap;color:transparent;font:600 20px/1.2 'Rubik Logo',sans-serif;-webkit-text-stroke:1.3px #FFD0EA;
+ filter:drop-shadow(0 0 1.5px var(--neon-pink)) drop-shadow(0 0 4px var(--neon-pink)) drop-shadow(0 0 9px var(--neon-pink))}
+.logo .t1{left:6px;top:-4px}.logo .t2{left:60px;top:35px;font-size:26px}
+.logo svg{position:absolute;overflow:visible;filter:drop-shadow(0 0 1.5px var(--neon-blue)) drop-shadow(0 0 4px var(--neon-blue)) drop-shadow(0 0 9px var(--neon-blue))}
+.logo svg path{fill:none;stroke:#CFE2FF;stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round}
+.logo .bub{left:14px;top:24px;width:200px;height:60px}.logo .ph{left:28px;top:36px;width:24px;height:24px}.logo .ph path{stroke-width:.95}
+#s-setup .top{align-items:flex-start}
+@media (max-width:360px){.logo{transform:rotate(-4deg) scale(.7);margin-bottom:-24px}}
+h2.grow{font-size:17px}@media (max-width:360px){h2.grow{font-size:15px}}
+@media (max-width:385px){.logo{transform:rotate(-4deg) scale(.9);margin-bottom:-12px}}
+@media (max-width:365px){.logo{transform:rotate(-4deg) scale(.84);margin-bottom:-16px}}
+@media (max-width:340px){.logo{transform:rotate(-4deg) scale(.7);margin-bottom:-24px}h2.grow{white-space:normal;line-height:1.05}}
