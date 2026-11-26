@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.4',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'7.5',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -327,7 +327,7 @@ function finish(why){if(game.running)game.used+=performance.now()-game.runFrom;g
  renderRoundPoints(mm?rec:null);matchCheck();
  const lab={correct:'✓ Correct',buzz:'✕ Buzzed',skip:'↷ Skipped',time:"Time's up",ended:'Ended'};
  $('#sum-list').innerHTML=game.cards.map((card,i)=>{const r=game.res[i];return r==='none'?'':'<li><span>'+esc(card[4])+'</span><span class="tag '+({time:'none',ended:'none'}[r]||r)+'">'+esc(lab[r])+'</span></li>'}).join('');
- $('#sum-back').textContent=back?plural(back,'card')+' you didn\'t reach went back into your deck.':'';
+ $('#sum-back').textContent=back&&game.cap?plural(back,'card')+' you didn\'t reach went back into your deck.':'';
  show('sum')}
 $('#start').onclick=startRound;
 $('#b-ok').onclick=()=>act('correct');$('#b-buzz').onclick=()=>act('buzz');$('#b-skip').onclick=()=>{if(game&&game.skips>0)act('skip')};
@@ -354,10 +354,10 @@ $('#mk-sw').addEventListener('click',e=>{const b=e.target.closest('button');if(!
 $$('#s-mk input').forEach(i=>i.addEventListener('input',drawMaker));
 function fitCanvas(ctx,text,maxW,size,min,font){let s=size;do{ctx.font=font.replace('S',s);if(ctx.measureText(text).width<=maxW)break;s-=2}while(s>min);return s}
 // the main word shrinks to fit, and wraps onto up to three lines
-function wrapTitle(ctx,text,maxW,maxH){for(let s=150;s>=34;s-=4){ctx.font="400 "+s+"px 'Archivo Black', Archivo, sans-serif";const words=text.split(' ');let lines=[''];
+function wrapTitle(ctx,text,maxW,maxH){for(let s=150;s>=34;s-=4){ctx.font="700 "+s+"px Palatino, 'Palatino Linotype', Pagella, Georgia, serif";const words=text.split(' ');let lines=[''];
   for(const w of words){const t=lines[lines.length-1]?lines[lines.length-1]+' '+w:w;if(ctx.measureText(t).width<=maxW)lines[lines.length-1]=t;else lines.push(w)}
   if(lines.length<=3&&lines.every(l=>ctx.measureText(l).width<=maxW)&&lines.length*s*1.05<=maxH)return{s,lines}}
- const s=fitCanvas(ctx,text,maxW,34,16,"400 Spx 'Archivo Black', Archivo, sans-serif");return{s,lines:[text]}}
+ const s=fitCanvas(ctx,text,maxW,34,16,"700 Spx Palatino, 'Palatino Linotype', Pagella, Georgia, serif");return{s,lines:[text]}}
 // the neon logo, drawn straight onto the card image (same shapes as the Home logo; coordinates match its 230x84 layout)
 const LOGO_BUBBLE=new Path2D('M17.5 3.4 H182.5 Q195 3.4 195 12 V39.4 Q195 48 182.5 48 H57.5 L32.5 58.3 L37.5 48 H17.5 Q5 48 5 39.4 V12 Q5 3.4 17.5 3.4 Z');
 const LOGO_PHONE=new Path2D('M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z');
@@ -376,12 +376,12 @@ function drawMaker(){const cv=$('#mk'),ctx=cv.getContext('2d'),W=cv.width,H=cv.h
  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0D1226';ctx.fillRect(0,0,W,H);const x=70,y=70,w=W-140,h=H-140,r=60;
  ctx.save();ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,w,h,r);else{ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}ctx.clip();
  ctx.fillStyle='#F4EFE6';ctx.fillRect(x,y,w,h);ctx.fillStyle=mkColor;ctx.fillRect(x,y,w,360);ctx.fillStyle='#F4EFE6';ctx.textAlign='center';ctx.textBaseline='middle';
- const t=wrapTitle(ctx,vals[0]||'Main word',w-100,300);ctx.font="400 "+t.s+"px 'Archivo Black', Archivo, sans-serif";t.lines.forEach((l,i)=>ctx.fillText(l,W/2,y+180+(i-(t.lines.length-1)/2)*t.s*1.05));
+ const t=wrapTitle(ctx,vals[0]||'Main word',w-100,300);ctx.font="700 "+t.s+"px Palatino, 'Palatino Linotype', Pagella, Georgia, serif";t.lines.forEach((l,i)=>ctx.fillText(l,W/2,y+180+(i-(t.lines.length-1)/2)*t.s*1.05));
  const FOOT=200,top=y+400,bottom=y+h-FOOT-(from?80:20),step=(bottom-top)/5;
  for(let i=0;i<5;i++){const cy=top+step*(i+.5),txt=vals[i+1]||'Forbidden '+(i+1);ctx.fillStyle=vals[i+1]?'#1B1A17':'#B0A898';
-  const s=fitCanvas(ctx,txt,w-120,84,40,"800 Spx Archivo, sans-serif");ctx.font="800 "+s+"px Archivo, sans-serif";ctx.fillText(txt,W/2,cy);
+  const s=fitCanvas(ctx,txt,w-120,84,40,"800 Spx Palatino, 'Palatino Linotype', Pagella, Georgia, serif");ctx.font="800 "+s+"px Palatino, 'Palatino Linotype', Pagella, Georgia, serif";ctx.fillText(txt,W/2,cy);
   if(i<4){ctx.fillStyle='#E6DECF';ctx.fillRect(x+90,top+step*(i+1)-2,w-180,4)}}
- if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-FOOT-45)}
+ if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Palatino, 'Palatino Linotype', Pagella, Georgia, serif");ctx.font="600 "+s+"px Palatino, 'Palatino Linotype', Pagella, Georgia, serif";ctx.fillText('From: '+from,W/2,y+h-FOOT-45)}
  // your neon logo at the bottom of the card
  drawLogo(ctx,W/2,y+h-FOOT/2-4,2,true);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
 let downloads=null;

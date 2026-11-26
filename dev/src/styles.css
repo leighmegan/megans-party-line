@@ -5,11 +5,11 @@ PICTURE: the card itself, large, centered; everything else is a thumb-reach cont
 COLOUR and TYPE: deep plum field, magenta band, sun-yellow action; Archivo Black + Archivo
 LAYOUT: one column, top status, card fills middle, big buttons at the bottom
 */
-@font-face{font-family:'Archivo Black';src:url(fonts/archivo-black-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-400-normal.woff2) format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
-@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-700-normal.woff2) format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Archivo';src:url(fonts/archivo-latin-800-normal.woff2) format('woff2');font-weight:800;font-display:swap}
+/* Palatino everywhere but the logo, like the original cards. iPhones and Macs have Palatino built in;
+   everything else gets TeX Gyre Pagella, a free Palatino twin (GUST Font License). */
+@font-face{font-family:'Pagella';src:url(fonts/pagella-regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Pagella';src:url(fonts/pagella-bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Pagella';src:url(fonts/pagella-italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap}
 @font-face{font-family:'Rubik Logo';src:url(fonts/rubik-latin-600-normal.woff2) format('woff2');font-weight:600;font-display:swap}
 :root{color-scheme:dark;
 --bg:#0D1226;--bg2:#2A3663;--card:#F4EFE6;--cink:#1B1A17;--muted:#7B756B;--line:#E6DECF;
@@ -17,7 +17,7 @@ LAYOUT: one column, top status, card fills middle, big buttons at the bottom
 --sun:#2EC4B6;--sunink:#0D1226;--sel:#2EC4B6;--selink:#0D1226;
 --ok:#179C7E;--no:#E2465A;--skip:#56639A;--r:22px;
 --goodink:#7FE3C4;--warnink:#FF8FA3;--scrim:rgba(0,0,0,.6);--scrim2:rgba(13,18,38,.95);
---fd:'Archivo Black',Archivo,sans-serif;--fb:Archivo,system-ui,sans-serif;--hw:400}
+--fd:Palatino,'Palatino Linotype','Book Antiqua',Pagella,Georgia,serif;--fb:Palatino,'Palatino Linotype','Book Antiqua',Pagella,Georgia,serif;--hw:700}
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 html,body{height:100%}
@@ -273,3 +273,7 @@ h2.grow{font-size:17px}@media (max-width:360px){h2.grow{font-size:15px}}
 #rules-more{margin-top:10px;border-top:1px solid var(--line);padding-top:10px}
 #rules-more summary{cursor:pointer;font-weight:800;color:var(--cink);list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:44px}
 #rules-more summary::-webkit-details-marker{display:none}#rules-more summary::after{content:'+';font-size:22px;line-height:1}#rules-more[open] summary::after{content:'−'}
+/* v7.5 Palatino sizing */
+.minor button{white-space:nowrap;padding:0 2px;font-size:14px}
+.seg button{white-space:nowrap}
+@media (max-width:345px){.minor button{font-size:12.5px}#s-setup .seg[data-field=deck]{grid-template-columns:repeat(3,minmax(0,1fr))}}

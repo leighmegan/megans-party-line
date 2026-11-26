@@ -25,7 +25,7 @@ for name, text in {"index.html": stamped("index.html").replace("<!--PWA-->", pwa
                    "app.js": stamped("app.js").replace("/*SW*/", sw_reg), "sw.js": sw, "manifest.webmanifest": manifest}.items():
     open(os.path.join(site, name), "w", encoding="utf-8").write(text)
 shutil.copy("cards.json", site)
-os.makedirs(os.path.join(site, "fonts"), exist_ok=True)
+shutil.rmtree(os.path.join(site, "fonts"), ignore_errors=True); os.makedirs(os.path.join(site, "fonts"))
 for f in FONTS: shutil.copy(os.path.join("src/fonts", f), os.path.join(site, "fonts"))
 for icon in ("icon-192.png", "icon-512.png"):
     if os.path.exists(os.path.join("src", icon)): shutil.copy(os.path.join("src", icon), site)
