@@ -139,3 +139,18 @@ textarea{width:100%;min-height:96px;border-radius:14px;border:2px solid var(--li
 .roll.static{overflow:auto;-webkit-mask-image:none;mask-image:none}.roll.static .roll-in{animation:none;padding:10px 0}
 .toast{pointer-events:none}
 .modal{z-index:50}.toast{z-index:56}.sp-card .ghost{background:var(--line);color:var(--cink)}
+/* gameplay sizing: same label line on all three actions; skips left as a corner pill */
+.acts button{position:relative}
+.acts .pill{position:absolute;top:6px;right:6px;min-width:22px;height:22px;border-radius:11px;background:rgba(255,255,255,.25);font-size:13px;line-height:22px;padding:0 6px}
+.timer{line-height:1.1}
+/* short screens (older/smaller phones): shrink the card so every control fits without scrolling */
+@media (max-height:600px){.app{gap:0}.screen{gap:8px}.card{min-height:0}.band{min-height:64px;padding:8px 12px}.band .w{font-size:28px}
+ .list{padding:4px 14px 8px}.list li{font-size:18px;padding:3px 0}.acts button{min-height:58px;font-size:16px}.acts .g{font-size:20px}.minor button{min-height:44px;font-size:14px}
+ .timer{font-size:32px}.score span{font-size:24px}}
+/* phone turned sideways: card on the left, controls on the right */
+@media (orientation:landscape) and (max-height:500px){
+ #s-play.on{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;gap:10px;height:calc(100dvh - 28px)}
+ #s-play .hud{grid-column:1/-1}#s-play .card{grid-column:1;grid-row:2/4;max-height:none;min-height:0}
+ #s-play .acts{grid-column:2;grid-row:2;grid-template-columns:1fr;grid-auto-rows:minmax(0,1fr)}#s-play .acts button{min-height:52px;flex-direction:row;gap:8px}
+ #s-play .minor{grid-column:2;grid-row:3;grid-template-columns:repeat(2,1fr)}
+ .app{max-width:none}.band{min-height:56px;padding:8px}.band .w{font-size:28px}.list li{font-size:18px;padding:2px 0}}

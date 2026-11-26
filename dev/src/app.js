@@ -218,8 +218,8 @@ function renderCard(){const c=game.cards[game.i];if(!c)return;const w=$('#p-word
  requestAnimationFrame(()=>{fit(w,44,20);$$('#p-list li').forEach(li=>{let s=26;li.style.fontSize=s+'px';while(s>14&&li.scrollWidth>li.clientWidth){s-=1;li.style.fontSize=s+'px'}})})}
 function renderHud(){const n=game.cards.length;
  $('#meter').innerHTML=game.res.map((r,i)=>'<i class="'+({correct:'c',buzz:'x',skip:'s'}[r]||(i===game.i?'now':''))+'"></i>').join('');
- $('#p-info').textContent='Card '+Math.min(game.i+1,n)+' of '+n+' · '+plural(game.skips,'skip')+' left';
- $('#p-score').textContent=game.res.filter(r=>r==='correct').length;$('#skipn').textContent=game.skips?game.skips+' left':'none left';
+ $('#p-info').textContent='Card '+Math.min(game.i+1,n)+' of '+n;
+ $('#p-score').textContent=game.res.filter(r=>r==='correct').length;$('#skipn').textContent=game.skips;
  $('#b-skip').disabled=game.skips<=0;$('#b-undo').disabled=!game.hist.length;$('#timer').textContent=fmt(game.left/1000)}
 function act(kind){if(!game||!game.running)return;const now=performance.now();game.hist.push({i:game.i,skips:game.skips,shownAt:game.shownAt});
  game.secs[game.i]=Math.round((now-game.shownAt)/100)/10;game.shownAt=now;game.res[game.i]=kind;markSeen(game.cards[game.i],true);saveSeen();
