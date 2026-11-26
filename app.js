@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'6.1',build:'20261125-2149',perRound:10,skips:3,
+const CONFIG={version:'6.2',build:'20261125-2211',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -94,7 +94,7 @@ let wl=null;
 async function wake(on){try{if(on&&'wakeLock' in navigator&&!wl){wl=await navigator.wakeLock.request('screen');wl.addEventListener('release',()=>{wl=null})}else if(!on&&wl){await wl.release();wl=null}}catch(e){wl=null}}
 
 // ============ screens and dialogs ============
-let screen='',draft=null;
+let screen='',draft=null,drafting=false;   // drafting: Home is filling in a brand-new game
 // many messages can arrive at once: redraw once per frame
 let renderQueued=false;const queueRender=()=>{if(renderQueued)return;renderQueued=true;requestAnimationFrame(()=>{renderQueued=false;if(screen==='play')renderSync();else render()})};
 const setVal=(sel,v)=>{const el=$(sel);if(el&&document.activeElement!==el)el.value=v};
@@ -109,20 +109,23 @@ $('#cf-no').onclick=closeModals;
 const FIELDS={player:()=>[['1','Player 1'],['2','Player 2']],deck:deckOptions,time:()=>CONFIG.times.map(t=>[String(t),timeLabel(t)]),
  type:()=>[['team','Team'],['h2h','Head-to-head']],
  win:()=>mdraft&&mdraft.type==='team'?[['target',SCORE.target+' cards'],['rounds',SCORE.roundsEach+' rounds each']]:[['target','First to '+SCORE.target],['rounds',SCORE.roundsEach+' rounds each']],
- pen:()=>[['-1','−1'],['-0.5','−0.5'],['0','0']],val:()=>[['weighted','Weighted'],['equal','Equal']],sound:()=>[['on','On'],['off','Off']]};
+ pen:()=>[['-1','−1'],['-0.5','−0.5'],['0','0']],mode:()=>[['fun','Just for fun'],['score','Keep score']],val:()=>[['weighted','Weighted'],['equal','Equal']],sound:()=>[['on','On'],['off','Off']]};
 const target=scope=>scope==='setup'?draft:scope==='game'?G():scope==='match'?mdraft:S;
 // some choices are locked: deck and round length during a match
-const locked=(f,scope)=>scope==='game'&&(f==='deck'||f==='time')&&matchOn();
+const locked=(f,scope)=>(scope==='game'&&(f==='deck'||f==='time'||f==='mode')&&matchOn())||(scope==='match'&&!!G()&&!drafting&&matchOn());
+// a single option that can't be picked right now: Keep score needs a round timer
+const blocked=(f,v,t)=>f==='mode'&&v==='score'&&!t.time;
 function renderSegs(){$$('.seg').forEach(seg=>{const t=target(seg.dataset.scope);if(!t)return;const f=seg.dataset.field,opts=FIELDS[f]();
  const lk=locked(f,seg.dataset.scope);
- seg.innerHTML=opts.length?opts.map(([v,l])=>'<button data-v="'+esc(v)+'" aria-pressed="'+(String(t[f])===v)+'"'+(lk&&String(t[f])!==v?' disabled':'')+'>'+esc(l)+'</button>').join(''):'<span class="note">Loading…</span>'})}
+ seg.innerHTML=opts.length?opts.map(([v,l])=>'<button data-v="'+esc(v)+'" aria-pressed="'+(String(t[f])===v)+'"'+((lk&&String(t[f])!==v)||blocked(f,v,t)?' disabled':'')+'>'+esc(l)+'</button>').join(''):'<span class="note">Loading…</span>'})}
 document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(!b||b.disabled)return;const seg=b.parentElement,t=target(seg.dataset.scope),f=seg.dataset.field;
- if(seg.dataset.scope==='match'){t[f]=b.dataset.v;render();return}
+ if(seg.dataset.scope==='match'){t[f]=b.dataset.v;const g=G();if(g&&!drafting){g.scoreCfg=Object.assign({},mdraft);save()}render();return}
  if(f==='deck'&&seg.dataset.scope==='game'&&t.deck!==b.dataset.v&&sess(t).rounds.length){
   confirmBox('Switching decks ends this game and shows your game summary.',()=>{endGame('deck',null);t.deck=b.dataset.v;S.defaults.deck=t.deck;save();render();afterCredits=()=>suggestTime(t)},'Switch and end');return}
  if(f==='player'&&seg.dataset.scope==='game'&&t.player&&t.player!==b.dataset.v&&(t.seen.length||sess(t).rounds.length)){
   confirmBox('Switch to Player '+b.dataset.v+'? You\'ll get the other half of the cards, and '+partner()+' may have already given clues for some of them. Only do this if your phones picked the same player.',()=>{t.player=b.dataset.v;save();announce();render()},'Switch');return}
  t[f]=f==='time'?Number(b.dataset.v):b.dataset.v;if(f==='time'&&t===G())t.timeT=Date.now();
+ if(f==='time'&&!t.time&&t.mode==='score')t.mode='fun';
  if(seg.dataset.scope==='game'){if(f!=='player')S.defaults[f]=t[f];if(f==='time'||f==='player')announce()}save();render();
  if(f==='deck')suggestTime(t)});
 // a deck can carry a suggested round length (cards.json decks[].suggestTime)
@@ -138,52 +141,85 @@ function renderRules(){$('#rules-list').innerHTML=[
  'Stuck? You get '+plural(CONFIG.skips,'free skip')+' a round.',
  'A round is up to '+CONFIG.perRound+' cards, or until time runs out.',
  'Ready to wrap up? Tap Final round so you both get the same number of turns.',
- 'Want bragging rights? Tap Keep score before you start.'
+ 'Want bragging rights? Pick Keep score on the home screen.'
 ].map(t=>'<li>'+esc(t)+'</li>').join('')}
 
 function badgeFor(code){if(!code)return'';const h=hash('badge|'+code),sk=Object.keys(SHAPES),ck=Object.keys(COLS),sh=sk[h%sk.length],c=ck[(h>>>8)%ck.length];
  return'<svg width="26" height="26" viewBox="0 0 24 24" aria-label="'+c+' '+sh+'"><path d="'+SHAPES[sh]+'" fill="'+COLS[c]+'"/></svg>'}
-function render(){const g=G();renderSegs();
+function render(){const g=G();
+ // Home's deck, round length and mode edit the current game, or the new-game draft
+ $$('#s-setup .seg[data-scope=setup], #s-setup .seg[data-scope=game]').forEach(x=>x.dataset.scope=drafting||!g?'setup':'game');renderSegs();
  $$('[data-backup]').forEach(el=>el.hidden=!CONFIG.backup);
  if(screen==='home'&&g){$('#h-game').textContent='Game with '+partner();$('#h-badge').innerHTML=g.code?badgeHTML():'';
-  $('#h-left').textContent=g.player&&loaded?'· '+unseenCount()+' of '+pool().length+' left':'';
-  $('#deck-note').hidden=!matchOn();$('#deck-note').textContent='Deck and round length are locked until the match ends.';
+  $('#h-deckname').textContent=deckName(g.deck);$('#h-time').textContent=g.time?timeLabel(g.time)+' rounds':'No timer';
+  $('#h-left').textContent=g.player&&loaded?unseenCount()+' of '+pool().length+' left':'cards: picking a player…';
   const b=$('#start'),st=startState();b.disabled=!!st;b.textContent=st||'Start round';
   $('#h-manual').hidden=!!g.player;renderTurn();renderSync();renderMatchHome()}
  if(screen==='sum')renderTurn();
- if(screen==='set'){$('#set-game').hidden=!g;$('#set-all-h').hidden=!g;$('#set-name').closest('label').hidden=!g;setVal('#set-name',S.name);
+ if(screen==='set'){const hg=!drafting&&g;$('#set-game').hidden=!hg;$('#set-all-h').hidden=!hg;$('#set-name').closest('label').hidden=!hg;setVal('#set-name',S.name);
   $('#ver').textContent='Version '+CONFIG.version+' · build '+CONFIG.build+(loaded?' · '+CARDS.length+' cards':'')}
- if(screen==='set'&&g){setVal('#set-playas',g.playAs||'');$('#set-playas').placeholder=S.name;setVal('#set-partner',g.partner);setVal('#set-code',g.code);$('#set-game-h').textContent='Game with '+partner();
-  const p=pool();$('#set-seen').textContent=loaded?(p.length-unseenCount())+' of your '+p.length+' '+deckName(g.deck).toLowerCase()+' cards played in this game.':'';
- }
- if(screen==='setup'){$('#setup-cancel').hidden=!G();$('#setup-title').textContent=Object.keys(S.games).length?'New game':"Megan's Taboo";
-  $('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value))}
- if(screen==='score')renderScoreSetup();
+ if(screen==='set'&&g&&!drafting){setVal('#set-playas',g.playAs||'');$('#set-playas').placeholder=S.name;setVal('#set-partner',g.partner);setVal('#set-code',g.code);$('#set-game-h').textContent='Game with '+partner();
+  const p=pool();$('#set-seen').textContent=loaded?(p.length-unseenCount())+' of your '+p.length+' '+deckName(g.deck).toLowerCase()+' cards played in this game.':''}
+ if(screen==='setup')renderHome();
+ if(g)maybeInvite();
  if(screen==='brag')renderBrag()}
 
-// ============ saved games ============
-function startSetup(){draft={deck:S.defaults.deck,time:S.defaults.time};
+// ============ home: saved games, a new game, and how you'll play ============
+const homeGame=()=>drafting?null:G();
+const otherGames=()=>Object.values(S.games).sort((a,b)=>(b.last||b.created)-(a.last||a.created));
+// fill Home from the current game, or start a blank new one when there are no games
+function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;draft=null;const g=G();
+ $('#setup-name').value=myName(g);$('#setup-code').value=g.code||'';mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults,g.scoreCfg);if(!g.mode)g.mode='fun';show('setup')}
+function startSetup(){drafting=true;draft={deck:S.defaults.deck,time:okTime(S.defaults.time),mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
  $('#setup-name').value=S.name;$('#setup-code').value='';closeModals();show('setup')}
+function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
+ $('#to-games').hidden=!Object.keys(S.games).length;
+ $('#sg-name').textContent=g?'Game with '+partner():'New game';$('#sg-badge').innerHTML=g&&g.code?badgeHTML():'';
+ $('#setup-cancel').hidden=!(drafting&&G());$('#code-note').hidden=!!g;$('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value));
+ $('#setup-go').textContent=g&&matchOn(g)?'Back to the match':"Let's play";
+ const on=g&&matchOn(g),sc=t.mode==='score'||on;$('#score-opts').hidden=!sc;
+ $('#mode-note').hidden=!(on||!t.time);$('#mode-note').textContent=on?'Match in progress. End it from the game screen.':'Keep score needs a timer. Pick 1:00, 1:30 or 2:00.';
+ if(sc)renderScoreNotes()}
+function renderScoreNotes(){$('#type-note').textContent=mdraft.type==='team'?'Work together. Fewer seconds per card is better.':'Score your own clues. A buzz gives your partner a steal.';
+ const ws=DECKS.filter(d=>(d.weight??1)!==1).map(d=>d.name+' '+half(d.weight));
+ $('#val-note').textContent=mdraft.val==='equal'?'Every card is worth 1.':'Most cards are worth 1. '+ws.join(', ')+'.'}
 $('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCode($('#setup-code').value);
  if(!name){toast('Add a name so your partner sees it');return}if(!code){toast('Add a code word. Your partner types the same one.');return}
  // a team name in your very first game shouldn't become your usual name
  if(!S.name&&!/\bteam\b/i.test(name))S.name=name;
- const g=newGame({deck:draft.deck,time:draft.time,code,last:Date.now(),timeT:draft.timeChosen?Date.now():0,playAs:name===S.name?null:name});
- S.games[g.id]=g;S.defaults={deck:g.deck,time:g.time};useGame(g.id);show('home');if(!S.rulesSeen){S.rulesSeen=true;save();setTimeout(()=>openModal('rules'),250)}};
-$('#setup-cancel').onclick=()=>show('home');
+ let g=homeGame();
+ if(!g){g=newGame({deck:draft.deck,time:draft.time,code,last:Date.now(),timeT:draft.timeChosen?Date.now():0,playAs:name===S.name?null:name});
+  g.mode=draft.mode;S.games[g.id]=g;S.defaults={deck:g.deck,time:g.time};useGame(g.id)}
+ else{g.playAs=name===S.name?null:name;if(code!==g.code){g.code=code;save();syncStart()}announce()}
+ drafting=false;g.scoreCfg=Object.assign({},mdraft);g.wantMatch=g.mode==='score'&&!matchOn(g)&&!(g.match&&g.match.status==='invite');save();show('home');tryInvite(g);
+ if(!S.rulesSeen){S.rulesSeen=true;save();setTimeout(()=>openModal('rules'),250)}};
+$('#setup-cancel').onclick=loadHome;
+$('#h-back').onclick=loadHome;
+$$('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(game)return;loadHome()}));
 $('#setup-code').addEventListener('input',()=>{$('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value))});
 let backTo='home';
 $('#setup-set').onclick=()=>{backTo='setup';show('set')};
-function renderGames(){const list=Object.values(S.games).sort((a,b)=>(b.last||b.created)-(a.last||a.created));
- $('#games-list').innerHTML=list.map(g=>{const when=g.last?new Date(g.last).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'not played yet',cur=g.id===S.current;
-  return'<li><button class="pick" data-game="'+esc(g.id)+'" aria-current="'+cur+'"><span>Game with '+esc(g.partner||'your partner')+'</span><small>'+esc(deckName(g.deck))+' · '+esc(cur?'playing now':'last played '+when)+'</small></button>'+
-   (cur?'':'<button class="del" data-del="'+esc(g.id)+'">Delete</button>')+'</li>'}).join('')}
+function renderGames(){const list=otherGames();
+ $('#games-list').innerHTML=list.map(g=>{const when=g.last?new Date(g.last).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'not played yet',cur=g.id===S.current&&!drafting;
+  return'<li><button class="pick" data-game="'+esc(g.id)+'" aria-current="'+cur+'"><span>Game with '+esc(g.partner||'your partner')+'</span><small>'+esc(deckName(g.deck))+' · '+esc(cur?'playing now':'last played '+when)+'</small></button></li>'}).join('')}
 $('#to-games').onclick=()=>{renderGames();openModal('games')};
-$('#games-list').addEventListener('click',e=>{const p=e.target.closest('[data-game]'),d=e.target.closest('[data-del]');
- if(p){useGame(p.dataset.game);closeModals();show('home');toast('Switched to game with '+partner())}
- if(d){const g=S.games[d.dataset.del];$('#m-games').classList.remove('on');confirmBox('Delete your game with '+(g.partner||'your partner')+'? Its played cards are lost.',()=>{delete S.games[g.id];save();renderGames();openModal('games')},'Delete')}});
+// tapping a saved game shows its summary first
+let gsum=null;
+function showGameSummary(id){const g=S.games[id];if(!g)return;gsum=id;const when=g.last?new Date(g.last).toLocaleDateString(undefined,{month:'short',day:'numeric'}):'not played yet';
+ $('#gs-h').innerHTML='Game with '+esc(g.partner||'your partner')+' '+badgeFor(g.code);$('#gs-sub').textContent='Last played '+when+' · '+deckName(g.deck)+' · '+(g.time?timeLabel(g.time)+' rounds':'No timer');
+ const es=g.partnerDevice?record(g):[],h=es.filter(e=>e.t==='h2h'),tm=es.filter(e=>e.t==='team'&&e.sp!=null),n=k=>h.filter(e=>e.r===k).length;
+ const box=(l,v,w)=>'<div'+(w?' class="wide"':'')+'><small>'+esc(l)+'</small><b>'+esc(v)+'</b></div>';
+ $('#gs-stats').innerHTML=box('Cards played',String(g.seen.length))+box('Rounds this game',String(sess(g).rounds.length))+
+  (h.length?box('Head-to-head',myName(g)+' '+n('w')+' – '+n('l')+' '+cap(g.partner||'partner')+(n('t')?' · '+plural(n('t'),'tie'):''),true):'')+
+  (tm.length?box('Team best speed',num(Math.min(...tm.map(e=>e.sp)))+' s a card',true):'')+(!es.length?box('Matches','None yet',true):'');
+ $('#m-games').classList.remove('on');openModal('gsum')}
+$('#games-list').addEventListener('click',e=>{const p=e.target.closest('[data-game]');if(p)showGameSummary(p.dataset.game)});
+$('#gs-play').onclick=()=>{const id=gsum;if(!S.games[id])return;if(id!==S.current||drafting){useGame(id);toast('Switched to game with '+partner())}loadHome()};
+$('#gs-del').onclick=()=>{const g=S.games[gsum];if(!g)return;$('#m-gsum').classList.remove('on');
+ confirmBox('Delete your game with '+(g.partner||'your partner')+'? Its played cards are lost. Bragging Rights stay.',()=>{const cur=g.id===S.current;delete S.games[g.id];save();
+  if(cur){const nx=otherGames()[0];useGame(nx?nx.id:null)}if(G())loadHome();else startSetup();toast('Game deleted')},'Delete')};
 $('#new-game').onclick=startSetup;
-$('#del-game').onclick=()=>confirmBox('Delete your game with '+partner()+'? Its played cards are lost, and you\'ll start a new game.',()=>{delete S.games[S.current];useGame(null);startSetup()},'Delete');
+$('#del-game').onclick=()=>confirmBox('Delete your game with '+partner()+'? Its played cards are lost. Bragging Rights stay.',()=>{delete S.games[S.current];const nx=otherGames()[0];useGame(nx?nx.id:null);if(G())loadHome();else startSetup()},'Delete');
 $('#set-partner').addEventListener('change',e=>{const v=clean(e.target.value);if(v){G().partner=v;save()}render()});
 $('#set-code').addEventListener('change',e=>{G().code=normCode(e.target.value);save();syncStart();render()});
 $('#set-name').addEventListener('change',e=>{S.name=clean(e.target.value);save();announce()});
@@ -276,7 +312,7 @@ $$('[data-close]').forEach(b=>b.addEventListener('click',closeModals));
 $$('[data-back]').forEach(b=>b.addEventListener('click',()=>{const t=backTo;backTo='home';if(t==='setup'||!G())show('setup');else show(t)}));
 $('#to-settings').onclick=()=>{backTo='home';show('set')};
 $('#h-manual').onclick=()=>show('set');
-$('#to-maker').onclick=()=>{show('mk');drawMaker()};
+$('#to-maker').onclick=()=>{backTo='setup';show('mk');drawMaker()};
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&game&&game.running)wake(true)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModals()});
 
@@ -400,7 +436,7 @@ function receive(m){const g=G();if(!g||!m||m.v!==3||m.d===S.device||typeof m.at!
   if(m.type==='hi'&&fresh(m,30000)){if(st.live&&!plive&&!roundKnown(g,st.live.rid))livePartner(st.live.rid,st.live.left-age(m),st.live.paused,null,st.live.unl);
    else if(!st.live&&plive){plive=null;hideSplash()}}}
  if(changed)save();
- (HANDLERS[m.type]||MATCH_HANDLERS[m.type]||(()=>{}))(m,g);matchCheck(g);
+ (HANDLERS[m.type]||MATCH_HANDLERS[m.type]||(()=>{}))(m,g);matchCheck(g);if(!replaying)tryInvite(g);
  if(m.ver&&m.ver>CONFIG.build)showUpdate();
  queueRender()}
 function assign(dev){const g=G(),h=heard[dev];if(!g||g.player||!h)return;
@@ -545,39 +581,29 @@ const keysFor=k=>[k].concat(S.merge[k]||[]);
 const record=(g=G())=>{const ks=keysFor(pairKey(g));return S.hist.filter(e=>ks.includes(e.k))};
 
 // --- home: the score strip, Keep score and End match ---
-function renderMatchHome(){const g=G(),box=$('#h-match'),m=g.match,on=matchOn(g),wait=m&&m.status==='invite';
- box.hidden=!on;$('#h-hero').hidden=on;$('#h-mend').hidden=!on;$('#h-score').hidden=on;
- $('#h-score').textContent=wait?(m.host===S.device?'Waiting for '+partner()+' to join…':'Keep score'):'Keep score';
+function renderMatchHome(){const g=G(),box=$('#h-match'),m=g.match,on=matchOn(g),wait=!!(m&&m.status==='invite'&&m.host===S.device);
+ box.hidden=!on;$('#h-hero').hidden=on;$('#h-mend').hidden=!on;
+ $('#h-mwait').hidden=!(wait||g.wantMatch);$('#h-mwait-t').textContent=wait?'Keep score: waiting for '+partner()+' to join…':'Keep score starts when '+partner()+"'s phone connects.";
  if(on){const t=tally(g);box.classList.toggle('team',m.type==='team');
   box.innerHTML=m.type==='team'
    ?'<div><small>Team cards</small><b>'+num(t.net)+(m.win==='target'?' of '+SCORE.target:'')+'</b></div><div><small>'+(m.win==='rounds'?'Rounds: '+Math.min(t.a,t.b)+' of '+SCORE.roundsEach:'Seconds a card')+'</small><b>'+(t.net>0?num(rnd2(t.secs/t.net)):'—')+'</b></div>'
    :'<div><small>'+esc(myName(g))+'</small><b>'+num(t.my)+'</b></div><div class="mid">'+esc(m.stopAt!=null?'Last round'+(m.tb?' (tiebreak)':''):m.win==='rounds'?SCORE.roundsEach+' rounds each':'First to '+SCORE.target)+'</div><div><small>'+esc(cap(partner()))+'</small><b>'+num(t.their)+'</b></div>'}
- if(m&&m.status==='done'&&!game&&!plive&&!$('#splash').classList.contains('on'))setTimeout(()=>{if(screen==='home'&&G()&&G().match&&G().match.status==='done')showResult(G())},0);
- if(inviteIn&&!game&&!plive&&!$('#m-invite').classList.contains('on'))showInvite()}
-$('#h-score').onclick=()=>{const g=G(),m=g.match;
- if(m&&m.status==='invite'&&m.host===S.device){mdraft=Object.assign({},m);show('score');return}
- if(!g.player){toast('Wait for '+partner()+"'s phone to connect first.");return}
- if(!g.time){toast('Keep score needs a timer. Pick 1:00, 1:30 or 2:00 in Settings.',3800);return}
- const peer=peerNow()[0];if(!peer){toast('Keep score needs '+partner()+"'s phone connected.",3500);return}
- if(peer[1].ver&&peer[1].ver!==CONFIG.build){toast('Your phones are on different versions. Close and reopen the app on both phones.',4500);return}
- mdraft=Object.assign({},SCORE.defaults);show('score')};
-function renderScoreSetup(){const g=G(),m=g&&g.match,wait=!!(m&&m.status==='invite'&&m.host===S.device);
- $('#type-note').textContent=mdraft.type==='team'?'Work together. Fewer seconds per card is better.':'Score your own clues. A buzz gives your partner a steal.';
- const ws=DECKS.filter(d=>(d.weight??1)!==1).map(d=>d.name+' '+half(d.weight));
- $('#val-note').textContent=mdraft.val==='equal'?'Every card is worth 1.':'Most cards are worth 1. '+ws.join(', ')+'.';
- $$('#s-score .seg button').forEach(b=>b.disabled=wait);
- $('#score-wait').hidden=!wait;$('#score-wait').textContent='Waiting for '+partner()+' to join…';$('#score-go').textContent=wait?'Cancel invite':'Start match'}
-$('#score-back').onclick=()=>show('home');
-$('#score-go').onclick=()=>{const g=G(),m=g.match;
- if(m&&m.status==='invite'&&m.host===S.device){send('mcancel',{mid:m.id});g.match=null;save();show('home');return}
- if(!connected()){toast(cap(partner())+"'s phone isn't connected.");return}
- g.match={id:uid(),type:mdraft.type,win:mdraft.win,pen:mdraft.pen,val:mdraft.val,host:S.device,status:'invite',at:Date.now()};save();
- send('invite',{m:cfgOf(g.match)});render()};
+ if(m&&m.status==='done'&&!game&&!plive&&!$('#splash').classList.contains('on'))setTimeout(()=>{if(screen==='home'&&G()&&G().match&&G().match.status==='done')showResult(G())},0)}
+// invites show on Home or the game screen, never during a round
+function maybeInvite(){if(inviteIn&&!game&&!plive&&(screen==='home'||screen==='setup')&&!$('#m-invite').classList.contains('on'))showInvite()}
+// Let's play with Keep score: invite as soon as the partner's phone is connected
+let verWarned=0;
+function tryInvite(g=G()){if(!g||!g.wantMatch||g.match||!g.time||!g.partnerDevice)return;const peer=peerNow()[0];if(!peer)return;
+ if(peer[1].ver&&peer[1].ver!==CONFIG.build){if(Date.now()-verWarned>60000){verWarned=Date.now();toast('Your phones are on different versions. Close and reopen the app on both phones to keep score.',5000)}return}
+ const c=Object.assign({},SCORE.defaults,g.scoreCfg);g.wantMatch=false;g.match={id:uid(),type:c.type,win:c.win,pen:c.pen,val:c.val,host:S.device,status:'invite',at:Date.now()};
+ save();send('invite',{m:cfgOf(g.match)});queueRender()}
+$('#h-mcancel').onclick=()=>{const g=G(),m=g.match;if(m&&m.status==='invite'&&m.host===S.device){send('mcancel',{mid:m.id});g.match=null}g.wantMatch=false;g.mode='fun';save();render();toast('Playing just for fun')};
 const cfgOf=m=>({id:m.id,type:m.type,win:m.win,pen:m.pen,val:m.val,host:m.host});
 function showInvite(){const iv=inviteIn;if(!iv)return;$('#iv-h').textContent=cap(iv.from)+' wants to keep score';
  $('#iv-p').textContent=matchLabel(iv.m)+'. '+matchDetail(iv.m)+'.';openModal('invite')}
-$('#iv-yes').onclick=()=>{const g=G(),iv=inviteIn;inviteIn=null;$('#m-invite').classList.remove('on');if(!iv||!g)return;
- g.match=Object.assign(cfgOf(iv.m),{status:'on',at:Date.now()});save();send('join',{mid:iv.m.id});toast('Match on! Good luck.');render()};
+function acceptInvite(iv){const g=G();if(!iv||!g)return;g.match=Object.assign(cfgOf(iv.m),{status:'on',at:Date.now()});g.mode='score';g.wantMatch=false;g.scoreCfg=cfgOf(iv.m);
+ if(screen==='setup'&&!drafting)mdraft=cfgOf(iv.m);save();send('join',{mid:iv.m.id});toast('Match on! Good luck.');render()}
+$('#iv-yes').onclick=()=>{const iv=inviteIn;inviteIn=null;$('#m-invite').classList.remove('on');acceptInvite(iv)};
 $('#iv-no').onclick=()=>{const iv=inviteIn;inviteIn=null;$('#m-invite').classList.remove('on');if(iv)send('decline',{mid:iv.m.id})};
 
 // --- ending a match early ---
@@ -605,7 +631,7 @@ function showResult(g){const e=g.match.result;if(!e){g.match=null;save();return}
  show('mres')}
 $('#mr-done').onclick=()=>{const g=G();if(g){g.match=null;save()}show('home')};
 $('#mr-brag').onclick=()=>{const g=G();if(g){g.match=null;save()}backTo='home';show('brag')};
-$('#to-brag').onclick=()=>{backTo='home';show('brag')};
+$('#to-brag').onclick=()=>{backTo='setup';show('brag')};
 
 // --- the round summary: points for this round, adjustable by the clue-giver ---
 function renderRoundPoints(r){const box=$('#sum-pts'),g=G(),m=g.match;box.hidden=!r||!r.m||!m||m.id!==r.m||m.status==='invite';if(box.hidden)return;
@@ -651,9 +677,11 @@ $('#br-merged').addEventListener('click',e=>{const b=e.target.closest('[data-unm
 const MATCH_HANDLERS={
  invite:(m,g)=>{if(!sameGame(g,m)||!m.m||matchOn(g))return;const mine=g.match&&g.match.status==='invite'?g.match:null;
   if(mine&&mine.id!==m.m.id){if(S.device<m.d)return;g.match=null;save()}   // both invited at once: the lower phone id's invite wins
-  if(replaying&&!fresh(m,5*60*1000))return;inviteIn={m:m.m,from:m.n||partner()};if(screen==='score')show('home');queueRender()},
+  if(replaying&&!fresh(m,5*60*1000))return;const iv={m:m.m,from:m.n||partner()};
+  if(mine||g.wantMatch){acceptInvite(iv);return}   // this phone wanted a match too: join theirs
+  inviteIn=iv;queueRender()},
  join:(m,g)=>{const x=g.match;if(x&&x.id===m.mid&&x.status==='invite')joined(g,m.n)},
- decline:(m,g)=>{const x=g.match;if(x&&x.id===m.mid&&x.status==='invite'){g.match=null;save();if(!replaying)toast(cap(m.n||partner())+' said not now.');if(screen==='score')show('home')}},
+ decline:(m,g)=>{const x=g.match;if(x&&x.id===m.mid&&x.status==='invite'){g.match=null;g.mode='fun';save();if(!replaying)toast(cap(m.n||partner())+' said not now. Playing just for fun.',3500)}},
  mcancel:(m)=>{if(inviteIn&&inviteIn.m.id===m.mid){inviteIn=null;$('#m-invite').classList.remove('on')}},
  mend:(m,g)=>{if(g.match&&g.match.id===m.mid){applyEnd(g,m.how,m.stopAt,m.drop);if(!replaying&&m.how==='more')toast(cap(m.n||partner())+' is ending the match after one more round.')}},
  adj:(m,g)=>{const r=sess(g).rounds.find(x=>x.who==='them'&&x.rid===m.rid);if(r){r.adj=m.adj;save()}},
@@ -664,7 +692,7 @@ const MATCH_HANDLERS={
  hist:(m,g)=>{let n=0;(m.h||[]).forEach(e=>{if(e&&e.id&&e.k===pairKey(g)&&addHist(flip(e)))n++});if(n)save()}};
 // the match part of every check-in, so a missed join or End match heals at the next message
 function matchState(g){const m=g.match;return{mt:m?{id:m.id,s:m.status,stop:m.stopAt??null,drop:m.drop||null,early:!!m.early}:null,hn:g.partnerDevice?S.hist.filter(e=>e.k===pairKey(g)).length:null}}
-function joined(g,n){g.match.status='on';save();if(!replaying)toast(cap(n||partner())+' joined. Match on!');if(screen==='score')show('home')}
+function joined(g,n){g.match.status='on';save();if(!replaying)toast(cap(n||partner())+' joined. Match on!')}
 function healMatch(g,m){const st=m.st||{},x=g.match,mt=st.mt;
  if(x&&mt&&mt.id===x.id){if(x.status==='invite'&&mt.s==='on'&&x.host===S.device)joined(g,m.n);
   if(x.status==='on'&&mt.early&&!x.early){if(mt.drop)applyEnd(g,'drop',null,mt.drop);else if(mt.stop!=null&&mt.s==='on')applyEnd(g,'more',mt.stop);else if(mt.s==='done')applyEnd(g,'now')}}
@@ -675,7 +703,7 @@ function sendIds(g,now){if(!now&&Date.now()-lastIds<20000)return;lastIds=Date.no
 // ============ start ============
 renderRules();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(screen==='mk')drawMaker()});
-if(G())show('home');else startSetup();
+loadHome();
 syncStart();
 // the app closed mid-round last time: tell the partner's phone so its splash clears (the round doesn't count)
 if(S.liveRound){const lr=S.liveRound;S.liveRound=null;save();if(lr.game===S.current)setTimeout(()=>send('abort',{rid:lr.rid}),1500)}

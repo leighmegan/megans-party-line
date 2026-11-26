@@ -224,3 +224,17 @@ input[type=text],input[type=number]{font-size:16px;min-height:46px}  /* 16px kee
 .gamebox{display:flex;flex-direction:column;gap:14px}.danger{width:100%;font-size:var(--t-m)}
 .row3 button{padding:0 2px}
 #s-setup .seg[data-field=deck] button{font-size:var(--t-s)}
+/* v6.2: home + game screens */
+.ttl{all:unset;cursor:pointer;font:inherit;color:inherit}.ttl:focus-visible{outline:2px solid var(--sun);border-radius:6px}
+h2.grow{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#h-back{font-size:26px;padding:0;width:44px}
+.who{margin:0;font-weight:800;font-size:var(--t-l);display:flex;align-items:center;gap:8px}.info{margin:-8px 0 0;color:#cdb8e0;font-size:var(--t-s)}
+.opts{display:flex;flex-direction:column;gap:12px;background:var(--bg2);border-radius:16px;padding:12px}
+.opts .seg{background:rgba(0,0,0,.18)}
+.link{all:unset;cursor:pointer;text-decoration:underline;font-weight:800}
+#m-gsum .stats{margin:12px 0 0}#m-gsum .stats div{background:var(--line);color:var(--cink)}#m-gsum .stats small{color:var(--muted)}
+#m-gsum .danger{flex:0 0 auto;width:auto}
+@media (max-width:350px){h2.grow{font-size:18px}}
+#setup-go{position:sticky;bottom:12px;z-index:5;box-shadow:0 10px 24px rgba(0,0,0,.45)}
+@media (max-height:780px){#s-setup .mini{width:min(36%,140px)}#s-setup .mini .band{min-height:42px;padding:6px}#s-setup .mini .band .w{font-size:19px}#s-setup .mini .list li{font-size:12px;padding:1px 0}}
+h2.grow{font-size:19px}

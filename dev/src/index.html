@@ -14,30 +14,42 @@
 <body>
 <div class="app">
 
-<!-- SETUP: first run and every new game -->
-<section class="screen" id="s-setup" aria-label="New game">
-  <div class="top"><h1 id="setup-title">Megan's Taboo</h1><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="setup-set" aria-label="Settings">⚙︎</button></div></div>
+<!-- HOME: pick or start a game, then how you'll play -->
+<section class="screen" id="s-setup" aria-label="Home">
+  <div class="top"><h1 id="setup-title"><button class="ttl" data-home>Megan's Taboo</button></h1><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="setup-set" aria-label="Settings">⚙︎</button></div></div>
   <div class="hero">
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
       <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
   </div>
+  <button class="switch" id="to-games" hidden><span><b>Saved game</b><span id="sg-name">Game with your partner</span></span><span class="sw-r"><span id="sg-badge" class="badge"></span><span aria-hidden="true">▾</span></span></button>
   <div class="pair"><label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
   <label class="f">Code word<span class="codebox"><input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"><span class="badge" id="setup-badge" aria-live="polite"></span></span></label></div>
-  <p class="note">Type the same code word on both phones.</p>
+  <p class="note" id="code-note">Type the same code word on both phones.</p>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="setup"></div></div>
+  <div class="group"><b>Round length</b><div class="seg one" data-field="time" data-scope="setup"></div></div>
+  <div class="group"><b>How you'll play</b><div class="seg one" data-field="mode" data-scope="setup"></div><p class="note" id="mode-note" hidden></p></div>
+  <div class="opts" id="score-opts" hidden>
+    <div class="group"><b>Type</b><div class="seg one" data-field="type" data-scope="match"></div><p class="note" id="type-note"></p></div>
+    <div class="group"><b>Win by</b><div class="seg one" data-field="win" data-scope="match"></div></div>
+    <div class="group"><b>Skips</b><div class="seg one" data-field="pen" data-scope="match"></div></div>
+    <div class="group"><b>Card values</b><div class="seg one" data-field="val" data-scope="match"></div><p class="note" id="val-note"></p></div>
+  </div>
+  <div class="row"><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
   <div style="flex:1"></div>
   <button class="primary" id="setup-go">Let's play</button>
-  <button class="ghost" id="setup-cancel" hidden>Cancel</button>
+  <button class="ghost" id="setup-cancel" hidden>Cancel new game</button>
   <div data-backup><button class="ghost" id="setup-bk">Restore from a backup code</button>
   <textarea id="setup-bk-text" hidden aria-label="Backup code" spellcheck="false" placeholder="Paste your backup code here"></textarea>
   <button class="primary" id="setup-bk-go" hidden>Restore</button></div>
 </section>
 
-<!-- HOME -->
-<section class="screen" id="s-home" aria-label="Home">
-  <div class="top"><h2>Megan's Taboo</h2><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="to-settings" aria-label="Settings">⚙︎</button></div></div>
-  <button class="switch" id="to-games"><span><b>Saved game</b><span id="h-game">Game with your partner</span></span><span class="sw-r"><span id="h-badge" class="badge"></span><span aria-hidden="true">▾</span></span></button>
+<!-- GAME: everything for playing rounds -->
+<section class="screen" id="s-home" aria-label="Game">
+  <div class="top"><button class="ghost icon" id="h-back" aria-label="Back to home">‹</button><h2 class="grow"><button class="ttl" data-home>Megan's Taboo</button></h2><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="to-settings" aria-label="Settings">⚙︎</button></div></div>
+  <p class="who"><span id="h-game">Game with your partner</span> <span id="h-badge" class="badge"></span></p>
+  <p class="sub info"><span id="h-deckname"></span> · <span id="h-time"></span> · <span id="h-left"></span></p>
   <p class="sync" id="h-sync" role="status" hidden></p>
+  <p class="sync" id="h-mwait" hidden><span id="h-mwait-t"></span> <button class="link" id="h-mcancel">Cancel</button></p>
   <p class="turn" id="h-turn" hidden></p>
   <p class="final" id="h-final" hidden></p>
   <div class="match" id="h-match" hidden></div>
@@ -45,13 +57,11 @@
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
       <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
   </div>
-  <div class="group"><b>Deck <span class="dim" id="h-left"></span></b><div class="seg" data-field="deck" data-scope="game"></div><p class="note" id="deck-note" hidden></p></div>
-  <div class="group"><b>Round length</b><div class="seg one" data-field="time" data-scope="game"></div></div>
   <div style="flex:1"></div>
   <button class="primary" id="start" disabled>Loading cards…</button>
   <button class="ghost" id="h-manual" hidden>Phones not connecting? Pick a player yourself</button>
   <button class="ghost" id="final-btn" data-final>Final round</button>
-  <div class="row3"><button class="ghost" id="h-score">Keep score</button><button class="ghost" id="h-mend" hidden>End match</button><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
+  <button class="ghost" id="h-mend" hidden>End match</button>
 </section>
 
 <!-- PLAY -->
@@ -108,18 +118,6 @@
     <textarea id="bk-text" hidden aria-label="Backup code" spellcheck="false"></textarea>
     <button class="primary" id="bk-restore" hidden>Restore from this code</button></div>
   <p class="note" id="ver"></p>
-</section>
-
-<!-- KEEP SCORE: pick how this match is scored -->
-<section class="screen" id="s-score" aria-label="Keep score">
-  <div class="top"><h2>Keep score</h2><button class="ghost" id="score-back">Back</button></div>
-  <div class="group"><b>Type</b><div class="seg one" data-field="type" data-scope="match"></div><p class="note" id="type-note"></p></div>
-  <div class="group"><b>Win by</b><div class="seg one" data-field="win" data-scope="match"></div></div>
-  <div class="group"><b>Skips</b><div class="seg one" data-field="pen" data-scope="match"></div></div>
-  <div class="group"><b>Card values</b><div class="seg one" data-field="val" data-scope="match"></div><p class="note" id="val-note"></p></div>
-  <div style="flex:1"></div>
-  <p class="sub" id="score-wait" style="text-align:center;font-weight:800" hidden></p>
-  <button class="primary" id="score-go">Start match</button>
 </section>
 
 <!-- MATCH RESULT -->
@@ -181,12 +179,19 @@
 
 <div class="modal" id="m-games" role="dialog" aria-modal="true" aria-labelledby="games-h"><div class="sheet">
   <h2 id="games-h">Saved games</h2><ul class="games" id="games-list"></ul>
+  <p class="note">Games save on their own. Delete one from its summary.</p>
   <div class="row"><button class="ghost" data-close>Close</button><button class="primary" id="new-game">New game</button></div>
 </div></div>
 
 <div class="modal" id="m-confirm" role="dialog" aria-modal="true" aria-labelledby="cf-h"><div class="sheet">
   <h2 id="cf-h">Are you sure?</h2><p id="cf-p"></p>
   <div class="row"><button class="ghost" id="cf-no">Cancel</button><button class="primary" id="cf-yes">Yes</button></div>
+</div></div>
+
+<div class="modal" id="m-gsum" role="dialog" aria-modal="true" aria-labelledby="gs-h"><div class="sheet">
+  <h2 id="gs-h">Game with Mom</h2><p class="note" id="gs-sub"></p><div class="stats" id="gs-stats"></div>
+  <div class="row"><button class="danger" id="gs-del">Delete</button><button class="primary" id="gs-play">Play this game</button></div>
+  <div class="row"><button class="ghost" data-close>Close</button></div>
 </div></div>
 
 <div class="modal" id="m-invite" role="dialog" aria-modal="true" aria-labelledby="iv-h"><div class="sheet">
