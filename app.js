@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'6.3',build:'20261125-2322',perRound:10,skips:3,
+const CONFIG={version:'6.4',build:'20261125-2354',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -574,7 +574,10 @@ function matchCheck(g=G()){const m=g&&g.match;if(!m||m.status!=='on')return;cons
   if(t.my===t.their&&!m.tb){m.tb=true;m.stopAt=t.a+1;save();if(!replaying)toast("It's a tie! One more round each.",3500);return}   // a tie gets one more round each, then stays a tie
   done=true}
  if(done)finalizeMatch(g)}
-const pairKey=(g=G())=>[S.device+':'+myName(g).toLowerCase(),(g.partnerDevice||'?')+':'+String(g.partner||'').toLowerCase()].sort().join('|');
+// a record belongs to the saved game: the two phones plus the code word (locked once they connect), so renaming yourself keeps it.
+// Older records used the play-as names; those still count toward the game they were played in.
+const pairKey=(g=G())=>'g'+hash(normCode(g.code||'')+'|'+[S.device,g.partnerDevice||'?'].sort().join('|')).toString(36);
+const legacyKey=(g=G())=>[S.device+':'+myName(g).toLowerCase(),(g.partnerDevice||'?')+':'+String(g.partner||'').toLowerCase()].sort().join('|');
 function finalizeMatch(g){const m=g.match,t=tally(g);m.status='done';
  const perfect=a=>a.filter(r=>r.c===CONFIG.perRound).length,sum=(a,f)=>a.reduce((x,r)=>x+(r[f]||0),0);
  const e={id:m.id,k:pairKey(g),t:m.type,w:m.win,at:Date.now(),me:myName(g),them:cap(partner()),r:m.type==='team'?'t':t.my>t.their?'w':t.my<t.their?'l':'t',
@@ -585,7 +588,7 @@ function addHist(e){if(S.hist.some(x=>x.id===e.id))return false;S.hist.push(e);S
 const FLIP=[['me','them'],['mp','tp'],['mr','tr'],['mpf','tpf'],['mx','tx'],['mc','tc']];
 function flip(e){const o=Object.assign({},e);FLIP.forEach(([a,b])=>{o[a]=e[b];o[b]=e[a]});o.r={w:'l',l:'w'}[e.r]||e.r;return o}
 const keysFor=k=>[k].concat(S.merge[k]||[]);
-const record=(g=G())=>{const ks=keysFor(pairKey(g));return S.hist.filter(e=>ks.includes(e.k))};
+const record=(g=G())=>{const ks=keysFor(pairKey(g)).concat(legacyKey(g));return S.hist.filter(e=>ks.includes(e.k))};
 
 // --- home: the score strip, Keep score and End match ---
 function renderMatchHome(){const g=G(),box=$('#h-match'),m=g.match,on=matchOn(g),wait=!!(m&&m.status==='invite'&&m.host===S.device);
@@ -675,7 +678,7 @@ function renderBrag(){const g=G(),body=$('#br-body');if(!g){body.innerHTML='';re
  const k=pairKey(g),others=otherRecords(k);$('#br-merge').hidden=!others.length;
  $('#br-merged').innerHTML=(S.merge[k]||[]).map(o=>'<div class="merged"><span class="note">Includes '+esc(recName(o))+'</span><button class="ghost" data-unmerge="'+esc(o)+'">Undo</button></div>').join('')}
 const recName=k=>{const e=S.hist.filter(x=>x.k===k).slice(-1)[0];return e?e.me+' & '+e.them+' ('+plural(S.hist.filter(x=>x.k===k).length,'match')+')':'an old record'};
-const otherRecords=k=>{const mine=keysFor(k),merged=new Set(Object.values(S.merge).flat());return[...new Set(S.hist.map(e=>e.k))].filter(x=>!mine.includes(x)&&!merged.has(x)&&!S.merge[x])};
+const otherRecords=k=>{const mine=keysFor(k).concat(legacyKey()),merged=new Set(Object.values(S.merge).flat());return[...new Set(S.hist.map(e=>e.k))].filter(x=>!mine.includes(x)&&!merged.has(x)&&!S.merge[x])};
 $('#br-merge').onclick=()=>{const k=pairKey();$('#mg-list').innerHTML=otherRecords(k).map(o=>'<li><button class="pick" data-merge="'+esc(o)+'"><span>'+esc(recName(o))+'</span></button></li>').join('');openModal('merge')};
 $('#mg-list').addEventListener('click',e=>{const b=e.target.closest('[data-merge]');if(!b)return;const k=pairKey();S.merge[k]=(S.merge[k]||[]).concat(b.dataset.merge);save();closeModals();render();toast('Records merged')});
 $('#br-merged').addEventListener('click',e=>{const b=e.target.closest('[data-unmerge]');if(!b)return;const k=pairKey();S.merge[k]=(S.merge[k]||[]).filter(x=>x!==b.dataset.unmerge);if(!S.merge[k].length)delete S.merge[k];save();render();toast('Merge undone')});
