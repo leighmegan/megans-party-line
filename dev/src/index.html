@@ -22,6 +22,7 @@
       <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
   </div>
   <button class="switch" id="to-games" hidden><span><b>Saved game</b><span id="sg-name">Game with your partner</span></span><span class="sw-r"><span id="sg-badge" class="badge"></span><span aria-hidden="true">▾</span></span></button>
+  <label class="f">Game name <small>Optional, like "Movie night." Both phones see it.</small><input type="text" id="setup-gname" maxlength="24" autocomplete="off" placeholder="e.g. Dynamic duo"></label>
   <div class="pair"><label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
   <label class="f">Code word<span class="codebox"><input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"><span class="badge" id="setup-badge" aria-live="polite"></span></span></label></div>
   <p class="note" id="code-note">Type the same code word on both phones.</p>
@@ -102,8 +103,6 @@
   <label class="f">Partner's name<input type="text" id="set-partner" maxlength="16" autocomplete="off"></label>
   <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div>
     <p class="note">Set automatically. Only change it if your phones can't connect.</p></div>
-  <label class="f">Code word <small>Same word on both phones.</small>
-    <input type="text" id="set-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="None"></label>
   <div class="group"><b>Cards you've played</b><p class="note" id="set-seen"></p>
     <button class="danger" id="reset-seen">Reset played cards</button></div>
   <button class="danger" id="del-game">Delete this game</button>
