@@ -1,4 +1,4 @@
-const C='mt-20261126-0205';
+const C='mt-20261126-0215';
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(["./", "./index.html", "./styles.css", "./app.js", "./cards.json", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./fonts/archivo-black-latin-400-normal.woff2", "./fonts/archivo-latin-400-normal.woff2", "./fonts/archivo-latin-600-normal.woff2", "./fonts/archivo-latin-700-normal.woff2", "./fonts/archivo-latin-800-normal.woff2", "./fonts/rubik-latin-600-normal.woff2"])))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
 self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==location.origin)return;

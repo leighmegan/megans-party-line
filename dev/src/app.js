@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.2',build:'__BUILD__',perRound:10,skips:3,
+const CONFIG={version:'7.3',build:'__BUILD__',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -132,18 +132,27 @@ document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if
 function suggestTime(t){const d=DECKS.find(x=>x.id===t.deck);if(!d||!d.suggestTime||!t.time||t.time>=d.suggestTime)return;
  confirmBox(d.name+' plays best with '+fmt(d.suggestTime)+' rounds. Switch to '+fmt(d.suggestTime)+'?',()=>{t.time=d.suggestTime;t.timeChosen=true;if(t===G()){S.defaults.time=t.time;t.timeT=Date.now();announce()}save();render();toast('Rounds set to '+fmt(d.suggestTime))},'Switch')}
 
-function renderRules(){$('#rules-list').innerHTML=[
+// rules: the basics everyone needs, then the fine print for sneaky players (tap to open)
+const RULES={basics:[
  'One of you gives clues and the other guesses. Swap after every round.',
  'Get your partner to say the big word on top. You can\'t say it, or any of the words under it.',
- 'No cheating with close cousins: if "marriage" is off-limits, so is "marry." No rhymes, no "sounds like," no spelling it out.',
- 'No shortcuts either: abbreviations and initials count as the word. If "medical" or "doctor" is off-limits, so is "MD."',
  'Tap Correct when they get it. Close enough counts, like "dogs" for "dog."',
- 'Slip up and say a forbidden word? Be honest and tap Buzz.',
+ 'Slip up and say a forbidden word? Tap Buzz. Either of you can call it, so be honest.',
  'Stuck? You get '+plural(CONFIG.skips,'free skip')+' a round.',
  'A round is up to '+CONFIG.perRound+' cards, or until time runs out.',
  'Ready to wrap up? Tap Final round so you both get the same number of turns.',
- 'Want bragging rights? Pick Keep score on the home screen.'
-].map(t=>'<li>'+esc(t)+'</li>').join('')}
+ 'Want bragging rights? Pick Keep score on the home screen.'],
+ fine:[
+ 'Close cousins count: if "marriage" is off-limits, so is "marry."',
+ 'No parts of words: if the word is "spaceship," you can\'t say "space" or "ship."',
+ 'No shortcuts: abbreviations and initials count as the word. If "medical" or "doctor" is off-limits, so is "MD."',
+ 'Acronyms work both ways: if the word is "UTI," you can\'t say the words it stands for.',
+ 'No rhymes, no "sounds like," no "starts with the letter…," and no spelling it out.',
+ 'No other languages: "chien" for "dog" counts as saying it.',
+ 'No codes: no spelling it backwards, no Pig Latin, no "change one letter."',
+ 'No sound effects or noises. Singing is allowed!',
+ 'No screens: no texting, pictures, or showing things on video during a round.']};
+function renderRules(){const li=a=>a.map(t=>'<li>'+esc(t)+'</li>').join('');$('#rules-list').innerHTML=li(RULES.basics);$('#rules-more-list').innerHTML=li(RULES.fine)}
 
 function badgeFor(code){if(!code)return'';const h=hash('badge|'+code),sk=Object.keys(SHAPES),ck=Object.keys(COLS),sh=sk[h%sk.length],c=ck[(h>>>8)%ck.length];
  return'<svg width="26" height="26" viewBox="0 0 24 24" aria-label="'+c+' '+sh+'"><path d="'+SHAPES[sh]+'" fill="'+COLS[c]+'"/></svg>'}
@@ -341,8 +350,9 @@ function wrapTitle(ctx,text,maxW,maxH){for(let s=150;s>=34;s-=4){ctx.font="400 "
 // the neon logo, drawn straight onto the card image (same shapes as the Home logo; coordinates match its 230x84 layout)
 const LOGO_BUBBLE=new Path2D('M17.5 3.4 H182.5 Q195 3.4 195 12 V39.4 Q195 48 182.5 48 H57.5 L32.5 58.3 L37.5 48 H17.5 Q5 48 5 39.4 V12 Q5 3.4 17.5 3.4 Z');
 const LOGO_PHONE=new Path2D('M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z');
-function drawLogo(ctx,cx,cy,sc){const PINK='#FF3FA4',BLUE='#3D8BFF';
- const glow=(color,core,draw)=>{ctx.shadowColor=color;[18,9,4].forEach(b=>{ctx.shadowBlur=b*sc;ctx.strokeStyle=color;draw()});ctx.shadowBlur=0;ctx.strokeStyle=core;draw()};
+function drawLogo(ctx,cx,cy,sc,light){const PINK=light?'#E0257F':'#FF3FA4',BLUE=light?'#2F6BE0':'#3D8BFF';
+ // on a dark field the tube core is pale and the glow is wide; on the cream card the tube is the color itself, with a softer glow
+ const glow=(color,core,draw)=>{ctx.shadowColor=light?color+'88':color;(light?[8,3]:[18,9,4]).forEach(b=>{ctx.shadowBlur=b*sc;ctx.strokeStyle=color;draw()});ctx.shadowBlur=0;ctx.strokeStyle=light?color:core;draw()};
  ctx.save();ctx.translate(cx,cy);ctx.rotate(-4*Math.PI/180);ctx.scale(sc,sc);ctx.translate(-107,-39);ctx.lineJoin='round';ctx.lineCap='round';
  ctx.save();ctx.translate(14,24);ctx.lineWidth=2.2;glow(BLUE,'#CFE2FF',()=>ctx.stroke(LOGO_BUBBLE));ctx.restore();
  ctx.save();ctx.translate(28,36);ctx.scale(1.2,1.2);ctx.translate(-2,-2);ctx.lineWidth=.95;glow(BLUE,'#CFE2FF',()=>ctx.stroke(LOGO_PHONE));ctx.restore();
@@ -361,9 +371,8 @@ function drawMaker(){const cv=$('#mk'),ctx=cv.getContext('2d'),W=cv.width,H=cv.h
   const s=fitCanvas(ctx,txt,w-120,84,40,"800 Spx Archivo, sans-serif");ctx.font="800 "+s+"px Archivo, sans-serif";ctx.fillText(txt,W/2,cy);
   if(i<4){ctx.fillStyle='#E6DECF';ctx.fillRect(x+90,top+step*(i+1)-2,w-180,4)}}
  if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-FOOT-45)}
- // a little navy sign at the bottom of the card, with the neon logo glowing in it
- ctx.fillStyle='#0D1226';const px=x+36,py=y+h-FOOT+6,pw=w-72,phh=FOOT-42;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(px,py,pw,phh,34);else ctx.rect(px,py,pw,phh);ctx.fill();
- drawLogo(ctx,W/2,py+phh/2-4,1.6);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
+ // your neon logo at the bottom of the card
+ drawLogo(ctx,W/2,y+h-FOOT/2-4,2,true);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
 let downloads=null;
 try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(d=>{downloads=d||null}).catch(()=>{})}catch(e){}
 $('#mk-save').onclick=async()=>{const name='bite-your-tongue-'+($('#mk-w').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'card')+'.png';
