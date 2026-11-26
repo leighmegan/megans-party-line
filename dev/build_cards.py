@@ -150,6 +150,6 @@ if "--write" in sys.argv:
         out += [[R_[m]["id"], cards[m]["deck"], R_[m]["side"], fid, cards[m]["w"], cards[m]["t"], min(R_[x]["id"] for x in by_word[cards[m]["k"]])] for m in fam["members"]]
     out.sort()
     meta = [{"id": d["id"], "name": d["name"], "count": sum(1 for c in out if c[1] == d["id"]),
-             "mixed": d.get("mixed", True), **({"suggestTime": d["suggestTime"]} if d.get("suggestTime") else {})} for d in decks]
+             "mixed": d.get("mixed", True), "weight": d.get("weight", 1), **({"suggestTime": d["suggestTime"]} if d.get("suggestTime") else {})} for d in decks]
     json.dump({"v": 3, "decks": meta, "cards": out}, open("cards.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print(f"wrote cards.json ({len(out)} cards)")

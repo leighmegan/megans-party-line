@@ -9,35 +9,39 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261125-1941">
+<link rel="stylesheet" href="styles.css?v=20261125-2025">
 </head>
 <body>
 <div class="app">
 
 <!-- SETUP: first run and every new game -->
 <section class="screen" id="s-setup" aria-label="New game">
-  <h1 id="setup-title">Megan's Taboo</h1>
-  <p class="sub">Each partner gets their own saved game. Your partner's name fills in from their phone.</p>
-  <label class="f">Play as <small>Your name, or a team name like "Red team" for a room game.</small><input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
-  <label class="f">Code word <small>Agree on one with your partner and both type it. Your phones use it to find each other, then pick who's Player 1 and Player 2.</small>
-    <input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"></label>
+  <div class="top"><h1 id="setup-title">Megan's Taboo</h1><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="setup-set" aria-label="Settings">⚙︎</button></div></div>
+  <div class="hero">
+    <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
+      <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
+  </div>
+  <div class="pair"><label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
+  <label class="f">Code word<span class="codebox"><input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"><span class="badge" id="setup-badge" aria-live="polite"></span></span></label></div>
+  <p class="note">Type the same code word on both phones.</p>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="setup"></div></div>
   <div style="flex:1"></div>
   <button class="primary" id="setup-go">Let's play</button>
   <button class="ghost" id="setup-cancel" hidden>Cancel</button>
-  <button class="ghost" id="setup-bk">Restore from a backup code</button>
+  <div data-backup><button class="ghost" id="setup-bk">Restore from a backup code</button>
   <textarea id="setup-bk-text" hidden aria-label="Backup code" spellcheck="false" placeholder="Paste your backup code here"></textarea>
-  <button class="primary" id="setup-bk-go" hidden>Restore</button>
+  <button class="primary" id="setup-bk-go" hidden>Restore</button></div>
 </section>
 
 <!-- HOME -->
 <section class="screen" id="s-home" aria-label="Home">
-  <div class="top"><h2>Megan's Taboo</h2><button class="ghost icon" data-open="rules">Rules</button></div>
+  <div class="top"><h2>Megan's Taboo</h2><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="to-settings" aria-label="Settings">⚙︎</button></div></div>
   <button class="switch" id="to-games"><span><b>Saved game</b><span id="h-game">Game with your partner</span></span><span aria-hidden="true">▾</span></button>
   <p class="sync" id="h-sync" role="status" hidden></p>
   <p class="turn" id="h-turn" hidden></p>
   <p class="final" id="h-final" hidden></p>
-  <div class="hero">
+  <div class="match" id="h-match" hidden></div>
+  <div class="hero" id="h-hero">
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Taboo</div></div>
       <ul class="list"><li>forbidden</li><li>don't say</li><li>off-limits</li></ul></div>
   </div>
@@ -51,7 +55,9 @@
   <button class="primary" id="start" disabled>Loading cards…</button>
   <button class="ghost" id="h-manual" hidden>Phones not connecting? Pick a player yourself</button>
   <button class="ghost" id="final-btn" data-final>Final round</button>
-  <div class="row"><button class="ghost" id="to-settings">Settings</button><button class="ghost" id="to-maker">Card maker</button></div>
+  <button class="ghost" id="h-score">Keep score</button>
+  <button class="ghost" id="h-mend" hidden>End match</button>
+  <div class="row"><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
 </section>
 
 <!-- PLAY -->
@@ -75,6 +81,7 @@
   <div class="top"><h2 id="sum-title">Your round</h2><span class="note" id="sum-why"></span></div>
   <div class="tot three"><div class="big"><b id="t-c">0</b><small>Guessed</small></div><div><b id="t-s">0</b><small>Skipped</small></div><div><b id="t-x">0</b><small>Buzzed</small></div></div>
   <ul class="res" id="sum-list"></ul>
+  <div class="pts" id="sum-pts" hidden><span id="sum-pts-t"></span><span class="adj"><button class="ghost" id="adj-down" aria-label="One point less">−1</button><button class="ghost" id="adj-up" aria-label="One point more">+1</button></span></div>
   <p class="note" id="sum-back"></p>
   <div style="flex:1"></div>
   <p class="sub" id="sum-next" style="text-align:center;font-weight:800"></p>
@@ -85,30 +92,59 @@
 <!-- SETTINGS -->
 <section class="screen" id="s-set" aria-label="Settings">
   <div class="top"><h2>Settings</h2><button class="ghost" data-back>Done</button></div>
+  <div class="gamebox" id="set-game">
   <p class="sect" id="set-game-h">This game</p>
-  <label class="f">Play as <small>The name your partner sees in this game.</small><input type="text" id="set-playas" maxlength="16" autocomplete="off"></label>
+  <label class="f">Play as<input type="text" id="set-playas" maxlength="16" autocomplete="off"></label>
   <label class="f">Partner's name<input type="text" id="set-partner" maxlength="16" autocomplete="off"></label>
   <div class="group"><b>Deck</b><div class="seg" data-field="deck" data-scope="game"></div>
-    <p class="note">You and your partner can pick different decks. You'll still never draw each other's cards. <span id="mixed-note"></span></p></div>
+    <p class="note" id="deck-note"></p></div>
+  <div class="group"><b>Round length</b><div class="seg" data-field="time" data-scope="game"></div><p class="note" id="time-note" hidden></p></div>
   <div class="group"><b>Player</b><div class="seg" data-field="player" data-scope="game"></div>
-    <p class="note">Set automatically when your phones connect. Only change it if they can't connect, and make sure your partner picks the other one.</p></div>
-  <label class="f">Code word <small>Your phones use it to find each other. The same word gives the same badge. Capitals and spaces don't matter. Pick something only you two would use.</small>
-    <input type="text" id="set-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="None (plain shuffle)"></label>
-  <div class="group"><b>Round length</b><div class="seg" data-field="time" data-scope="game"></div></div>
+    <p class="note">Set automatically. Only change it if your phones can't connect.</p></div>
+  <label class="f">Code word <small>Same word on both phones.</small>
+    <input type="text" id="set-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="None"></label>
   <div class="group"><b>Cards you've played</b><p class="note" id="set-seen"></p>
     <button class="danger" id="reset-seen">Reset played cards</button></div>
   <button class="danger" id="del-game">Delete this game</button>
+  </div>
 
-  <p class="sect">Everything</p>
-  <label class="f">Your usual name <small>New games start with this.</small><input type="text" id="set-name" maxlength="16" autocomplete="off"></label>
+  <p class="sect" id="set-all-h">Everything</p>
+  <label class="f">Your usual name<input type="text" id="set-name" maxlength="16" autocomplete="off"></label>
   <div class="group"><b>Sound</b><div class="seg" data-field="sound" data-scope="all"></div>
-    <p class="note">iPhones usually mute web sounds during a call or on silent. Vibration works on Android only.</p></div>
-  <div class="group"><b>Backup</b>
-    <p class="note">Copy a backup code of all your saved games and paste it somewhere safe, like Notes. Paste it back here to restore.</p>
+    <p class="note">iPhones may mute sounds during a call.</p></div>
+  <div class="group" data-backup><b>Backup</b>
     <div class="row"><button class="ghost" id="bk-copy">Copy backup code</button><button class="ghost" id="bk-open">Restore</button></div>
     <textarea id="bk-text" hidden aria-label="Backup code" spellcheck="false"></textarea>
     <button class="primary" id="bk-restore" hidden>Restore from this code</button></div>
   <p class="note" id="ver"></p>
+</section>
+
+<!-- KEEP SCORE: pick how this match is scored -->
+<section class="screen" id="s-score" aria-label="Keep score">
+  <div class="top"><h2>Keep score</h2><button class="ghost" id="score-back">Back</button></div>
+  <div class="group"><b>Type</b><div class="seg one" data-field="type" data-scope="match"></div><p class="note" id="type-note"></p></div>
+  <div class="group"><b>Win by</b><div class="seg one" data-field="win" data-scope="match"></div></div>
+  <div class="group"><b>Skips</b><div class="seg one" data-field="pen" data-scope="match"></div></div>
+  <div class="group"><b>Card values</b><div class="seg one" data-field="val" data-scope="match"></div><p class="note" id="val-note"></p></div>
+  <div style="flex:1"></div>
+  <p class="sub" id="score-wait" style="text-align:center;font-weight:800" hidden></p>
+  <button class="primary" id="score-go">Start match</button>
+</section>
+
+<!-- MATCH RESULT -->
+<section class="screen" id="s-mres" aria-label="Match result">
+  <div class="mres-in"><p class="note" id="mr-why"></p><h1 id="mr-h">Megan wins!</h1><div class="tot two" id="mr-tot"></div><ul class="res" id="mr-list"></ul></div>
+  <div style="flex:1"></div>
+  <div class="row"><button class="ghost" id="mr-brag">Bragging Rights</button><button class="primary" id="mr-done">Done</button></div>
+</section>
+
+<!-- BRAGGING RIGHTS -->
+<section class="screen" id="s-brag" aria-label="Bragging Rights">
+  <div class="top"><h2>Bragging Rights</h2><button class="ghost" data-back>Done</button></div>
+  <p class="sub" id="br-who"></p>
+  <div id="br-body"></div>
+  <button class="ghost" id="br-merge">Merge with an old record</button>
+  <div id="br-merged"></div>
 </section>
 
 <!-- CREDITS: when a game ends -->
@@ -162,6 +198,21 @@
   <div class="row"><button class="ghost" id="cf-no">Cancel</button><button class="primary" id="cf-yes">Yes</button></div>
 </div></div>
 
-<script src="app.js?v=20261125-1941"></script>
+<div class="modal" id="m-invite" role="dialog" aria-modal="true" aria-labelledby="iv-h"><div class="sheet">
+  <h2 id="iv-h">Keep score?</h2><p id="iv-p"></p>
+  <div class="row"><button class="ghost" id="iv-no">Not now</button><button class="primary" id="iv-yes">Join</button></div>
+</div></div>
+
+<div class="modal" id="m-mend" role="dialog" aria-modal="true" aria-labelledby="me-h"><div class="sheet">
+  <h2 id="me-h">End the match?</h2><p id="me-p"></p>
+  <div class="col"><button class="primary" id="me-more">Play one more round</button><button class="ghost" id="me-drop">Don't count the last round</button><button class="ghost" id="me-now">End now</button><button class="ghost" data-close>Keep playing</button></div>
+</div></div>
+
+<div class="modal" id="m-merge" role="dialog" aria-modal="true" aria-labelledby="mg-h"><div class="sheet">
+  <h2 id="mg-h">Merge with an old record</h2><p>Pick an old record to add to this one. You can undo it later.</p><ul class="games" id="mg-list"></ul>
+  <div class="row"><button class="ghost" data-close>Close</button></div>
+</div></div>
+
+<script src="app.js?v=20261125-2025"></script>
 </body>
 </html>
