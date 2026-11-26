@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'6.6',build:'20261126-0052',perRound:10,skips:3,
+const CONFIG={version:'6.7',build:'20261126-0124',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -327,21 +327,23 @@ $('#mk-sw').innerHTML=MK_COLORS.map((c,i)=>'<button style="background:'+c+'" dat
 $('#mk-sw').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mkColor=b.dataset.c;$$('#mk-sw button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));drawMaker()});
 $$('#s-mk input').forEach(i=>i.addEventListener('input',drawMaker));
 function fitCanvas(ctx,text,maxW,size,min,font){let s=size;do{ctx.font=font.replace('S',s);if(ctx.measureText(text).width<=maxW)break;s-=2}while(s>min);return s}
-function wrapTitle(ctx,text,maxW,maxH){for(let s=150;s>=50;s-=4){ctx.font="400 "+s+"px 'Archivo Black', Archivo, sans-serif";const words=text.split(' ');let lines=[''];
+// the main word shrinks to fit, and wraps onto up to three lines
+function wrapTitle(ctx,text,maxW,maxH){for(let s=150;s>=34;s-=4){ctx.font="400 "+s+"px 'Archivo Black', Archivo, sans-serif";const words=text.split(' ');let lines=[''];
   for(const w of words){const t=lines[lines.length-1]?lines[lines.length-1]+' '+w:w;if(ctx.measureText(t).width<=maxW)lines[lines.length-1]=t;else lines.push(w)}
-  if(lines.length<=2&&lines.every(l=>ctx.measureText(l).width<=maxW)&&lines.length*s*1.05<=maxH)return{s,lines}}return{s:50,lines:[text]}}
+  if(lines.length<=3&&lines.every(l=>ctx.measureText(l).width<=maxW)&&lines.length*s*1.05<=maxH)return{s,lines}}
+ const s=fitCanvas(ctx,text,maxW,34,16,"400 Spx 'Archivo Black', Archivo, sans-serif");return{s,lines:[text]}}
 function drawMaker(){const cv=$('#mk'),ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
  const vals=['#mk-w','#mk-1','#mk-2','#mk-3','#mk-4','#mk-5'].map(s=>$(s).value.trim()),from=$('#mk-from').value.trim();
  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0D1226';ctx.fillRect(0,0,W,H);const x=70,y=70,w=W-140,h=H-140,r=60;
  ctx.save();ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,w,h,r);else{ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}ctx.clip();
- ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);ctx.fillStyle=mkColor;ctx.fillRect(x,y,w,360);ctx.fillStyle='#fff';ctx.textAlign='center';ctx.textBaseline='middle';
+ ctx.fillStyle='#F4EFE6';ctx.fillRect(x,y,w,h);ctx.fillStyle=mkColor;ctx.fillRect(x,y,w,360);ctx.fillStyle='#F4EFE6';ctx.textAlign='center';ctx.textBaseline='middle';
  const t=wrapTitle(ctx,vals[0]||'Main word',w-100,300);ctx.font="400 "+t.s+"px 'Archivo Black', Archivo, sans-serif";t.lines.forEach((l,i)=>ctx.fillText(l,W/2,y+180+(i-(t.lines.length-1)/2)*t.s*1.05));
  const top=y+400,bottom=y+h-(from?190:110),step=(bottom-top)/5;
- for(let i=0;i<5;i++){const cy=top+step*(i+.5),txt=vals[i+1]||'Forbidden '+(i+1);ctx.fillStyle=vals[i+1]?'#1d1027':'#b9a6c9';
+ for(let i=0;i<5;i++){const cy=top+step*(i+.5),txt=vals[i+1]||'Forbidden '+(i+1);ctx.fillStyle=vals[i+1]?'#1B1A17':'#B0A898';
   const s=fitCanvas(ctx,txt,w-120,84,40,"800 Spx Archivo, sans-serif");ctx.font="800 "+s+"px Archivo, sans-serif";ctx.fillText(txt,W/2,cy);
-  if(i<4){ctx.fillStyle='#e7dcef';ctx.fillRect(x+90,top+step*(i+1)-2,w-180,4)}}
- if(from){ctx.fillStyle='#6b5a78';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-130)}
- ctx.fillStyle='#b9a6c9';ctx.font="600 34px Archivo, sans-serif";ctx.fillText("Megan's Taboo",W/2,y+h-58);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
+  if(i<4){ctx.fillStyle='#E6DECF';ctx.fillRect(x+90,top+step*(i+1)-2,w-180,4)}}
+ if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-130)}
+ ctx.fillStyle='#A9A293';ctx.font="600 34px Archivo, sans-serif";ctx.fillText("Megan's Taboo",W/2,y+h-58);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
 let downloads=null;
 try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(d=>{downloads=d||null}).catch(()=>{})}catch(e){}
 $('#mk-save').onclick=async()=>{const name='megans-taboo-'+($('#mk-w').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'card')+'.png';

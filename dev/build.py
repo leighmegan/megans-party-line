@@ -28,7 +28,8 @@ for icon in ("icon-192.png", "icon-512.png"):
     if os.path.exists(os.path.join("src", icon)): shutil.copy(os.path.join("src", icon), site)
 if "--repo" in sys.argv:
     repo = sys.argv[sys.argv.index("--repo") + 1]
-    for f in os.listdir(site): shutil.copy(os.path.join(site, f), repo)
+    for f in os.listdir(site):
+        if os.path.isfile(os.path.join(site, f)): shutil.copy(os.path.join(site, f), repo)   # preview-only folders stay out
     dev = os.path.join(repo, "dev"); shutil.rmtree(dev, ignore_errors=True); os.makedirs(dev)
     for d in ("src", "cards", "tests"): shutil.copytree(d, os.path.join(dev, d), ignore=shutil.ignore_patterns("__pycache__"))
     for f in ("build.py", "build_cards.py", "ids.json"): shutil.copy(f, dev)
