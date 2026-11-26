@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.6',build:'20261126-1807',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'7.7',build:'20261126-1842',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 

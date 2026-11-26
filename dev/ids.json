@@ -8543,5 +8543,775 @@
 "id": 1710,
 "side": 0,
 "deck": "h"
+},
+"toy story": {
+"id": 1711,
+"side": 1,
+"deck": "m"
+},
+"buzz lightyear": {
+"id": 1712,
+"side": 1,
+"deck": "m"
+},
+"finding nemo": {
+"id": 1713,
+"side": 0,
+"deck": "m"
+},
+"ratatouille": {
+"id": 1714,
+"side": 1,
+"deck": "m"
+},
+"up": {
+"id": 1715,
+"side": 0,
+"deck": "m"
+},
+"inside out": {
+"id": 1716,
+"side": 1,
+"deck": "m"
+},
+"coco": {
+"id": 1717,
+"side": 0,
+"deck": "m"
+},
+"wall e": {
+"id": 1718,
+"side": 1,
+"deck": "m"
+},
+"car": {
+"id": 1719,
+"side": 0,
+"deck": "m"
+},
+"monster inc": {
+"id": 1720,
+"side": 0,
+"deck": "m"
+},
+"the incredible": {
+"id": 1721,
+"side": 1,
+"deck": "m"
+},
+"moana": {
+"id": 1722,
+"side": 0,
+"deck": "m"
+},
+"encanto": {
+"id": 1723,
+"side": 1,
+"deck": "m"
+},
+"mulan": {
+"id": 1724,
+"side": 0,
+"deck": "m"
+},
+"hercule": {
+"id": 1725,
+"side": 1,
+"deck": "m"
+},
+"lilo stitch": {
+"id": 1726,
+"side": 0,
+"deck": "m"
+},
+"zootopia": {
+"id": 1727,
+"side": 1,
+"deck": "m"
+},
+"tarzan": {
+"id": 1728,
+"side": 0,
+"deck": "m"
+},
+"the princess and the frog": {
+"id": 1729,
+"side": 1,
+"deck": "m"
+},
+"despicable me": {
+"id": 1730,
+"side": 0,
+"deck": "m"
+},
+"minion": {
+"id": 1731,
+"side": 1,
+"deck": "m"
+},
+"kung fu panda": {
+"id": 1732,
+"side": 0,
+"deck": "m"
+},
+"ice age": {
+"id": 1733,
+"side": 1,
+"deck": "m"
+},
+"madagascar": {
+"id": 1734,
+"side": 0,
+"deck": "m"
+},
+"spirited away": {
+"id": 1735,
+"side": 1,
+"deck": "m"
+},
+"space jam": {
+"id": 1736,
+"side": 0,
+"deck": "m"
+},
+"the avenger": {
+"id": 1737,
+"side": 0,
+"deck": "m"
+},
+"m|iron man": {
+"id": 1738,
+"side": 0,
+"deck": "m"
+},
+"black panther": {
+"id": 1739,
+"side": 1,
+"deck": "m"
+},
+"guardian of the galaxy": {
+"id": 1740,
+"side": 0,
+"deck": "m"
+},
+"the dark knight": {
+"id": 1741,
+"side": 1,
+"deck": "m"
+},
+"deadpool": {
+"id": 1742,
+"side": 0,
+"deck": "m"
+},
+"the matrix": {
+"id": 1743,
+"side": 1,
+"deck": "m"
+},
+"john wick": {
+"id": 1744,
+"side": 0,
+"deck": "m"
+},
+"fast furiou": {
+"id": 1745,
+"side": 1,
+"deck": "m"
+},
+"top gun maverick": {
+"id": 1746,
+"side": 0,
+"deck": "m"
+},
+"gladiator": {
+"id": 1747,
+"side": 1,
+"deck": "m"
+},
+"braveheart": {
+"id": 1748,
+"side": 0,
+"deck": "m"
+},
+"pirate of the caribbean": {
+"id": 1749,
+"side": 1,
+"deck": "m"
+},
+"jack sparrow": {
+"id": 1750,
+"side": 1,
+"deck": "m"
+},
+"men in black": {
+"id": 1751,
+"side": 0,
+"deck": "m"
+},
+"independence day": {
+"id": 1752,
+"side": 1,
+"deck": "m"
+},
+"armageddon": {
+"id": 1753,
+"side": 0,
+"deck": "m"
+},
+"twister": {
+"id": 1754,
+"side": 1,
+"deck": "m"
+},
+"interstellar": {
+"id": 1755,
+"side": 0,
+"deck": "m"
+},
+"the martian": {
+"id": 1756,
+"side": 1,
+"deck": "m"
+},
+"m|gravity": {
+"id": 1757,
+"side": 0,
+"deck": "m"
+},
+"arrival": {
+"id": 1758,
+"side": 1,
+"deck": "m"
+},
+"jurassic world": {
+"id": 1759,
+"side": 0,
+"deck": "m"
+},
+"night at the museum": {
+"id": 1760,
+"side": 1,
+"deck": "m"
+},
+"scream": {
+"id": 1761,
+"side": 0,
+"deck": "m"
+},
+"the sixth sense": {
+"id": 1762,
+"side": 1,
+"deck": "m"
+},
+"get out": {
+"id": 1763,
+"side": 0,
+"deck": "m"
+},
+"the conjuring": {
+"id": 1764,
+"side": 1,
+"deck": "m"
+},
+"the blair witch project": {
+"id": 1765,
+"side": 0,
+"deck": "m"
+},
+"a quiet place": {
+"id": 1766,
+"side": 1,
+"deck": "m"
+},
+"knive out": {
+"id": 1767,
+"side": 0,
+"deck": "m"
+},
+"parasite": {
+"id": 1768,
+"side": 1,
+"deck": "m"
+},
+"everything everywhere all at once": {
+"id": 1769,
+"side": 0,
+"deck": "m"
+},
+"fight club": {
+"id": 1770,
+"side": 0,
+"deck": "m"
+},
+"the truman show": {
+"id": 1771,
+"side": 1,
+"deck": "m"
+},
+"cast away": {
+"id": 1772,
+"side": 0,
+"deck": "m"
+},
+"the terminal": {
+"id": 1773,
+"side": 1,
+"deck": "m"
+},
+"saving private ryan": {
+"id": 1774,
+"side": 1,
+"deck": "m"
+},
+"oppenheimer": {
+"id": 1775,
+"side": 0,
+"deck": "m"
+},
+"barbenheimer": {
+"id": 1776,
+"side": 0,
+"deck": "m"
+},
+"clueless": {
+"id": 1777,
+"side": 1,
+"deck": "m"
+},
+"10 thing i hate about you": {
+"id": 1778,
+"side": 0,
+"deck": "m"
+},
+"the notebook": {
+"id": 1779,
+"side": 1,
+"deck": "m"
+},
+"notting hill": {
+"id": 1780,
+"side": 0,
+"deck": "m"
+},
+"crazy rich asian": {
+"id": 1781,
+"side": 1,
+"deck": "m"
+},
+"the devil wear prada": {
+"id": 1782,
+"side": 0,
+"deck": "m"
+},
+"m|bridesmaid": {
+"id": 1783,
+"side": 1,
+"deck": "m"
+},
+"mamma mia": {
+"id": 1784,
+"side": 0,
+"deck": "m"
+},
+"the greatest showman": {
+"id": 1785,
+"side": 1,
+"deck": "m"
+},
+"la la land": {
+"id": 1786,
+"side": 0,
+"deck": "m"
+},
+"the hangover": {
+"id": 1787,
+"side": 1,
+"deck": "m"
+},
+"step brother": {
+"id": 1788,
+"side": 0,
+"deck": "m"
+},
+"superbad": {
+"id": 1789,
+"side": 0,
+"deck": "m"
+},
+"m|wedding crasher": {
+"id": 1790,
+"side": 1,
+"deck": "m"
+},
+"austin power": {
+"id": 1791,
+"side": 1,
+"deck": "m"
+},
+"bring it on": {
+"id": 1792,
+"side": 0,
+"deck": "m"
+},
+"jumanji": {
+"id": 1793,
+"side": 0,
+"deck": "m"
+},
+"jerry maguire": {
+"id": 1794,
+"side": 1,
+"deck": "m"
+},
+"show me the money": {
+"id": 1795,
+"side": 1,
+"deck": "m"
+},
+"the big bang theory": {
+"id": 1796,
+"side": 1,
+"deck": "m"
+},
+"bazinga": {
+"id": 1797,
+"side": 1,
+"deck": "m"
+},
+"modern family": {
+"id": 1798,
+"side": 0,
+"deck": "m"
+},
+"abbott elementary": {
+"id": 1799,
+"side": 1,
+"deck": "m"
+},
+"how i met your mother": {
+"id": 1800,
+"side": 0,
+"deck": "m"
+},
+"new girl": {
+"id": 1801,
+"side": 1,
+"deck": "m"
+},
+"brooklyn nine nine": {
+"id": 1802,
+"side": 0,
+"deck": "m"
+},
+"scrub": {
+"id": 1803,
+"side": 1,
+"deck": "m"
+},
+"ted lasso": {
+"id": 1804,
+"side": 0,
+"deck": "m"
+},
+"schitt s creek": {
+"id": 1805,
+"side": 1,
+"deck": "m"
+},
+"arrested development": {
+"id": 1806,
+"side": 0,
+"deck": "m"
+},
+"30 rock": {
+"id": 1807,
+"side": 1,
+"deck": "m"
+},
+"malcolm in the middle": {
+"id": 1808,
+"side": 0,
+"deck": "m"
+},
+"that 70s show": {
+"id": 1809,
+"side": 1,
+"deck": "m"
+},
+"everybody love raymond": {
+"id": 1810,
+"side": 0,
+"deck": "m"
+},
+"will grace": {
+"id": 1811,
+"side": 1,
+"deck": "m"
+},
+"only murder in the building": {
+"id": 1812,
+"side": 0,
+"deck": "m"
+},
+"the bear": {
+"id": 1813,
+"side": 1,
+"deck": "m"
+},
+"grey s anatomy": {
+"id": 1814,
+"side": 0,
+"deck": "m"
+},
+"gilmore girl": {
+"id": 1815,
+"side": 1,
+"deck": "m"
+},
+"sex and the city": {
+"id": 1816,
+"side": 0,
+"deck": "m"
+},
+"desperate housewive": {
+"id": 1817,
+"side": 1,
+"deck": "m"
+},
+"breaking bad": {
+"id": 1818,
+"side": 0,
+"deck": "m"
+},
+"walter white": {
+"id": 1819,
+"side": 0,
+"deck": "m"
+},
+"the soprano": {
+"id": 1820,
+"side": 1,
+"deck": "m"
+},
+"dexter": {
+"id": 1821,
+"side": 0,
+"deck": "m"
+},
+"mad men": {
+"id": 1822,
+"side": 1,
+"deck": "m"
+},
+"succession": {
+"id": 1823,
+"side": 0,
+"deck": "m"
+},
+"the west wing": {
+"id": 1824,
+"side": 1,
+"deck": "m"
+},
+"m|yellowstone": {
+"id": 1825,
+"side": 0,
+"deck": "m"
+},
+"the crown": {
+"id": 1826,
+"side": 1,
+"deck": "m"
+},
+"bridgerton": {
+"id": 1827,
+"side": 0,
+"deck": "m"
+},
+"euphoria": {
+"id": 1828,
+"side": 1,
+"deck": "m"
+},
+"the white lotu": {
+"id": 1829,
+"side": 0,
+"deck": "m"
+},
+"lost": {
+"id": 1830,
+"side": 1,
+"deck": "m"
+},
+"squid game": {
+"id": 1831,
+"side": 0,
+"deck": "m"
+},
+"the walking dead": {
+"id": 1832,
+"side": 1,
+"deck": "m"
+},
+"the last of us": {
+"id": 1833,
+"side": 0,
+"deck": "m"
+},
+"game of throne": {
+"id": 1834,
+"side": 1,
+"deck": "m"
+},
+"jon snow": {
+"id": 1835,
+"side": 1,
+"deck": "m"
+},
+"khaleesi": {
+"id": 1836,
+"side": 1,
+"deck": "m"
+},
+"winter is coming": {
+"id": 1837,
+"side": 1,
+"deck": "m"
+},
+"stranger thing": {
+"id": 1838,
+"side": 0,
+"deck": "m"
+},
+"eleven": {
+"id": 1839,
+"side": 0,
+"deck": "m"
+},
+"wednesday": {
+"id": 1840,
+"side": 0,
+"deck": "m"
+},
+"the mandalorian": {
+"id": 1841,
+"side": 0,
+"deck": "m"
+},
+"baby yoda": {
+"id": 1842,
+"side": 0,
+"deck": "m"
+},
+"bluey": {
+"id": 1843,
+"side": 1,
+"deck": "m"
+},
+"dora the explorer": {
+"id": 1844,
+"side": 0,
+"deck": "m"
+},
+"phinea and ferb": {
+"id": 1845,
+"side": 1,
+"deck": "m"
+},
+"avatar the last airbender": {
+"id": 1846,
+"side": 0,
+"deck": "m"
+},
+"the powerpuff girl": {
+"id": 1847,
+"side": 1,
+"deck": "m"
+},
+"dexter s laboratory": {
+"id": 1848,
+"side": 0,
+"deck": "m"
+},
+"blue s clue": {
+"id": 1849,
+"side": 1,
+"deck": "m"
+},
+"teletubby": {
+"id": 1850,
+"side": 0,
+"deck": "m"
+},
+"survivor": {
+"id": 1851,
+"side": 1,
+"deck": "m"
+},
+"big brother": {
+"id": 1852,
+"side": 0,
+"deck": "m"
+},
+"the great british bake off": {
+"id": 1853,
+"side": 1,
+"deck": "m"
+},
+"top chef": {
+"id": 1854,
+"side": 0,
+"deck": "m"
+},
+"rupaul s drag race": {
+"id": 1855,
+"side": 1,
+"deck": "m"
+},
+"queer eye": {
+"id": 1856,
+"side": 0,
+"deck": "m"
+},
+"shark tank": {
+"id": 1857,
+"side": 1,
+"deck": "m"
+},
+"love island": {
+"id": 1858,
+"side": 0,
+"deck": "m"
+},
+"dancing with the star": {
+"id": 1859,
+"side": 1,
+"deck": "m"
+},
+"the real housewive": {
+"id": 1860,
+"side": 0,
+"deck": "m"
+},
+"hell s kitchen": {
+"id": 1861,
+"side": 1,
+"deck": "m"
+},
+"say yes to the dress": {
+"id": 1862,
+"side": 0,
+"deck": "m"
+},
+"fixer upper": {
+"id": 1863,
+"side": 1,
+"deck": "m"
+},
+"house hunter": {
+"id": 1864,
+"side": 0,
+"deck": "m"
 }
 }

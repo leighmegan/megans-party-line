@@ -28,6 +28,13 @@
   "weight": 1
  },
  {
+  "id": "m",
+  "name": "Movies & TV",
+  "file": "movies.txt",
+  "mixed": true,
+  "weight": 1
+ },
+ {
   "id": "k",
   "name": "Kids",
   "file": "kids.txt",

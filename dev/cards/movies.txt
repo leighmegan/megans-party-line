@@ -1,0 +1,306 @@
+# Megan's Party Line cards: Movies & TV deck
+# Rule for this deck: every movie came out in 1995 or later, and every show first aired in 1995 or later.
+# Cards that name each other (a show and its character) share a family, so they always belong to the same player.
+# One family per block. Header: == category type   (type: syn, sib, ctr, tan)
+# Card line: Word | 5 forbidden words, comma-separated
+
+== pixar sib
+Toy Story | Woody, Buzz, Andy, cowboy, Pixar
+Buzz Lightyear | space ranger, infinity, beyond, astronaut, toy
+
+== pixar sib
+Finding Nemo | fish, Dory, clownfish, ocean, dad
+Ratatouille | rat, chef, Paris, cook, Remy
+
+== pixar sib
+Up | balloons, house, old man, Carl, Pixar
+Inside Out | emotions, Joy, Sadness, girl, head
+
+== pixar sib
+Coco | Mexico, guitar, skeleton, dead, Miguel
+WALL-E | robot, trash, space, Eve, Pixar
+Cars | Lightning, McQueen, race, Mater, Pixar
+
+== pixar sib
+Monsters, Inc. | Sully, Mike, scare, door, Boo
+The Incredibles | superhero, family, Elastigirl, Edna, Pixar
+
+== disney sib
+Moana | ocean, Maui, island, boat, Hawaiian
+Encanto | Bruno, family, magic, house, Colombia
+
+== disney sib
+Mulan | China, warrior, soldier, dragon, Mushu
+Hercules | Greek, god, strong, Zeus, Hades
+
+== disney sib
+Lilo & Stitch | alien, blue, Hawaii, ohana, dog
+Zootopia | bunny, fox, police, animals, sloth
+
+== disney sib
+Tarzan | jungle, ape, gorillas, vine, Jane
+The Princess and the Frog | Tiana, New Orleans, kiss, bayou, restaurant
+
+== animated sib
+Despicable Me | Gru, villain, girls, yellow, moon
+Minions | yellow, banana, goggles, Gru, bello
+
+== animated sib
+Kung Fu Panda | Po, martial arts, Jack Black, dragon warrior, bear
+Ice Age | sloth, mammoth, squirrel, acorn, Sid
+Madagascar | zoo, lion, zebra, penguins, move it
+
+== animated sib
+Spirited Away | Japanese, bathhouse, girl, No-Face, Miyazaki
+Space Jam | Michael Jordan, Bugs Bunny, basketball, Looney Tunes, aliens
+
+== superhero sib
+The Avengers | Marvel, Iron Man, Thor, Hulk, team
+Iron Man | Tony Stark, suit, Marvel, Robert Downey, armor
+
+== superhero sib
+Black Panther | Wakanda, Marvel, king, vibranium, T'Challa
+Guardians of the Galaxy | Groot, raccoon, Star-Lord, Chris Pratt, mixtape
+
+== superhero sib
+The Dark Knight | Batman, Joker, Gotham, Heath Ledger, why so serious
+Deadpool | Ryan Reynolds, red suit, mercenary, jokes, Marvel
+
+== action sib
+The Matrix | Neo, red pill, Keanu, simulation, slow motion
+John Wick | Keanu, dog, assassin, revenge, pencil
+
+== action sib
+Fast & Furious | Vin Diesel, family, racing, Paul Walker, NOS
+Top Gun: Maverick | Tom Cruise, jets, pilot, Navy, sequel
+
+== action sib
+Gladiator | Rome, arena, Russell Crowe, emperor, entertained
+Braveheart | Scotland, freedom, Mel Gibson, kilt, face paint
+
+== action sib
+Pirates of the Caribbean | Jack Sparrow, Johnny Depp, ship, Black Pearl, curse
+Jack Sparrow | pirate, Johnny Depp, captain, rum, ship
+
+== action sib
+Men in Black | aliens, suits, sunglasses, Will Smith, flashy thing
+Independence Day | aliens, July 4th, White House, Will Smith, president
+
+== action sib
+Armageddon | asteroid, drill, Bruce Willis, Aerosmith, space
+Twister | tornado, storm chasers, cow, Oklahoma, wind
+
+== scifi sib
+Interstellar | space, black hole, time, Matthew McConaughey, farm
+The Martian | Mars, potatoes, Matt Damon, astronaut, stranded
+
+== scifi sib
+Gravity | space, Sandra Bullock, astronaut, floating, debris
+Arrival | aliens, language, Amy Adams, circles, linguist
+
+== scifi sib
+Jurassic World | dinosaurs, park, Chris Pratt, raptors, T. rex
+Night at the Museum | Ben Stiller, exhibits, come alive, Teddy Roosevelt, security guard
+
+== horror sib
+Scream | Ghostface, mask, phone, slasher, killer
+The Sixth Sense | dead people, ghost, Bruce Willis, twist, boy
+
+== horror sib
+Get Out | Jordan Peele, hypnosis, sunken place, teacup, girlfriend
+The Conjuring | haunted, demon, Warrens, ghost, possession
+
+== horror sib
+The Blair Witch Project | woods, camera, lost, found footage, 1999
+A Quiet Place | silence, monsters, sound, family, deaf
+
+== thriller sib
+Knives Out | murder, mystery, Daniel Craig, family, sweater
+Parasite | Korean, family, basement, rich, poor
+Everything Everywhere All at Once | multiverse, bagel, Michelle Yeoh, googly eyes, laundromat
+
+== thriller sib
+Fight Club | Brad Pitt, soap, rules, Tyler Durden, basement
+The Truman Show | Jim Carrey, TV, fake, dome, good morning
+
+== drama sib
+Cast Away | Tom Hanks, island, Wilson, volleyball, FedEx
+The Terminal | Tom Hanks, airport, stuck, JFK, Viktor
+
+== drama sib
+Saving Private Ryan | World War II, soldier, Tom Hanks, Normandy, D-Day
+Oppenheimer | atomic bomb, physicist, Nolan, Cillian Murphy, Manhattan Project
+Barbenheimer | Barbie, Oppenheimer, double feature, pink, summer
+
+
+== romcom sib
+Clueless | Cher, Beverly Hills, as if, plaid, high school
+10 Things I Hate About You | Heath Ledger, poem, sisters, high school, Shakespeare
+
+== romcom sib
+The Notebook | Ryan Gosling, rain, letters, old couple, Noah
+Notting Hill | Hugh Grant, Julia Roberts, bookstore, London, actress
+
+== romcom sib
+Crazy Rich Asians | Singapore, wedding, Constance Wu, family, mahjong
+The Devil Wears Prada | fashion, Meryl Streep, assistant, magazine, Anne Hathaway
+
+== romcom sib
+Bridesmaids | wedding, Kristen Wiig, friends, dress, airplane
+Mamma Mia! | ABBA, Greece, dads, wedding, Meryl Streep
+
+== musical sib
+The Greatest Showman | circus, Hugh Jackman, P.T. Barnum, singing, This Is Me
+La La Land | Ryan Gosling, jazz, Los Angeles, Emma Stone, dancing
+
+== comedy sib
+The Hangover | Vegas, bachelor party, tiger, baby, wolfpack
+Step Brothers | Will Ferrell, bunk beds, John C. Reilly, adults, Catalina
+
+== comedy sib
+Superbad | McLovin, teenagers, party, Jonah Hill, fake ID
+Wedding Crashers | Owen Wilson, Vince Vaughn, Rachel McAdams, sneak in, party
+
+== comedy sib
+Austin Powers | spy, groovy, Mike Myers, Dr. Evil, baby
+Bring It On | cheerleaders, competition, Kirsten Dunst, cheer, rival
+
+== comedy sib
+Jumanji | board game, jungle, Robin Williams, dice, the Rock
+Jerry Maguire | sports agent, Tom Cruise, you complete me, football, Renée Zellweger
+Show me the money | Jerry Maguire, Tom Cruise, football, agent, phone
+
+== sitcom sib
+The Big Bang Theory | Sheldon, nerds, physicist, Penny, Bazinga
+Bazinga | Sheldon, Big Bang Theory, joke, gotcha, nerd
+
+== sitcom sib
+Modern Family | Phil, Gloria, Jay, mockumentary, Cam
+Abbott Elementary | school, teachers, Philadelphia, mockumentary, Janine
+
+== sitcom sib
+How I Met Your Mother | Ted, Barney, kids, legendary, bar
+New Girl | Jess, roommates, Schmidt, loft, Zooey Deschanel
+
+== sitcom sib
+Brooklyn Nine-Nine | police, Jake, precinct, detective, noice
+Scrubs | hospital, J.D., doctors, interns, Turk
+
+== sitcom sib
+Ted Lasso | soccer, coach, believe, biscuits, England
+Schitt's Creek | Rose, motel, rich, Moira, Ew David
+
+== sitcom sib
+Arrested Development | Bluth, banana stand, family, narrator, chicken dance
+30 Rock | Liz Lemon, Tina Fey, NBC, Jack, TV show
+
+== sitcom sib
+Malcolm in the Middle | genius, brothers, Hal, Lois, family
+That '70s Show | basement, Kelso, Red, Wisconsin, friends
+
+== sitcom sib
+Everybody Loves Raymond | Robert, Marie, family, sportswriter, Debra
+Will & Grace | roommates, New York, Karen, Jack, best friends
+
+== sitcom sib
+Only Murders in the Building | podcast, Selena Gomez, Steve Martin, apartment, mystery
+The Bear | restaurant, chef, Chicago, kitchen, yes chef
+
+== drama sib
+Grey's Anatomy | surgeons, Seattle, Meredith, McDreamy, hospital
+Gilmore Girls | Lorelai, Rory, coffee, Stars Hollow, mother daughter
+
+== drama sib
+Sex and the City | Carrie, New York, shoes, column, Samantha
+Desperate Housewives | Wisteria Lane, suburbs, neighbors, secrets, narrator
+
+== drama sib
+Breaking Bad | Walter White, meth, teacher, Heisenberg, chemistry
+Walter White | Heisenberg, Breaking Bad, teacher, meth, Bryan Cranston
+
+== drama sib
+The Sopranos | mob, Tony, New Jersey, therapist, mafia
+Dexter | serial killer, blood, Miami, police, dark passenger
+
+== drama sib
+Mad Men | advertising, 1960s, Don Draper, smoking, office
+Succession | Roy family, media company, Logan, heir, rich
+
+== drama sib
+The West Wing | White House, president, staff, walking, politics
+Yellowstone | ranch, Kevin Costner, Montana, cowboys, Dutton
+
+== drama sib
+The Crown | Queen, royal family, Elizabeth, Netflix, Buckingham
+Bridgerton | Regency, romance, Lady Whistledown, dukes, Netflix
+
+== drama sib
+Euphoria | Zendaya, teens, glitter makeup, Rue, high school
+The White Lotus | resort, vacation, rich guests, Hawaii, murder
+
+== survival sib
+Lost | island, plane crash, Others, numbers, hatch
+Squid Game | Korean, red light, money, tracksuits, 456
+
+== zombies sib
+The Walking Dead | zombies, Rick, apocalypse, Daryl, Negan
+The Last of Us | zombies, fungus, Pedro Pascal, Ellie, video game
+
+== fantasy sib
+Game of Thrones | dragons, Westeros, Lannister, winter is coming, Jon Snow
+Jon Snow | Game of Thrones, know nothing, the Wall, Stark, bastard
+Khaleesi | dragons, Daenerys, mother, Game of Thrones, blonde
+Winter is coming | Game of Thrones, Stark, cold, warning, Westeros
+
+== fantasy sib
+Stranger Things | Eleven, upside down, Hawkins, Eggos, Demogorgon
+Eleven | Stranger Things, powers, Eggos, shaved head, nosebleed
+Wednesday | Addams, Jenna Ortega, dance, Nevermore, Thing
+
+== spacewestern sib
+The Mandalorian | Star Wars, bounty hunter, Baby Yoda, helmet, Pedro Pascal
+Baby Yoda | green, Grogu, ears, Mandalorian, cute
+
+== kids sib
+Bluey | dog, Australia, Bingo, family, cartoon
+Dora the Explorer | backpack, map, Swiper, Boots, Spanish
+
+== kids sib
+Phineas and Ferb | summer, Perry, platypus, Doofenshmirtz, brothers
+Avatar: The Last Airbender | Aang, bending, elements, Zuko, arrow
+
+== kids sib
+The Powerpuff Girls | Blossom, Bubbles, Buttercup, Mojo Jojo, sugar
+Dexter's Laboratory | genius, Dee Dee, experiments, sister, boy
+
+== kids sib
+Blue's Clues | Steve, dog, paw prints, notebook, thinking chair
+Teletubbies | Tinky Winky, Po, tummy, TV, sun baby
+
+== reality sib
+Survivor | island, tribe, vote off, Jeff Probst, immunity
+Big Brother | house, cameras, evicted, HOH, houseguests
+
+== reality sib
+The Great British Bake Off | Prue, tent, Paul Hollywood, soggy bottom, handshake
+Top Chef | cooking, Padma, Bravo, pack your knives, competition
+
+== reality sib
+RuPaul's Drag Race | queens, lip sync, sashay away, runway, Ru
+Queer Eye | Fab Five, makeover, Jonathan, Antoni, Netflix
+
+== reality sib
+Shark Tank | investors, pitch, Mark Cuban, deal, entrepreneurs
+Love Island | villa, couples, recoupling, Ireland, bombshell
+
+== reality sib
+Dancing with the Stars | ballroom, celebrities, mirrorball, judges, partner
+The Real Housewives | Bravo, drama, reunion, Andy Cohen, rich
+
+== reality sib
+Hell's Kitchen | Gordon Ramsay, yelling, chefs, raw, donkey
+Say Yes to the Dress | wedding, bride, Kleinfeld, gown, shopping
+
+== reality sib
+Fixer Upper | Chip, Joanna, Waco, renovation, shiplap
+House Hunters | HGTV, buying, three homes, couple, budget
