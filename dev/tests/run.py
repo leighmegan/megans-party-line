@@ -470,6 +470,7 @@ async def main(slow):
         await ann.click("#me-drop"); await ann.wait_for_timeout(300); await bea.wait_for_timeout(900)
         check("don't count the last round: 0–0 tie on both phones", await ann.text_content("#mr-h") == "It's a tie!" and await bea.text_content("#mr-h") == "It's a tie!")
         await ann.click("#mr-done"); await bea.click("#mr-done")
+        await home(bea); check("after a match, Home is back on Just for fun", await bea.get_attribute('#s-setup [data-field=mode] button[aria-pressed=true]', "data-v") == "fun"); await game_screen(bea)
         # merge with an old record after a name change
         await ann.click("#to-settings"); await ann.fill("#set-playas", "Annie"); await ann.press("#set-playas", "Enter"); await ann.click("#s-set [data-back]")
         await home(ann); await ann.click("#to-brag"); check("renaming yourself keeps the game's record", "Head-to-head" in await ann.text_content("#br-body") and "Annie & Bea" in await ann.text_content("#br-who") and await ann.is_hidden("#br-merge"))

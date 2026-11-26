@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.0',build:'20261126-0148',perRound:10,skips:3,
+const CONFIG={version:'7.1',build:'20261126-0155',perRound:10,skips:3,
  times:[60,90,120,0],defaultTime:60,backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -172,7 +172,9 @@ const codeLocked=g=>!!(g&&g.partnerDevice);
 const otherGames=()=>Object.values(S.games).sort((a,b)=>(b.last||b.created)-(a.last||a.created));
 // fill Home from the current game, or start a blank new one when there are no games
 function loadHome(){closeModals();if(!G()){startSetup();return}drafting=false;draft=null;const g=G();
- $('#setup-name').value=myName(g);$('#setup-code').value=g.code||'';$('#setup-gname').value=g.title||'';mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults,g.scoreCfg);if(!g.mode)g.mode='fun';show('setup')}
+ $('#setup-name').value=myName(g);$('#setup-code').value=g.code||'';$('#setup-gname').value=g.title||'';// Just for fun is the default each time; Keep score stays only while a match is on or an invite is out
+ if(!matchOn(g)&&!(g.match&&g.match.status==='invite')&&!g.wantMatch)g.mode='fun';
+ mdraft=matchOn(g)?cfgOf(g.match):Object.assign({},SCORE.defaults,g.scoreCfg);if(!g.mode)g.mode='fun';show('setup')}
 function startSetup(){drafting=true;draft={deck:S.defaults.deck,time:okTime(S.defaults.time),mode:'fun'};mdraft=Object.assign({},SCORE.defaults);
  $('#setup-name').value=S.name;$('#setup-code').value='';$('#setup-gname').value='';closeModals();show('setup')}
 function renderHome(){const g=homeGame(),t=g||draft;if(!t)return;
@@ -317,7 +319,9 @@ $$('[data-close]').forEach(b=>b.addEventListener('click',closeModals));
 $$('[data-back]').forEach(b=>b.addEventListener('click',()=>{const t=backTo;backTo='home';if(t==='setup'||!G())show('setup');else show(t)}));
 $('#to-settings').onclick=()=>{backTo='home';show('set')};
 $('#h-manual').onclick=()=>show('set');
-$('#to-maker').onclick=()=>{backTo='setup';show('mk');drawMaker()};
+$('#to-maker').onclick=()=>{backTo='setup';show('mk');drawMaker();
+ // make sure the logo's font is ready before the card is drawn again
+ try{document.fonts.load("600 20px 'Rubik Logo'").then(()=>{if(screen==='mk')drawMaker()})}catch(e){}};
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&game&&game.running)wake(true)});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModals()});
 
@@ -332,18 +336,32 @@ function wrapTitle(ctx,text,maxW,maxH){for(let s=150;s>=34;s-=4){ctx.font="400 "
   for(const w of words){const t=lines[lines.length-1]?lines[lines.length-1]+' '+w:w;if(ctx.measureText(t).width<=maxW)lines[lines.length-1]=t;else lines.push(w)}
   if(lines.length<=3&&lines.every(l=>ctx.measureText(l).width<=maxW)&&lines.length*s*1.05<=maxH)return{s,lines}}
  const s=fitCanvas(ctx,text,maxW,34,16,"400 Spx 'Archivo Black', Archivo, sans-serif");return{s,lines:[text]}}
+// the neon logo, drawn straight onto the card image (same shapes as the Home logo; coordinates match its 230x84 layout)
+const LOGO_BUBBLE=new Path2D('M17.5 3.4 H182.5 Q195 3.4 195 12 V39.4 Q195 48 182.5 48 H57.5 L32.5 58.3 L37.5 48 H17.5 Q5 48 5 39.4 V12 Q5 3.4 17.5 3.4 Z');
+const LOGO_PHONE=new Path2D('M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z');
+function drawLogo(ctx,cx,cy,sc){const PINK='#FF3FA4',BLUE='#3D8BFF';
+ const glow=(color,core,draw)=>{ctx.shadowColor=color;[18,9,4].forEach(b=>{ctx.shadowBlur=b*sc;ctx.strokeStyle=color;draw()});ctx.shadowBlur=0;ctx.strokeStyle=core;draw()};
+ ctx.save();ctx.translate(cx,cy);ctx.rotate(-4*Math.PI/180);ctx.scale(sc,sc);ctx.translate(-107,-39);ctx.lineJoin='round';ctx.lineCap='round';
+ ctx.save();ctx.translate(14,24);ctx.lineWidth=2.2;glow(BLUE,'#CFE2FF',()=>ctx.stroke(LOGO_BUBBLE));ctx.restore();
+ ctx.save();ctx.translate(28,36);ctx.scale(1.2,1.2);ctx.translate(-2,-2);ctx.lineWidth=.95;glow(BLUE,'#CFE2FF',()=>ctx.stroke(LOGO_PHONE));ctx.restore();
+ ctx.textAlign='left';ctx.textBaseline='alphabetic';ctx.lineWidth=1.3;
+ ctx.font="600 20px 'Rubik Logo', sans-serif";glow(PINK,'#FFD0EA',()=>ctx.strokeText("Megan's",6,13));
+ ctx.font="600 26px 'Rubik Logo', sans-serif";glow(PINK,'#FFD0EA',()=>ctx.strokeText('Party Line',60,57));
+ ctx.restore()}
 function drawMaker(){const cv=$('#mk'),ctx=cv.getContext('2d'),W=cv.width,H=cv.height;
  const vals=['#mk-w','#mk-1','#mk-2','#mk-3','#mk-4','#mk-5'].map(s=>$(s).value.trim()),from=$('#mk-from').value.trim();
  ctx.clearRect(0,0,W,H);ctx.fillStyle='#0D1226';ctx.fillRect(0,0,W,H);const x=70,y=70,w=W-140,h=H-140,r=60;
  ctx.save();ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,w,h,r);else{ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}ctx.clip();
  ctx.fillStyle='#F4EFE6';ctx.fillRect(x,y,w,h);ctx.fillStyle=mkColor;ctx.fillRect(x,y,w,360);ctx.fillStyle='#F4EFE6';ctx.textAlign='center';ctx.textBaseline='middle';
  const t=wrapTitle(ctx,vals[0]||'Main word',w-100,300);ctx.font="400 "+t.s+"px 'Archivo Black', Archivo, sans-serif";t.lines.forEach((l,i)=>ctx.fillText(l,W/2,y+180+(i-(t.lines.length-1)/2)*t.s*1.05));
- const top=y+400,bottom=y+h-(from?190:110),step=(bottom-top)/5;
+ const FOOT=200,top=y+400,bottom=y+h-FOOT-(from?80:20),step=(bottom-top)/5;
  for(let i=0;i<5;i++){const cy=top+step*(i+.5),txt=vals[i+1]||'Forbidden '+(i+1);ctx.fillStyle=vals[i+1]?'#1B1A17':'#B0A898';
   const s=fitCanvas(ctx,txt,w-120,84,40,"800 Spx Archivo, sans-serif");ctx.font="800 "+s+"px Archivo, sans-serif";ctx.fillText(txt,W/2,cy);
   if(i<4){ctx.fillStyle='#E6DECF';ctx.fillRect(x+90,top+step*(i+1)-2,w-180,4)}}
- if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-130)}
- ctx.fillStyle='#A9A293';ctx.font="600 34px Archivo, sans-serif";ctx.fillText("Megan's Party Line",W/2,y+h-58);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
+ if(from){ctx.fillStyle='#7B756B';const s=fitCanvas(ctx,'From: '+from,w-120,54,30,"600 Spx Archivo, sans-serif");ctx.font="600 "+s+"px Archivo, sans-serif";ctx.fillText('From: '+from,W/2,y+h-FOOT-45)}
+ // a little navy sign at the bottom of the card, with the neon logo glowing in it
+ ctx.fillStyle='#0D1226';const px=x+36,py=y+h-FOOT+6,pw=w-72,phh=FOOT-42;ctx.beginPath();if(ctx.roundRect)ctx.roundRect(px,py,pw,phh,34);else ctx.rect(px,py,pw,phh);ctx.fill();
+ drawLogo(ctx,W/2,py+phh/2-4,1.6);ctx.restore();$('#mk-save').disabled=vals.some(v=>!v)}
 let downloads=null;
 try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(d=>{downloads=d||null}).catch(()=>{})}catch(e){}
 $('#mk-save').onclick=async()=>{const name='bite-your-tongue-'+($('#mk-w').value.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'card')+'.png';
@@ -641,8 +659,8 @@ function showResult(g){const e=g.match.result;if(!e){g.match=null;save();return}
  const li=(a,b)=>'<li><span>'+esc(a)+'</span><span>'+esc(b)+'</span></li>';
  $('#mr-list').innerHTML=li('Rounds',e.me+' '+e.mr+' · '+e.them+' '+e.tr)+li('Perfect rounds',e.me+' '+e.mpf+' · '+e.them+' '+e.tpf)+li('Buzzes',e.me+' '+e.mx+' · '+e.them+' '+e.tx);
  show('mres')}
-$('#mr-done').onclick=()=>{const g=G();if(g){g.match=null;save()}show('home')};
-$('#mr-brag').onclick=()=>{const g=G();if(g){g.match=null;save()}backTo='home';show('brag')};
+$('#mr-done').onclick=()=>{const g=G();if(g){g.match=null;g.mode='fun';save()}show('home')};
+$('#mr-brag').onclick=()=>{const g=G();if(g){g.match=null;g.mode='fun';save()}backTo='home';show('brag')};
 $('#to-brag').onclick=()=>{backTo='setup';show('brag')};
 
 // --- the round summary: points for this round, adjustable by the clue-giver ---
