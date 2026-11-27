@@ -452,7 +452,8 @@ async def main(slow):
         await nv.click("#b-ok"); await nv.click("#b-end"); await nv.click("#cf-yes"); await nv.wait_for_timeout(200)
         await back(); check("back from the round summary goes to the game screen", await nv.is_visible("#s-home"))
         # Home holds changes until Let's play
-        await nv.click("#h-back"); check("no Cancel or Discard buttons on Home", await nv.evaluate("!document.querySelector('#setup-cancel')&&!document.querySelector('#home-discard')"))
+        await nv.click("#h-back"); check("Let's play fills its row when there's nothing to undo", await nv.is_hidden("#home-undo") and await nv.evaluate("Math.abs(document.querySelector('#setup-go').getBoundingClientRect().width-document.querySelector('.go-row').getBoundingClientRect().width)<1"))
+        check("no Cancel or Discard buttons on Home", await nv.evaluate("!document.querySelector('#setup-cancel')&&!document.querySelector('#home-discard')"))
         check("no unsaved-changes note when nothing changed", await nv.is_hidden("#home-dirty"))
         await nv.click('#s-setup [data-field=deck] button:has-text("Adult")'); await nv.click('#s-setup [data-field=time] button:has-text("2:00")'); await nv.fill("#setup-gname", "Typo night")
         st = (await state(nv))["g"]
@@ -466,11 +467,13 @@ async def main(slow):
         check("Let's play saves the change", (await state(nv))["g"]["time"] == 90)
         # undo
         n_seen = len((await state(nv))["g"]["seen"]); await nv.click("#to-settings"); await nv.click("#reset-seen"); await nv.wait_for_timeout(100)
-        check("reset played cards happens right away, with an Undo", len((await state(nv))["g"]["seen"]) == 0 and await nv.is_visible("#undo"))
-        await nv.click("#undo-b"); await nv.wait_for_timeout(100); check("Undo brings the played cards back", len((await state(nv))["g"]["seen"]) == n_seen and n_seen > 0, n_seen)
+        check("reset played cards happens right away, with Undo in the button's place", len((await state(nv))["g"]["seen"]) == 0 and await nv.is_visible("#reset-undo") and await nv.is_hidden("#reset-seen"))
+        await nv.click("#reset-undo"); check("…and the Reset button comes back", await nv.is_visible("#reset-seen")); await nv.wait_for_timeout(100); check("Undo brings the played cards back", len((await state(nv))["g"]["seen"]) == n_seen and n_seen > 0, n_seen)
         await nv.click("#del-game"); await nv.click("#cf-yes"); await nv.wait_for_timeout(150)
-        check("delete still asks, then offers Undo", len((await state(nv))["s"]["games"]) == 0 and await nv.is_visible("#undo") and await nv.is_visible("#s-setup"))
-        await nv.click("#undo-b"); await nv.wait_for_timeout(150)
+        go = await nv.evaluate("[document.querySelector('#setup-go').getBoundingClientRect().width,document.querySelector('#home-undo').getBoundingClientRect()]")
+        check("delete still asks, then shows Undo beside Let's play", len((await state(nv))["s"]["games"]) == 0 and await nv.is_visible("#home-undo") and await nv.is_visible("#s-setup")
+              and await nv.evaluate("document.querySelector('#home-undo').getBoundingClientRect().left>document.querySelector('#setup-go').getBoundingClientRect().right"))
+        await nv.click("#home-undo"); await nv.wait_for_timeout(150)
         check("Undo brings the deleted game back", len((await state(nv))["s"]["games"]) == 1 and await nv.input_value("#setup-code") == "nav-1" and (await state(nv))["g"]["time"] == 90)
         allerr += nv.errs; await c32.close()
         # ---------- v6: keep score ----------

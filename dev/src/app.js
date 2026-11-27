@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.8',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'7.9',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -103,8 +103,12 @@ function show(id){screen=id;if(id!=='setup')arm();$$('.screen').forEach(s=>s.cla
 function toast(msg,ms=2600){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),ms)}
 const openModal=id=>{$('#m-'+id).classList.add('on');arm()};
 // a short-lived Undo after something you can't otherwise take back
-function offerUndo(msg,undoFn,ms=8000){const u=$('#undo');$('#undo-t').textContent=msg;u.classList.add('on');clearTimeout(u._h);
- $('#undo-b').onclick=()=>{u.classList.remove('on');clearTimeout(u._h);undoFn()};u._h=setTimeout(()=>u.classList.remove('on'),ms)}
+// Undo shows up right where the change happened, for a few seconds: beside Let's play on Home, or in place of the button in Settings
+function offerUndo(msg,undoFn,where='home',ms=10000){const btn=where==='home'?$('#home-undo'):$('#reset-undo'),other=where==='home'?null:$('#reset-seen');
+ toast(msg,3000);btn.hidden=false;if(other)other.hidden=true;btn.setAttribute('aria-label','Undo: '+msg);clearTimeout(btn._h);
+ const done=()=>{btn.hidden=true;if(other)other.hidden=false;clearTimeout(btn._h)};btn._done=done;
+ btn.onclick=()=>{done();undoFn()};btn._h=setTimeout(done,ms)}
+const dropUndo=()=>{['#home-undo','#reset-undo'].forEach(id=>{const b=$(id);if(b._done)b._done()})};
 function closeModals(){$$('.modal').forEach(m=>m.classList.remove('on'));if(game&&game.pausedByDialog){game.pausedByDialog=false;resume()}}
 function confirmBox(msg,yes,label='Yes'){$('#cf-p').textContent=msg;$('#cf-yes').textContent=label;$('#cf-yes').onclick=()=>{$('#m-confirm').classList.remove('on');if(game)game.pausedByDialog=false;yes()};openModal('confirm')}
 $('#cf-no').onclick=closeModals;
@@ -215,7 +219,7 @@ function renderHome(){const g=homeGame();if(g)followGame(g);const t=draft;if(!t)
 function renderScoreNotes(){$('#type-note').textContent=mdraft.type==='team'?'Work together. Fewer seconds per card is better.':'Score your own clues. A buzz gives your partner a steal.';
  const ws=DECKS.filter(d=>(d.weight??1)!==1).map(d=>d.name+' '+half(d.weight));
  $('#val-note').textContent=mdraft.val==='equal'?'Every card is worth 1.':'Most cards are worth 1. '+ws.join(', ')+'.'}
-$('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCode($('#setup-code').value),title=clean($('#setup-gname').value);
+$('#setup-go').onclick=()=>{dropUndo();const name=clean($('#setup-name').value),code=normCode($('#setup-code').value),title=clean($('#setup-gname').value);
  if(!name){toast('Add a name so your partner sees it');return}if(!code){toast('Add a code word. Your partner types the same one.');return}
  // a team name in your very first game shouldn't become your usual name
  if(!S.name&&!/\bteam\b/i.test(name))S.name=name;
@@ -280,7 +284,7 @@ $('#set-partner').addEventListener('change',e=>{const v=clean(e.target.value);if
 $('#set-name').addEventListener('change',e=>{S.name=clean(e.target.value);save();announce()});
 $('#set-playas').addEventListener('change',e=>{const v=clean(e.target.value);G().playAs=v&&v!==S.name?v:null;save();announce();render()});
 $('#reset-seen').onclick=()=>{const g=G(),was=[...seen],cyc=g.cycle;seen.clear();g.cycle++;saveSeen();render();
- offerUndo('Played cards reset',()=>{if(G()!==g)return;seen.clear();was.forEach(x=>seen.add(x));g.cycle=cyc;saveSeen();render();toast('Played cards are back')})};
+ offerUndo('Played cards reset',()=>{if(G()!==g)return;seen.clear();was.forEach(x=>seen.add(x));g.cycle=cyc;saveSeen();render();toast('Played cards are back')},'reset')};
 
 // ============ backup: all games as one short code (played cards packed as bits) ============
 const toB64=u8=>{let s='';u8.forEach(b=>s+=String.fromCharCode(b));return btoa(s)};

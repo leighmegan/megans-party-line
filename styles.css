@@ -243,7 +243,9 @@ h2.grow{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:elli
 #m-gsum .stats{margin:12px 0 0}#m-gsum .stats div{background:var(--line);color:var(--cink)}#m-gsum .stats small{color:var(--muted)}
 #m-gsum .danger{flex:0 0 auto;width:auto}
 @media (max-width:350px){h2.grow{font-size:18px}}
-#setup-go{position:sticky;bottom:12px;z-index:5;box-shadow:0 10px 24px rgba(0,0,0,.45)}
+/* Let's play fills its row; Undo slides in beside it only right after something you can take back */
+.go-row{position:sticky;bottom:12px;z-index:5;display:flex;gap:8px}.go-row #setup-go{flex:1;box-shadow:0 10px 24px rgba(0,0,0,.45)}
+#home-undo{flex:0 0 auto;min-width:96px;min-height:54px;border-radius:18px;background:var(--card);color:var(--cink);font-weight:800;box-shadow:0 10px 24px rgba(0,0,0,.45)}
 h2.grow{font-size:19px}
 input.locked{background:var(--bg2);color:var(--soft)}
 #to-games{font-weight:800}
