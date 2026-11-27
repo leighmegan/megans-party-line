@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.7',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'7.8',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -206,7 +206,7 @@ function renderHome(){const g=homeGame();if(g)followGame(g);const t=draft;if(!t)
  $('#sg-name').textContent=g?gameLabel(g):'New game';
  const lk=codeLocked(g);$('#setup-code').readOnly=lk;$('#setup-code').classList.toggle('locked',lk);
  $('#code-note').hidden=!(!g||lk);$('#code-note').textContent=lk?'The code word is locked once your phones connect. Start a new game to use a different one.':'Type the same code word on both phones.';$('#sg-badge').innerHTML=g?badgeFor(g.code):'';
- $('#setup-cancel').hidden=!(drafting&&G());$('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value));
+ $('#setup-badge').innerHTML=badgeFor(normCode($('#setup-code').value));
  $('#setup-go').textContent=g&&matchOn(g)?'Back to the match':"Let's play";
  $('#cpr-group').hidden=!!t.time;
  const on=g&&matchOn(g),sc=t.mode==='score'||on;$('#score-opts').hidden=!sc;
@@ -233,8 +233,6 @@ $('#setup-go').onclick=()=>{const name=clean($('#setup-name').value),code=normCo
  drafting=false;g.scoreCfg=Object.assign({},mdraft);g.wantMatch=g.mode==='score'&&!matchOn(g)&&!(g.match&&g.match.status==='invite');
  draft=Object.assign(homeVals(g),{base:homeVals(g)});save();show('home');tryInvite(g);
  if(!S.rulesSeen){S.rulesSeen=true;save();setTimeout(()=>openModal('rules'),250)}};
-$('#setup-cancel').onclick=loadHome;
-$('#home-discard').onclick=()=>{loadHome();toast('Changes discarded')};
 ['#setup-name','#setup-code','#setup-gname'].forEach(id=>$(id).addEventListener('input',()=>{if(!drafting)$('#home-dirty').hidden=!homeDirty()}));
 $('#h-back').onclick=loadHome;
 $$('[data-home]').forEach(b=>b.addEventListener('click',()=>{if(game)return;loadHome()}));

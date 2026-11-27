@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#0D1226">
 <title>Megan's Party Line</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Party Line">
-<link rel="stylesheet" href="styles.css?v=20261126-1842">
+<link rel="stylesheet" href="styles.css?v=20261126-2041">
 </head>
 <body>
 <div class="app">
@@ -16,7 +16,7 @@
   <div class="top"><h1 id="setup-title"><button class="ttl logo" id="logo" aria-label="Megan's Party Line. Tap to refresh."><span class="t t1" aria-hidden="true">Megan's</span><svg class="bub" preserveAspectRatio="none" viewBox="0 0 160 70" aria-hidden="true"><path d="M14 4 H146 Q156 4 156 14 V46 Q156 56 146 56 H46 L26 68 L30 56 H14 Q4 56 4 46 V14 Q4 4 14 4 Z"/></svg><svg class="ph" viewBox="2 2 20 20" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg><span class="t t2" aria-hidden="true">Party Line</span></button></h1><div class="tools"><button class="ghost icon" data-open="rules">Rules</button><button class="ghost icon gear" id="setup-set" aria-label="Settings">⚙︎</button></div></div>
   <div class="hero">
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Bite Your Tongue</div></div>
-      <ul class="list"><li>off-limits</li><li>no peeking</li><li>forbidden</li></ul></div>
+      <ul class="list"><li>off-limits</li><li>no peeking</li><li>don't say it</li></ul></div>
   </div>
   <div class="pair"><label class="f">Your name<input type="text" id="setup-name" maxlength="16" autocomplete="off" placeholder="e.g. Megan"></label>
   <label class="f">Code word<span class="codebox"><input type="text" id="setup-code" maxlength="30" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. pug42"><span class="badge" id="setup-badge" aria-live="polite"></span></span></label></div>
@@ -36,9 +36,8 @@
   </div>
   <div class="row"><button class="ghost" id="to-brag">Bragging Rights</button><button class="ghost" id="to-maker">Card maker</button></div>
   <div style="flex:1"></div>
-  <p class="note dirty" id="home-dirty" hidden>Changes save when you tap Let's play. <button class="link" id="home-discard">Discard changes</button></p>
+  <p class="note dirty" id="home-dirty" hidden>Changes save when you tap Let's play.</p>
   <button class="primary" id="setup-go">Let's play</button>
-  <button class="ghost" id="setup-cancel" hidden>Cancel new game</button>
   <div data-backup><button class="ghost" id="setup-bk">Restore from a backup code</button>
   <textarea id="setup-bk-text" hidden aria-label="Backup code" spellcheck="false" placeholder="Paste your backup code here"></textarea>
   <button class="primary" id="setup-bk-go" hidden>Restore</button></div>
@@ -56,7 +55,7 @@
   <div class="match" id="h-match" hidden></div>
   <div class="hero" id="h-hero">
     <div class="card mini" aria-hidden="true"><div class="band"><div class="w">Bite Your Tongue</div></div>
-      <ul class="list"><li>off-limits</li><li>no peeking</li><li>forbidden</li></ul></div>
+      <ul class="list"><li>off-limits</li><li>no peeking</li><li>don't say it</li></ul></div>
   </div>
   <div style="flex:1"></div>
   <button class="primary" id="start" disabled>Loading cards…</button>
@@ -210,6 +209,6 @@
   <div class="row"><button class="ghost" data-close>Close</button></div>
 </div></div>
 
-<script src="app.js?v=20261126-1842"></script>
+<script src="app.js?v=20261126-2041"></script>
 </body>
 </html>

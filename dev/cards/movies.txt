@@ -1,16 +1,13 @@
 # Megan's Party Line cards: Movies & TV deck
 # Rule for this deck: every movie came out in 1995 or later, and every show first aired in 1995 or later.
-# Cards that name each other (a show and its character) share a family, so they always belong to the same player.
+# Shows and their characters sit in different families, so they can go to different players.
 # One family per block. Header: == category type   (type: syn, sib, ctr, tan)
 # Card line: Word | 5 forbidden words, comma-separated
 
 == pixar sib
-Toy Story | Woody, Buzz, Andy, cowboy, Pixar
-Buzz Lightyear | space ranger, infinity, beyond, astronaut, toy
-
-== pixar sib
 Finding Nemo | fish, Dory, clownfish, ocean, dad
 Ratatouille | rat, chef, Paris, cook, Remy
+Toy Story | Woody, Buzz, Andy, cowboy, Pixar
 
 == pixar sib
 Up | balloons, house, old man, Carl, Pixar
@@ -55,12 +52,10 @@ Spirited Away | Japanese, bathhouse, girl, No-Face, Miyazaki
 Space Jam | Michael Jordan, Bugs Bunny, basketball, Looney Tunes, aliens
 
 == superhero sib
-The Avengers | Marvel, Iron Man, Thor, Hulk, team
-Iron Man | Tony Stark, suit, Marvel, Robert Downey, armor
-
-== superhero sib
 Black Panther | Wakanda, Marvel, king, vibranium, T'Challa
+Iron Man | Tony Stark, suit, Marvel, Robert Downey, armor
 Guardians of the Galaxy | Groot, raccoon, Star-Lord, Chris Pratt, mixtape
+The Avengers | Marvel, Iron Man, Thor, Hulk, team
 
 == superhero sib
 The Dark Knight | Batman, Joker, Gotham, Heath Ledger, why so serious
@@ -79,12 +74,9 @@ Gladiator | Rome, arena, Russell Crowe, emperor, entertained
 Braveheart | Scotland, freedom, Mel Gibson, kilt, face paint
 
 == action sib
-Pirates of the Caribbean | Jack Sparrow, Johnny Depp, ship, Black Pearl, curse
-Jack Sparrow | pirate, Johnny Depp, captain, rum, ship
-
-== action sib
 Men in Black | aliens, suits, sunglasses, Will Smith, flashy thing
 Independence Day | aliens, July 4th, White House, Will Smith, president
+Pirates of the Caribbean | Jack Sparrow, Johnny Depp, ship, Black Pearl, curse
 
 == action sib
 Armageddon | asteroid, drill, Bruce Willis, Aerosmith, space
@@ -130,8 +122,6 @@ The Terminal | Tom Hanks, airport, stuck, JFK, Viktor
 == drama sib
 Saving Private Ryan | World War II, soldier, Tom Hanks, Normandy, D-Day
 Oppenheimer | atomic bomb, physicist, Nolan, Cillian Murphy, Manhattan Project
-Barbenheimer | Barbie, Oppenheimer, double feature, pink, summer
-
 
 == romcom sib
 Clueless | Cher, Beverly Hills, as if, plaid, high school
@@ -168,11 +158,6 @@ Bring It On | cheerleaders, competition, Kirsten Dunst, cheer, rival
 == comedy sib
 Jumanji | board game, jungle, Robin Williams, dice, the Rock
 Jerry Maguire | sports agent, Tom Cruise, you complete me, football, Renée Zellweger
-Show me the money | Jerry Maguire, Tom Cruise, football, agent, phone
-
-== sitcom sib
-The Big Bang Theory | Sheldon, nerds, physicist, Penny, Bazinga
-Bazinga | Sheldon, Big Bang Theory, joke, gotcha, nerd
 
 == sitcom sib
 Modern Family | Phil, Gloria, Jay, mockumentary, Cam
@@ -181,6 +166,7 @@ Abbott Elementary | school, teachers, Philadelphia, mockumentary, Janine
 == sitcom sib
 How I Met Your Mother | Ted, Barney, kids, legendary, bar
 New Girl | Jess, roommates, Schmidt, loft, Zooey Deschanel
+The Big Bang Theory | Sheldon, nerds, physicist, Penny, Bazinga
 
 == sitcom sib
 Brooklyn Nine-Nine | police, Jake, precinct, detective, noice
@@ -215,12 +201,9 @@ Sex and the City | Carrie, New York, shoes, column, Samantha
 Desperate Housewives | Wisteria Lane, suburbs, neighbors, secrets, narrator
 
 == drama sib
-Breaking Bad | Walter White, meth, teacher, Heisenberg, chemistry
-Walter White | Heisenberg, Breaking Bad, teacher, meth, Bryan Cranston
-
-== drama sib
 The Sopranos | mob, Tony, New Jersey, therapist, mafia
 Dexter | serial killer, blood, Miami, police, dark passenger
+Breaking Bad | Walter White, meth, teacher, Heisenberg, chemistry
 
 == drama sib
 Mad Men | advertising, 1960s, Don Draper, smoking, office
@@ -245,21 +228,12 @@ Squid Game | Korean, red light, money, tracksuits, 456
 == zombies sib
 The Walking Dead | zombies, Rick, apocalypse, Daryl, Negan
 The Last of Us | zombies, fungus, Pedro Pascal, Ellie, video game
-
-== fantasy sib
-Game of Thrones | dragons, Westeros, Lannister, winter is coming, Jon Snow
-Jon Snow | Game of Thrones, know nothing, the Wall, Stark, bastard
-Khaleesi | dragons, Daenerys, mother, Game of Thrones, blonde
-Winter is coming | Game of Thrones, Stark, cold, warning, Westeros
+The Mandalorian | Star Wars, bounty hunter, Baby Yoda, helmet, Pedro Pascal
 
 == fantasy sib
 Stranger Things | Eleven, upside down, Hawkins, Eggos, Demogorgon
-Eleven | Stranger Things, powers, Eggos, shaved head, nosebleed
+Game of Thrones | dragons, Westeros, Lannister, winter is coming, Jon Snow
 Wednesday | Addams, Jenna Ortega, dance, Nevermore, Thing
-
-== spacewestern sib
-The Mandalorian | Star Wars, bounty hunter, Baby Yoda, helmet, Pedro Pascal
-Baby Yoda | green, Grogu, ears, Mandalorian, cute
 
 == kids sib
 Bluey | dog, Australia, Bingo, family, cartoon
@@ -304,3 +278,24 @@ Say Yes to the Dress | wedding, bride, Kleinfeld, gown, shopping
 == reality sib
 Fixer Upper | Chip, Joanna, Waco, renovation, shiplap
 House Hunters | HGTV, buying, three homes, couple, budget
+
+== characters sib
+Buzz Lightyear | space ranger, infinity, beyond, astronaut, toy
+Jack Sparrow | pirate, Johnny Depp, captain, rum, ship
+
+== characters sib
+Baby Yoda | green, Grogu, ears, Mandalorian, cute
+Walter White | Heisenberg, Breaking Bad, teacher, meth, Bryan Cranston
+
+== characters sib
+Jon Snow | Game of Thrones, know nothing, the Wall, Stark, bastard
+Khaleesi | dragons, Daenerys, mother, Game of Thrones, blonde
+Eleven | Stranger Things, powers, Eggos, shaved head, nosebleed
+
+== moments sib
+Bazinga | Sheldon, Big Bang Theory, joke, gotcha, nerd
+Winter is coming | Game of Thrones, Stark, cold, warning, Westeros
+
+== moments sib
+Show me the money | Jerry Maguire, Tom Cruise, football, agent, phone
+Barbenheimer | Barbie, Oppenheimer, double feature, pink, summer

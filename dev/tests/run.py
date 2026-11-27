@@ -379,7 +379,7 @@ async def main(slow):
         await dismiss(solo); await solo.click("#to-settings")
         check("backup buttons are hidden for now", await solo.is_hidden("#bk-copy")); await solo.click("#s-set [data-back]")
         await dismiss(solo); await solo.click("#to-settings"); await solo.click("#del-game"); await solo.click("#cf-yes"); await solo.wait_for_timeout(200)
-        check("deleting current game opens a brand-new game", await solo.is_visible("#s-setup") and await solo.is_hidden("#setup-cancel"))
+        check("deleting current game opens a brand-new game", await solo.is_visible("#s-setup"))
         allerr += solo.errs; await c7.close()
         # ---------- running out, time-up ----------
         pool = [c[0] for c in CARDS.values() if c[2] == side1 and c[1] == "c"]
@@ -452,13 +452,15 @@ async def main(slow):
         await nv.click("#b-ok"); await nv.click("#b-end"); await nv.click("#cf-yes"); await nv.wait_for_timeout(200)
         await back(); check("back from the round summary goes to the game screen", await nv.is_visible("#s-home"))
         # Home holds changes until Let's play
-        await nv.click("#h-back"); check("no unsaved-changes note when nothing changed", await nv.is_hidden("#home-dirty"))
+        await nv.click("#h-back"); check("no Cancel or Discard buttons on Home", await nv.evaluate("!document.querySelector('#setup-cancel')&&!document.querySelector('#home-discard')"))
+        check("no unsaved-changes note when nothing changed", await nv.is_hidden("#home-dirty"))
         await nv.click('#s-setup [data-field=deck] button:has-text("Adult")'); await nv.click('#s-setup [data-field=time] button:has-text("2:00")'); await nv.fill("#setup-gname", "Typo night")
         st = (await state(nv))["g"]
         check("changes on Home aren't saved yet", st["deck"] == "c" and st["time"] == 60 and not st.get("title") and await nv.is_visible("#home-dirty"))
         await nv.click("#to-brag"); await back(); check("leaving Home and coming back keeps the unsaved changes", await nv.input_value("#setup-gname") == "Typo night")
-        await nv.click("#home-discard"); await nv.wait_for_timeout(150)
-        check("Discard changes puts Home back the way it was", await nv.text_content("#s-setup [data-field=deck] button[aria-pressed=true]") == "Classic"
+        await nv.click("#logo"); await nv.wait_for_selector("#s-setup.on"); await nv.wait_for_timeout(300)
+        await nv.fill("#setup-code", "nav-1"); await nv.dispatch_event("#setup-code", "change"); await nv.wait_for_timeout(150)
+        check("tapping the logo throws away unsaved changes", await nv.text_content("#s-setup [data-field=deck] button[aria-pressed=true]") == "Classic"
               and await nv.get_attribute("#s-setup [data-field=time] button[aria-pressed=true]", "data-v") == "60" and await nv.input_value("#setup-gname") == "" and await nv.is_hidden("#home-dirty"))
         await nv.click('#s-setup [data-field=time] button:has-text("1:30")'); await nv.click("#setup-go"); await nv.wait_for_timeout(150)
         check("Let's play saves the change", (await state(nv))["g"]["time"] == 90)
