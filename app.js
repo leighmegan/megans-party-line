@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'7.9',build:'20261127-1413',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'8.0',build:'20261127-1439',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -313,13 +313,13 @@ function startRound(){if(startState())return;audio();const cap=G().time?null:(G(
  if(d.fresh)toast('You\'ve played every card in this deck. Shuffling them all back in.',3800);
  G().last=Date.now();save();
  const rid=uid();
- game={rid,cap,cards:d.cards,i:0,res:Array(d.cards.length).fill('none'),secs:[],shownAt:0,hist:[],skips:CONFIG.skips,unl:!G().time,left:G().time*1000,dur:G().time*1000,used:0,end:0,running:false,counting:true,lastTick:null,warned:false,pausedByDialog:false,deck:G().deck,
+ game={rid,cap,cards:d.cards,i:0,res:Array(d.cards.length).fill('none'),secs:[],shownAt:0,hist:[],skips:CONFIG.skips,unl:!G().time,left:G().time*1000*TIME_SCALE,dur:G().time*1000*TIME_SCALE,used:0,end:0,running:false,counting:true,lastTick:null,warned:false,pausedByDialog:false,deck:G().deck,
   mid:matchOn()?G().match.id:null};
  hideSplash();show('play');renderCard();renderHud();wake(true);
- const cd=CONFIG.countdown*800;send('start',{rid,left:game.left+cd,dur:game.dur,unl:game.unl});S.liveRound={game:S.current,rid};save();
+ const cd=CONFIG.countdown*TICK;send('start',{rid,left:game.left+cd,dur:game.dur,unl:game.unl});S.liveRound={game:S.current,rid};save();
  const c=$('#count'),n=$('#count-n');let k=CONFIG.countdown;c.classList.add('on');
  const step=()=>{if(!game||game.rid!==rid||game.cancelled){c.classList.remove('on');return}
-  if(k===0){c.classList.remove('on');game.counting=false;sfx.go();go();return}n.textContent=k;n.style.animation='none';void n.offsetWidth;n.style.animation='';sfx.tick();k--;setTimeout(step,800)};step()}
+  if(k===0){c.classList.remove('on');game.counting=false;sfx.go();go();return}n.textContent=k;n.style.animation='none';void n.offsetWidth;n.style.animation='';sfx.tick();k--;setTimeout(step,TICK)};step()}
 function cancelRound(msg){if(!game||!game.counting)return;game.cancelled=true;S.liveRound=null;save();wake(false);game=null;$('#count').classList.remove('on');show('home');toast(msg,3500)}
 function go(){game.running=true;game.end=performance.now()+game.left;game.runFrom=performance.now();if(!game.shownAt)game.shownAt=performance.now();if(game.pausedAt){game.shownAt+=performance.now()-game.pausedAt;game.pausedAt=0}loop()}
 function loop(){cancelAnimationFrame(raf);if(!game||!game.running)return;if(game.unl){$('#timer').textContent='No timer';return}
@@ -434,6 +434,8 @@ $('#mk-save').onclick=async()=>{const name='bite-your-tongue-'+($('#mk-w').value
 // Games are matched by a shared game id (sid), never by clock times, so two phones' clocks can disagree.
 const SYNC_URL=store.get('mt:syncUrl',null)||'https://ntfy.sh/';
 const LIVE_WINDOW=store.get('mt:liveWindow',null)||CONFIG.liveWindow;   // tests shorten this
+// tests only: a quicker 3-2-1, and a faster clock for timer tests (nothing sets these in real use)
+const TICK=store.get('mt:tick',null)||800,TIME_SCALE=store.get('mt:timeScale',null)||1,REPLAY=store.get('mt:replay',null)||1200;
 let es=null,syncTopic=null,heard={},beat=null,plive=null,spTimer=null,backoffUntil=0,pending=null,replaying=false,replayTimer=null,replayBuf={};
 const topicFor=code=>'mtaboo-'+hash('megans-taboo|'+code).toString(36)+hash(code+'|mt|'+code.length).toString(36);
 const other=p=>p==='1'?'2':'1';let assignTimer=null;
@@ -453,7 +455,7 @@ function syncStart(){if(!CONFIG.sync)return;const g=G(),t=g&&g.code?topicFor(g.c
   es.onopen=()=>{clearTimeout(replayTimer);replayTimer=setTimeout(()=>{const buf=Object.values(replayBuf).sort((a,b)=>a.at-b.at),ended=new Set(buf.map(m=>m.st&&m.st.prev).filter(Boolean));
    // a phone still announcing a game that another phone has since ended is out of date: use only its name and settings
    buf.forEach(m=>{if(m.st&&ended.has(m.st.sid)&&m.type!=='over')m=Object.assign({},m,{st:{}});try{receive(m)}catch(_){}});replayBuf={};
-   replaying=false;save();if(plive)paintSplash();queueRender()},1200);send('hi');renderSync()};
+   replaying=false;save();if(plive)paintSplash();queueRender()},REPLAY);send('hi');renderSync()};
   es.onerror=()=>renderSync()}catch(e){es=null}
  clearInterval(beat);beat=setInterval(()=>{if(document.visibilityState==='visible')send('hi');renderSync();renderTurn()},CONFIG.syncBeat);renderSync()}
 function syncStop(){if(es){es.close();es=null}syncTopic=null;heard={};plive=null;hideSplash();clearInterval(beat)}
