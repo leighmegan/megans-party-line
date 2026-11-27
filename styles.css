@@ -103,6 +103,9 @@ canvas#mk{width:100%;max-width:340px;height:auto;align-self:center;border-radius
 .modal{position:fixed;inset:0;background:var(--scrim);display:none;align-items:flex-end;justify-content:center;z-index:40;padding:12px}
 .modal.on{display:flex}
 .sheet{background:var(--card);color:var(--cink);border-radius:24px;max-width:520px;width:100%;max-height:88dvh;overflow:auto;padding:22px 20px calc(20px + env(safe-area-inset-bottom))}
+.sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+/* while a pop-up is open the page behind it is pinned in place (set by lockPage in app.js) */
+html.locked,html.locked body{overflow:hidden}html.locked body{position:fixed;left:0;right:0;width:100%}
 .sheet h2{margin-bottom:10px}.sheet p,.sheet li{color:var(--cink)}
 .sheet ul{padding-left:20px;margin:0 0 10px}.sheet li{margin:6px 0}
 .sheet .row{margin-top:14px}

@@ -1,6 +1,6 @@
 {
 // ============ settings: change game numbers here; rules and labels read from this ============
-const CONFIG={version:'8.0',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
+const CONFIG={version:'8.1',build:'__BUILD__',batch:10,cardOpts:[5,10,15,20],defaultCards:5,skips:3,
  times:[60,90,120,0],defaultTime:60,defaultDeck:'c',backup:false,countdown:3,warnAt:10,mixedName:'Mixed',
  sync:true,syncHeardFor:15*60*1000,syncBeat:90*1000,liveWindow:3*60*1000,creditSecondsPerLine:2.2};
 
@@ -109,6 +109,14 @@ function offerUndo(msg,undoFn,where='home',ms=10000){const btn=where==='home'?$(
  const done=()=>{btn.hidden=true;if(other)other.hidden=false;clearTimeout(btn._h)};btn._done=done;
  btn.onclick=()=>{done();undoFn()};btn._h=setTimeout(done,ms)}
 const dropUndo=()=>{['#home-undo','#reset-undo'].forEach(id=>{const b=$(id);if(b._done)b._done()})};
+// any pop-up (sheet, game splash, pause, 3-2-1) pins the page behind it, so a swipe can only scroll the pop-up
+const OVERLAYS='.modal,.splash,.paused,.count';let lockY=0;
+function lockPage(){const on=!!document.querySelector(['.modal.on','.splash.on','.paused.on','.count.on'].join(',')),h=document.documentElement;if(on===h.classList.contains('locked'))return;
+ if(on){lockY=scrollY;document.body.style.top=-lockY+'px';h.classList.add('locked')}else{h.classList.remove('locked');document.body.style.top='';scrollTo(0,lockY)}}
+{const mo=new MutationObserver(lockPage);document.querySelectorAll(OVERLAYS).forEach(el=>mo.observe(el,{attributes:true,attributeFilter:['class']}))}
+// iOS can still hand a swipe to the page: drop any swipe on a pop-up that isn't inside a sheet that has room to scroll
+document.addEventListener('touchmove',e=>{if(!document.documentElement.classList.contains('locked'))return;const sh=e.target.closest&&e.target.closest('.sheet');
+ if(!sh||sh.scrollHeight<=sh.clientHeight+1)e.preventDefault()},{passive:false});
 function closeModals(){$$('.modal').forEach(m=>m.classList.remove('on'));if(game&&game.pausedByDialog){game.pausedByDialog=false;resume()}}
 function confirmBox(msg,yes,label='Yes'){$('#cf-p').textContent=msg;$('#cf-yes').textContent=label;$('#cf-yes').onclick=()=>{$('#m-confirm').classList.remove('on');if(game)game.pausedByDialog=false;yes()};openModal('confirm')}
 $('#cf-no').onclick=closeModals;

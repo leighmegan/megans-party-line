@@ -53,6 +53,12 @@ async def settle(floor=0.5, quiet=0.4, cap=5):
     t0 = time.time(); await asyncio.sleep(floor)
     while time.time() - t0 < cap and time.time() - LAST[0] < quiet: await asyncio.sleep(0.05)
 
+async def swipe(pg, x, y, dy):   # a real finger drag (touch events), like a swipe on the phone
+    cdp = await pg.context.new_cdp_session(pg); t = lambda k, pts: cdp.send("Input.dispatchTouchEvent", {"type": k, "touchPoints": pts})
+    await t("touchStart", [{"x": x, "y": y}])
+    for i in range(1, 11): await t("touchMove", [{"x": x, "y": y + dy * i / 10}]); await asyncio.sleep(0.016)
+    await t("touchEnd", []); await asyncio.sleep(0.3); await cdp.detach()
+
 async def phone(b, vp=None, device=None, scheme="light", clock=0, live=None, fast=None):
     ctx = await b.new_context(viewport=vp or {"width": 390, "height": 844}, is_mobile=True, has_touch=True, color_scheme=scheme)
     await ctx.grant_permissions(["clipboard-read", "clipboard-write"], origin=f"http://localhost:{PORT}")
@@ -599,6 +605,17 @@ async def main():
                 if scr == "settings": await dismiss(pg); await pg.click("#to-settings")
                 check(f"{name} {scr}: no sideways scroll", await pg.evaluate("document.documentElement.scrollWidth-innerWidth") <= 0)
             allerr += pg.errs; await ctx.close()
+        # ---------- pop-ups pin the page behind them ----------
+        ctx, pg = await phone(b, vp={"width": 360, "height": 560}); await pg.evaluate("scrollTo(0,60)")
+        await pg.evaluate("document.querySelector('#s-setup [data-open=rules]').click()"); await pg.wait_for_timeout(100)
+        await swipe(pg, 180, 40, -300); check("swiping beside the rules doesn't scroll the page", await pg.evaluate("document.body.getBoundingClientRect().top") == -60)
+        await swipe(pg, 180, 400, -250); await swipe(pg, 180, 400, -250)
+        check("swiping the rules scrolls the rules, not the page", await pg.evaluate("document.querySelector('#m-rules .sheet').scrollTop") > 0 and await pg.evaluate("document.body.getBoundingClientRect().top") == -60)
+        await pg.evaluate("document.querySelector('#m-rules [data-close]').click()"); await pg.wait_for_timeout(100)
+        check("closing the rules puts the page back where it was", await pg.evaluate("[document.documentElement.classList.contains('locked'),scrollY]") == [False, 60])
+        missed = await pg.evaluate("""(async()=>{const out=[];for(const el of document.querySelectorAll('.modal,.splash,.paused,.count')){el.classList.add('on');await new Promise(r=>setTimeout(r,20));
+          if(!document.documentElement.classList.contains('locked'))out.push(el.id);el.classList.remove('on');await new Promise(r=>setTimeout(r,20))}return out})()""")
+        check("every pop-up pins the page", not missed, str(missed)); allerr += pg.errs; await ctx.close()
         check("no script errors", not allerr, str(allerr)); await b.close()
     print(f"\n{sum(results)}/{len(results)} passed"); return 0 if all(results) else 1
 
